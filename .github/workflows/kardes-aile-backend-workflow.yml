@@ -1,4 +1,4 @@
-name: Build and deploy kardes-aile to an Azure Web App
+name: Backend CI/CD
 
 env:
   AZURE_WEBAPP_NAME: kardes-aile-backend  # set this to the name of your Azure Web App
