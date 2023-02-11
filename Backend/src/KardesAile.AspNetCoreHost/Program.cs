@@ -17,6 +17,8 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddScoped<IAuthenticationBusiness, AuthenticationBusiness>();
 
 builder.Services.AddScoped<IUserContext, UserContext>();
@@ -99,13 +101,14 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+app.MapHealthChecks("/health");
+
 app.UseExceptionHandler(appError => { appError.Run(GlobalExceptionManager.Handler); });
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.MapGet("/", () => "API");
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 
