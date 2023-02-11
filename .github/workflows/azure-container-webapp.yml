@@ -26,7 +26,7 @@ jobs:
           
           
       - run: |
-          docker build -f ./Backend/src/KardesAile.AspNetCoreHost/Dockerfile -t mycontainer.azurecr.io/myapp:${{ github.sha }}
+          docker build -f ./Backend/src/KardesAile.AspNetCoreHost/Dockerfile -t mycontainer.azurecr.io/myapp:${{ github.sha }} .
           docker push mycontainer.azurecr.io/myapp:${{ github.sha }}    
           
       - name: Lowercase the repo name and username
