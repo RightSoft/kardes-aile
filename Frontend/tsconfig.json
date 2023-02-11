@@ -12,7 +12,8 @@
       "@preloaderModule/*": ["src/modules/preloader/*"],
       "@layoutModule/*": ["src/modules/layout/*"],
       "@dashboardModule/*": ["src/modules/dashboard/*"],
-      "@authModule/*": ["src/modules/auth/*"]
+      "@authModule/*": ["src/modules/auth/*"],
+      "@matchListsModule/*": ["src/modules/match-lists/*"]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { AppService } from '@appModule/business/app.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-header',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  templateUrl: './app-header.component.html',
+  styleUrls: ['./app-header.component.scss'],
+  host: {
+    class: 'd-block border-bottom mb-3',
+  },
 })
-export default class DashboardComponent {
+export class AppHeaderComponent {
   private appService = inject(AppService);
-  constructor() {
-    this.appService.pageTitle$.next('Dashboard');
-  }
+  title$ = this.appService.pageTitle$;
 }

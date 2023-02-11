@@ -1,12 +1,6 @@
 import { Routes } from '@angular/router';
 import authRoutes from './auth.routes';
-const projectRoutes: Routes = [
-  ...authRoutes,
-  {
-    path: '',
-    loadComponent: () =>
-      import('@dashboardModule/components/dashboard/dashboard.component'),
-  },
-];
+import layoutRoutes from './layout.routes';
+const projectRoutes: Routes = [...authRoutes, ...layoutRoutes];
 
 export default projectRoutes;
