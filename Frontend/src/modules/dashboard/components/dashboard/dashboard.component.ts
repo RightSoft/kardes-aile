@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppService } from '@appModule/business/app.service';
+import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,9 +9,8 @@ import { AppService } from '@appModule/business/app.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export default class DashboardComponent {
-  private appService = inject(AppService);
-  constructor() {
-    this.appService.pageTitle$.next('Dashboard');
-  }
+export default class DashboardComponent extends AddPageTitle {
+constructor(){
+  super("Anasayfa")
+}
 }

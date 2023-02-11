@@ -13,7 +13,8 @@
       "@layoutModule/*": ["src/modules/layout/*"],
       "@dashboardModule/*": ["src/modules/dashboard/*"],
       "@authModule/*": ["src/modules/auth/*"],
-      "@matchListsModule/*": ["src/modules/match-lists/*"]
+      "@matchListsModule/*": ["src/modules/match-lists/*"],
+      "@voluntarilyListsModule/*": ["src/modules/voluntarily-lists/*"]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

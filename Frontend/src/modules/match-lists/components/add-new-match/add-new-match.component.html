@@ -26,10 +26,10 @@
       <input
         type="text"
         matInput
-        [matAutocomplete]="disasteVictimAutoComplete"
-        formControlName="disasteVictim"
+        [matAutocomplete]="disasterVictimAutoComplete"
+        formControlName="disasterVictim"
       />
-      <mat-autocomplete #disasteVictimAutoComplete="matAutocomplete">
+      <mat-autocomplete #disasterVictimAutoComplete="matAutocomplete">
         <mat-option
           *ngFor="let option of disasteVictimList$ | async"
           [value]="option"
@@ -38,7 +38,7 @@
         </mat-option>
       </mat-autocomplete>
       <mat-error>
-        {{ disasteVictimValidationMessage }}
+        {{ disasterVictimValidationMessage }}
       </mat-error>
     </mat-form-field>
     <mat-form-field class="d-block mb-3">
@@ -71,14 +71,14 @@
       />
       <mat-autocomplete #disasteVictimChildAutoComplete="matAutocomplete">
         <mat-option
-          *ngFor="let option of disasteVictimChildList$ | async"
+          *ngFor="let option of disasterVictimChildList$ | async"
           [value]="option"
         >
           {{ option }}
         </mat-option>
       </mat-autocomplete>
       <mat-error>
-        {{ disasteVictimChildValidationMessage }}
+        {{ disasterVictimChildValidationMessage }}
       </mat-error>
     </mat-form-field>
   </form>

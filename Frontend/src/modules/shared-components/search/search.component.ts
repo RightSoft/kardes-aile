@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SearchComponent {
   keyword: string;
-  label: string = 'Search...';
+  label: string = 'Ara...';
   onChange = new EventEmitter<string>();
   onSearch = new EventEmitter<string>();
   onChangeHandle() {

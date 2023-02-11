@@ -1,0 +1,19 @@
+<app-search
+  (onSearch)="onSearch.emit($event)"
+  class="align-self-center"
+></app-search>
+<mat-checkbox
+  [(ngModel)]="checked"
+  *ngIf="checkboxLabel"
+  class="align-self-baseline ms-2"
+>
+  {{ checkboxLabel }}
+</mat-checkbox>
+<button
+  mat-button
+  class="btn-ascendent p-3 align-self-baseline ms-auto"
+  (click)="handleNewButtonClick()"
+  *ngIf="onAddNew.observed || url"
+>
+  {{ buttonLabel }}
+</button>
