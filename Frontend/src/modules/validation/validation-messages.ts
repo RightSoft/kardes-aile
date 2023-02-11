@@ -1,4 +1,4 @@
-import { passwordRegEx } from '@constants/password-regex';
+import { passwordRegEx } from '@appModule/contants/password-regex';
 
 export const validationMessages: { [key: string]: string } = {
   required: 'Required.',
