@@ -1,0 +1,32 @@
+.login-layout{
+  background: #FCFCFD;
+  box-shadow: 0 16px 50px -6px rgba(26, 27, 30, 0.25);
+  border-radius: 32px !important;
+  width: 500px;
+}
+
+.login-button{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 6px;
+  background: #77B452;
+  border-radius: 12px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+}
+
+.login-title{
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 34px;
+  text-align: center;
+  letter-spacing: -0.01em;
+  color: #1A1B1E;
+}
