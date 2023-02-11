@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using KardesAile.AspNetCoreHost.Authentication;
+using KardesAile.AspNetCoreHost.Middlewares;
 using KardesAile.Business.Context;
 using KardesAile.Business.Implementations;
 using KardesAile.Business.Interfaces;
@@ -97,6 +98,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandler(appError => { appError.Run(GlobalExceptionManager.Handler); });
 
 if (app.Environment.IsDevelopment())
 {
