@@ -26,8 +26,8 @@ jobs:
           
           
       - run: |
-          docker build -f ./Backend/src/KardesAile.AspNetCoreHost/Dockerfile -t kardesaileregistry.azurecr.io/kardesaileregistry:${{ github.sha }} .
-          docker push kardesaileregistry.azurecr.io/kardesaileregistry:${{ github.sha }}    
+          docker build -f ./Backend/src/KardesAile.AspNetCoreHost/Dockerfile -t kardesaileregistry.azurecr.io/kardes-aile-image .
+          docker push kardesaileregistry.azurecr.io/kardes-aile-image
           
       - name: Lowercase the repo name and username
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
@@ -36,4 +36,4 @@ jobs:
         with:
           app-name: 'kardes-aile-backend'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: 'kardesaileregistry.azurecr.io/kardesaileregistry:${{ github.sha }}'
+          images: 'kardesaileregistry.azurecr.io/kardes-aile-image'
