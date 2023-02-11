@@ -3,11 +3,11 @@ using KardesAile.Database.Abstracts;
 
 namespace KardesAile.Database.Entities;
 
-public class Cocuk : BaseEntity
+public class Child : BaseEntity
 {
-    public string Ad { get; set; } = null!;
-    public DateTime DogumTarih { get; set; }
-    public Cinsiyet Cinsiyet { get; set; }
+    public string Name { get; set; } = null!;
+    public DateOnly BirthDate { get; set; }
+    public Genders Gender { get; set; }
 
     public Guid UserId { get; set; }
     public User? User { get; set; }

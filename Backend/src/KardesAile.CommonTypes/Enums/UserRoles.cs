@@ -3,7 +3,7 @@ namespace KardesAile.CommonTypes.Enums;
 public enum UserRoles
 {
     GlobalAdmin,
-    Gonullu,
-    KardesAile,
+    Supporter,
+    DisasterVictim,
     User
 }

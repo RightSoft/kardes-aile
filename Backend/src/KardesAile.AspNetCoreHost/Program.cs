@@ -20,6 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IAuthenticationBusiness, AuthenticationBusiness>();
+builder.Services.AddScoped<IAddressBusiness, AddressBusiness>();
+builder.Services.AddScoped<ISupporterBusiness, SupporterBusiness>();
+builder.Services.AddScoped<IChildBusiness, ChildBusiness>();
 
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IAuditColumnValuesGenerator, AuditColumnValuesGenerator>();
@@ -31,14 +34,14 @@ builder.Services.AddOptions<JwtOptions>()
     .BindConfiguration("Jwt")
     .ValidateDataAnnotations();
 
-builder.Services.PostConfigure<TokenValidationParameters>(options =>
+builder.Services.Configure<TokenValidationParameters>(options =>
     options.SetAuthenticationDefaults(builder.Configuration));
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer();
+    .AddJwtBearer(options => options.TokenValidationParameters.SetAuthenticationDefaults(builder.Configuration));
 
 builder.Services.AddAuthorization(options =>
 {
@@ -107,11 +110,14 @@ app.UseExceptionHandler(appError => { appError.Run(GlobalExceptionManager.Handle
 
 app.MapGet("/", () => "API");
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.ApplyMigrations();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
+app.UseCors();
+app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

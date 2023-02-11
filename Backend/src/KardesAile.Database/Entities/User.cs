@@ -7,7 +7,8 @@ public class User : BaseEntity
 {
     public User()
     {
-        Cocuklar = new HashSet<Cocuk>();
+        Children = new HashSet<Child>();
+        Supporters = new HashSet<Supporter>();
     }
     
     public UserStatuses Status { get; set; }
@@ -21,5 +22,6 @@ public class User : BaseEntity
     public string? Salt { get; set; }
     public UserRoles Role { get; set; }
 
-    public ICollection<Cocuk> Cocuklar { get; set; }
+    public ICollection<Child> Children { get; set; }
+    public ICollection<Supporter> Supporters { get; set; }
 }
