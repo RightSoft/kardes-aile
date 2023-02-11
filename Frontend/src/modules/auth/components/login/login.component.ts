@@ -20,7 +20,7 @@ import { first } from "rxjs";
 })
 export default class LoginComponent {
   form: UntypedFormGroup = new UntypedFormGroup({
-    email: new UntypedFormControl('', Validators.required),
+    email: new UntypedFormControl('', [Validators.email, Validators.required]),
     password: new UntypedFormControl('', Validators.required),
   });
 

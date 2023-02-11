@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import voluntarilyListRoutes from './voluntarily-list.routes';
+import moderatorRoutes from './moderator.routes';
 import { AuthenticationGuard } from "@appModule/guards/authentication.guard/authentication.guard";
 const layoutRoutes: Routes = [
   {
@@ -12,6 +13,7 @@ const layoutRoutes: Routes = [
         canActivate: [AuthenticationGuard]
       },
       ...voluntarilyListRoutes,
+      ...moderatorRoutes
     ],
   },
 ];

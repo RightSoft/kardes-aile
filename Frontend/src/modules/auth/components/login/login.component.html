@@ -4,9 +4,12 @@
     <form [formGroup]="form" class="mt-5">
       <mat-form-field class="d-block"  >
         <mat-label>E-Posta</mat-label>
-        <input type="email" matInput placeholder="Email" formControlName="email" autofocus/>
+        <input type="email" matInput placeholder="Email" formControlName="email" autofocus email="true"/>
         <mat-error *ngIf="form.hasError('email') && !form.hasError('required')">
           Please enter an email
+        </mat-error>
+        <mat-error *ngIf="form.hasError('email', 'email')">
+          Please enter a valid email
         </mat-error>
       </mat-form-field>
       <mat-form-field class="d-block">
@@ -16,7 +19,7 @@
           Please enter a password
         </mat-error>
       </mat-form-field>
-      <button mat-button class="w-100 btn-ascendent p-3 login-button mt-5"  (click)="login()">Giriş</button>
+      <button mat-button class="w-100 btn-ascendent p-3 login-button mt-5"  (click)="login()" [disabled]="form.invalid">Giriş</button>
     </form>
   </div>
 </div>
