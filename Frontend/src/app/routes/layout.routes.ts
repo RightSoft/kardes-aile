@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import voluntarilyRoutes from './voluntarily.routes';
+import voluntarilyListRoutes from './voluntarily-list.routes';
 const layoutRoutes: Routes = [
   {
     path: '',
@@ -13,7 +13,7 @@ const layoutRoutes: Routes = [
             '@matchListsModule/components/match-lists/match-lists.component'
           ),
       },
-      ...voluntarilyRoutes,
+      ...voluntarilyListRoutes,
     ],
   },
 ];

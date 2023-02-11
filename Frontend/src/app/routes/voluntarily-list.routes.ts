@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-const voluntarilyRoutes: Routes = [
+const voluntarilyListRoutes: Routes = [
   {
     path: 'voluntarily',
     loadComponent: () =>
@@ -15,4 +15,4 @@ const voluntarilyRoutes: Routes = [
       ),
   },
 ];
-export default voluntarilyRoutes;
+export default voluntarilyListRoutes;
