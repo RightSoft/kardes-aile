@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  kardesaile-db:
+    build:
+      context: ./
+      dockerfile: ./postgres.Dockerfile
+    container_name: 'kardesaile-db'
+    restart: always
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ~/.docker-conf/kardesaile/postgres:/var/lib/postgresql/data
+    networks:
+      - kardesaile-network
+      
+  kardesaile-backend:
+    build:
+      context: ./
+      dockerfile: ./KardesAile.AspNetCoreHost/Dockerfile
+    container_name: 'kardesaile-backend'
+    restart: always
+    ports:
+      - "5002:80"
+    depends_on:
+      kardesaile-db:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_Environment=Development
+      - ConnectionStrings__DbConnection=UserID=postgres;Password=postgres;Host=kardesaile-db;Port=5432;Database=postgres;Pooling=true;MinPoolSize=3;MaxPoolSize=50;ConnectionLifetime=0;
+    networks:
+      - kardesaile-network
+    
+networks:
+  kardesaile-network:
