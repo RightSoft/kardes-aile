@@ -1,0 +1,91 @@
+<h2 mat-dialog-title class="bg-ascendent">Yeni Eşleşme</h2>
+<mat-dialog-content class="mat-typography">
+  <form class="mt-3 row row-cols-lg-2" [formGroup]="addMatchForm">
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Gönüllü</mat-label>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="voluntarilyAutoComplete"
+        formControlName="voluntarily"
+      />
+      <mat-autocomplete #voluntarilyAutoComplete="matAutocomplete">
+        <mat-option
+          *ngFor="let option of voluntarilyList$ | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>
+        {{ voluntarilyValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Afetzede</mat-label>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="disasteVictimAutoComplete"
+        formControlName="disasteVictim"
+      />
+      <mat-autocomplete #disasteVictimAutoComplete="matAutocomplete">
+        <mat-option
+          *ngFor="let option of disasteVictimList$ | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>
+        {{ disasteVictimValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Gönüllü Ailenin Çocuğu</mat-label>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="voluntarilyChildAutoComplete"
+        formControlName="voluntarilyChild"
+      />
+      <mat-autocomplete #voluntarilyChildAutoComplete="matAutocomplete">
+        <mat-option
+          *ngFor="let option of voluntarilyChildList$ | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>
+        {{ voluntarilyChildValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Afetzede Ailenin Çocuğu</mat-label>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="disasteVictimChildAutoComplete"
+        formControlName="disasteVictimChild"
+      />
+      <mat-autocomplete #disasteVictimChildAutoComplete="matAutocomplete">
+        <mat-option
+          *ngFor="let option of disasteVictimChildList$ | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>
+        {{ disasteVictimChildValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close class="p-3">İptal</button>
+  <button mat-button class="btn-ascendent p-3" [mat-dialog-close]="true">
+    Kaydet
+  </button>
+</mat-dialog-actions>

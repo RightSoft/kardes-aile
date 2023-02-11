@@ -19,6 +19,7 @@ $main_color: #8bb752;
 }
 .bg-ascendent {
   background-color: $main_color;
+  color: $white !important;
 }
 .login-page {
   background-image: url("./assets/images/loogin-top.svg");

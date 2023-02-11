@@ -1,1 +1,16 @@
-<p>match-lists works!</p>
+<div class="d-flex">
+  <app-search
+    (onSearch)="onSearch($event)"
+    class="align-self-center"
+  ></app-search>
+  <mat-checkbox class="align-self-baseline ms-2"
+    >Bitmiş Eşleşmeleri Listele</mat-checkbox
+  >
+  <button
+    mat-button
+    class="btn-ascendent p-3 align-self-baseline ms-auto"
+    (click)="addNewMatch()"
+  >
+    Yeni Eşleşme
+  </button>
+</div>
