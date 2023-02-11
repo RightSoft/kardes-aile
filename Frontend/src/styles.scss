@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+
+$main_color: #8bb752;
+
+.mdc-button {
+  height: auto !important;
+  min-height: 36px;
+}
+
+.btn-ascendent {
+  background-color: $main_color !important;
+  color: var(--bs-white) !important;
+  &:disabled,
+  &[disabled],
+  &[disabled="true"] {
+    opacity: 0.5;
+  }
+}
+.bg-ascendent {
+  background-color: $main_color;
+}
+.login-page {
+  background-image: url("./assets/images/loogin-top.svg");
+  background-repeat: no-repeat;
+  background-position: right top;
+  .login-wrapper {
+    background-image: url("./assets/images/loogin-bottom.svg");
+    background-repeat: no-repeat;
+    background-position: left bottom;
+  }
+}

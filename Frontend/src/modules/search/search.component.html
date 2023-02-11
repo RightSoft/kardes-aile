@@ -1,0 +1,20 @@
+<mat-form-field>
+  <mat-label>
+    {{ label }}
+  </mat-label>
+  <input
+    type="text"
+    matInput
+    [(ngModel)]="keyword"
+    (ngModelChange)="onSearchHandle()"
+  />
+  <button
+    mat-mini-fab
+    matSuffix
+    class="me-2 ascendent-button shadow-none"
+    [disabled]="!keyword"
+    (click)="onSearchHandle()"
+  >
+    <mat-icon>filter_alt</mat-icon>
+  </button>
+</mat-form-field>

@@ -1,0 +1,33 @@
+<app-left-aside-header></app-left-aside-header>
+<div class="px-3">
+  <button
+    [routerLinkActiveOptions]="{
+      exact: true
+    }"
+    mat-stroked-button
+    class="border border-dark w-100 justify-content-start py-3"
+    routerLink="/"
+    routerLinkActive="text-bg-dark"
+  >
+    <span>Dashboard</span>
+    <mat-icon class="opacity-50">home</mat-icon>
+  </button>
+  <button
+    mat-stroked-button
+    class="border border-dark w-100 justify-content-start py-3 mt-3"
+    routerLink="organisations"
+    routerLinkActive="text-bg-dark"
+  >
+    Organisations
+    <mat-icon class="opacity-50">corporate_fare</mat-icon>
+  </button>
+  <button
+    mat-stroked-button
+    class="border border-dark w-100 justify-content-start py-3 mt-3"
+    routerLink="admins"
+    routerLinkActive="text-bg-dark"
+  >
+    Admins
+    <mat-icon class="opacity-50">admin_panel_settings</mat-icon>
+  </button>
+</div>
