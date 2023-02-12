@@ -4,13 +4,15 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
 COPY . .
-RUN dotnet restore "./Backend/src/KardesAile.AspNetCoreHost/KardesAile.AspNetCoreHost.csproj"
+RUN dotnet restore "KardesAile.AspNetCoreHost/KardesAile.AspNetCoreHost.csproj"
 COPY . .
-RUN dotnet build "./Backend/src/KardesAile.AspNetCoreHost/KardesAile.AspNetCoreHost.csproj" -c Release -o /app/build
+WORKDIR "/src/KardesAile.AspNetCoreHost"
+RUN dotnet build "KardesAile.AspNetCoreHost.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "./Backend/src/KardesAile.AspNetCoreHost/KardesAile.AspNetCoreHost.csproj" -c Release -o /app/publish
+RUN dotnet publish "KardesAile.AspNetCoreHost.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
