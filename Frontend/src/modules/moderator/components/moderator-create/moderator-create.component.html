@@ -1,0 +1,47 @@
+<form [formGroup]="form"
+      fxLayout="column"
+      fxLayoutAlign="stretch">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Full Name</mat-label>
+    <input matInput formControlName="fullName" type="text" autofocus required />
+    <mat-error *ngIf="form.hasError('required', 'fullName')">
+      Please enter the name and surname
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" required />
+    <mat-error *ngIf="form.hasError('required', 'email')">
+      Please enter the email address
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password" type="password" required />
+    <mat-error *ngIf="form.hasError('required', 'password')">
+      Please enter the password
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Re-Password</mat-label>
+    <input matInput formControlName="repassword" type="password" required />
+    <mat-error *ngIf="form.hasError('required', 'repassword')">
+      Please enter the password again
+    </mat-error>
+    <mat-error *ngIf="form.hasError('mustMatch', 'repassword')">
+      Passwords don't match
+    </mat-error>
+  </mat-form-field>
+
+  <div fxLayout="row"
+       fxLayoutAlign="end center"
+       fxLayoutGap="12px">
+    <button mat-raised-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" (click)="onSave()" [disabled]="form.invalid">Save</button>
+  </div>
+
+</form>
