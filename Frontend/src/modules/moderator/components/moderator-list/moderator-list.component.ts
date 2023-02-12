@@ -11,9 +11,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { PagedResultModel } from '@appModule/models/paged-result.model';
 import { SearchModeratorModel } from '@moderatorModule/models/search-moderator-model';
 import { AppConstants } from '@appModule/contants/app-constants';
-import { catchError, merge, of, startWith, switchMap, tap } from 'rxjs';
+import { catchError, filter, merge, of, startWith, switchMap, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NavigationService } from '@appModule/services/navigation.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '@sharedComponents/confirmation-dialog/components/confirmation-dialog.component';
+import { SnackbarService } from '@appModule/services/snackbar.service';
 
 @Component({
   selector: 'app-moderator-list',
@@ -24,7 +27,8 @@ import { NavigationService } from '@appModule/services/navigation.service';
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   templateUrl: './moderator-list.component.html',
   styleUrls: ['./moderator-list.component.scss']
@@ -50,9 +54,12 @@ export default class ModeratorListComponent
 
   constructor(
     private moderatorService: ModeratorService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private dialog: MatDialog,
+    private snackbarService: SnackbarService
   ) {
     super('Moderatör Listesi');
+    this.dataSource = [];
   }
 
   ngAfterViewInit() {
@@ -79,6 +86,31 @@ export default class ModeratorListComponent
 
   onDelete(data: SearchModeratorResult) {
     console.log('onDelete');
+
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        width: '300px',
+        data: {
+          title: 'Uyarı',
+          message: 'Moderatörü silmek istediğinize emin misiniz?'
+        }
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => {
+          return result;
+        }),
+        switchMap(() => this.moderatorService.delete(data.id)),
+        tap(() => this.snackbarService.show('Success', 'Successfully deleted')),
+        catchError((error) => {
+          return of(error);
+        })
+      )
+      .subscribe((data) => {
+        if (data && data.ok === false) {
+          this.snackbarService.show('Error', data.message);
+        }
+      });
   }
 
   override onSearch(keyword?: string) {
