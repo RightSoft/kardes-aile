@@ -19,7 +19,7 @@ public class DisasterVictimEntityConfiguration : ModifiableEntityConfigurationBa
         builder.HasOne(x => x.Country)
             .WithMany(x => x.DisasterVictims)
             .HasForeignKey(x => x.CountryId);
-        builder.Property(e => e.IdentityNumber).HasMaxLength(11).IsFixedLength();
+        builder.Property(e => e.IdentityNumber).HasMaxLength(11);
         builder.Property(x => x.IdentityNumberValidated).IsRequired();
 
         builder.HasOne(x => x.City)
