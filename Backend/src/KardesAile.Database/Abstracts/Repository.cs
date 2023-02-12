@@ -43,7 +43,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         EntitySet.RemoveRange(entityList);
     }
 
-    public async Task<bool> DeleteById(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteById(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await FindById(id, cancellationToken);
         if (entity == null) return false;
@@ -51,7 +51,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         return true;
     }
 
-    public ValueTask<T?> FindById(int id, CancellationToken cancellationToken = default)
+    public ValueTask<T?> FindById(Guid id, CancellationToken cancellationToken = default)
     {
         return EntitySet.FindAsync(new object[] {id}, cancellationToken);
     }

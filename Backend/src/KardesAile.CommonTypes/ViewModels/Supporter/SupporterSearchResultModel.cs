@@ -4,7 +4,8 @@ namespace KardesAile.CommonTypes.ViewModels.Supporter;
 
 public class SupporterSearchResultModel
 {
-    public Guid Id { get; set; }
+    public Guid SupporterId { get; set; }
+    public Guid UserId { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string? Phone { get; set; }

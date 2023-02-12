@@ -9,6 +9,6 @@ public interface IRepository<T> where T : class, IEntity
     void AddRange(IEnumerable<T> entityList);
     void Delete(T entity);
     void DeleteRange(IEnumerable<T> entityList);
-    Task<bool> DeleteById(int id, CancellationToken cancellationToken = default);
-    ValueTask<T?> FindById(int id, CancellationToken cancellationToken = default);
+    Task<bool> DeleteById(Guid id, CancellationToken cancellationToken = default);
+    ValueTask<T?> FindById(Guid id, CancellationToken cancellationToken = default);
 }

@@ -5,7 +5,7 @@ namespace KardesAile.CommonTypes.ViewModels.Supporter;
 
 public class UpdateSupporterModel
 {
-    [Required] public Guid? Id { get; set; }
+    [Required] public Guid? UserId { get; set; }
     [Required] public string? FirstName { get; set; }
     [Required] public string? LastName { get; set; }
     [Phone] [Required] public string? Phone { get; set; }

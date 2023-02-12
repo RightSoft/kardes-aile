@@ -59,7 +59,7 @@ public class SupporterBusiness : ISupporterBusiness
             .AsQueryable
             .Include(p => p.User)
             .AsSplitQuery()
-            .FirstOrDefaultAsync(p => p.UserId == model.Id);
+            .FirstOrDefaultAsync(p => p.UserId == model.UserId);
 
         if (supporter == null)
         {
@@ -109,8 +109,7 @@ public class SupporterBusiness : ISupporterBusiness
 
         if (model.Page == 1)
         {
-            result.TotalCount = await _unitOfWork.Supporter
-                .AsQueryable
+            result.TotalCount = await query
                 .CountAsync();
 
             if (result.TotalCount == 0)
@@ -128,7 +127,8 @@ public class SupporterBusiness : ISupporterBusiness
             .Take(model.PageSize!.Value)
             .Select(p=> new SupporterSearchResultModel
             {
-                Id = p.UserId,
+                UserId = p.UserId,
+                SupporterId = p.Id,
                 FirstName = p.User!.FirstName,
                 LastName = p.User!.LastName,
                 Phone = p.User!.Phone,
