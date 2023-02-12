@@ -1,6 +1,7 @@
 using KardesAile.Business.Interfaces;
 using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.ViewModels.Child;
+using KardesAile.CommonTypes.ViewModels.Error;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,10 @@ public class ChildController : ControllerBase
     
     [HttpGet("{userId:guid:required}")]
     [Authorize(Roles = nameof(UserRoles.User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ChildResultModel>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> List([FromRoute] Guid userId)
     {
         return Ok(await _childBusiness.List(userId));
@@ -27,6 +32,10 @@ public class ChildController : ControllerBase
 
     [HttpPost("{userId:guid:required}")]
     [Authorize(Roles = nameof(UserRoles.User))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> Add([FromRoute] Guid userId, [FromBody] CreateChildModel model)
     {
         await _childBusiness.Add(userId, model);
@@ -35,6 +44,10 @@ public class ChildController : ControllerBase
 
     [HttpDelete]
     [Authorize(Roles = nameof(UserRoles.User))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> Remove([FromQuery] Guid id)
     {
         await _childBusiness.Remove(id);
