@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '@appModule/services/authentication.service';
 import { NavigationService } from '@appModule/services/navigation.service';
-import { AuthenticationRequest } from '@appModule/models/authentication-request';
+import { AuthenticationRequest } from '@appModule/models/auth/authentication-request';
 import { first } from 'rxjs';
 
 @Component({

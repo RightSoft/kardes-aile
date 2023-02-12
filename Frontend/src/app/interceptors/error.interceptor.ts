@@ -7,9 +7,9 @@ export function errorInterceptor(
   req: HttpRequest<any>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> {
+  const authenticationService = inject(AuthenticationService);
   return next(req).pipe(
     catchError((error) => {
-      const authenticationService = inject(AuthenticationService);
       if (error.status === 401) {
         authenticationService.logout();
         location.reload();

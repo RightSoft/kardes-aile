@@ -151,6 +151,7 @@ public class ModeratorBusiness : IModeratorBusiness
                     Id = moderator.Id,
                     FullName = moderator.FullName,
                     Email = moderator.Email,
+                    CreatedAt = moderator.CreatedAt,
                     IsDeleted = moderator.IsDeleted
                 })
                 .ToListAsync();
