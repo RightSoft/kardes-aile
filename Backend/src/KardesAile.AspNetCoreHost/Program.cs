@@ -112,9 +112,11 @@ app.UseExceptionHandler(appError => { appError.Run(GlobalExceptionManager.Handle
 
 app.MapGet("/", () => "API");
 
-app.ApplyMigrations();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+if (app.Environment.IsDevelopment()) 
+    app.ApplyMigrations();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 app.UseStaticFiles();
