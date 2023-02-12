@@ -15,8 +15,11 @@ public class MatchEntityConfiguration : ModifiableEntityConfigurationBase<Match>
             .IsRequired()
             .HasForeignKey<Match>(x => x.SupporterId);
 
-        // TODO: Add match->victim relation here
-        
+        builder.HasOne(x => x.Victim)
+            .WithOne(x => x.Match)
+            .IsRequired()
+            .HasForeignKey<Match>(x => x.VictimId);
+
         builder.HasOne(x => x.VictimChild)
             .WithOne(x => x.VictimMatch)
             .HasForeignKey<Match>(x => x.VictimChildId);

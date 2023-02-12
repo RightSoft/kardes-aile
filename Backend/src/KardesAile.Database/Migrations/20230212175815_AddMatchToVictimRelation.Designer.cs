@@ -3,6 +3,7 @@ using System;
 using KardesAile.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KardesAile.Database.Migrations
 {
     [DbContext(typeof(KardesAileDbContext))]
-    partial class KardesAileDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230212175815_AddMatchToVictimRelation")]
+    partial class AddMatchToVictimRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

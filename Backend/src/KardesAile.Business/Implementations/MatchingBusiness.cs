@@ -98,15 +98,15 @@ public class MatchingBusiness : IMatchingBusiness
         var list = await query
             .Include(p => p.Supporter!.User)
             .Include(p => p.SupporterChild)
-            // TODO: Add victim here
+            .Include(p=>p.Victim!.User)
             .Include(p => p.VictimChild)
             .Skip((model.Page!.Value - 1) * model.PageSize!.Value)
             .Take(model.PageSize!.Value)
             .Select(p => new MatchResultModel
             {
                 VictimId = p.VictimId,
-                VictimFirstName = "", // TODO: Add victim name
-                VictimLastName = "",// TODO: Add victim name
+                VictimFirstName = p.Victim!.User!.FirstName,
+                VictimLastName = p.Victim!.User!.LastName,
                 SupporterId = p.SupporterId,
                 SupporterFirstName = p.Supporter!.User!.FirstName,
                 SupporterLastName = p.Supporter!.User!.LastName,
