@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import voluntarilyListRoutes from './voluntarily-list.routes';
 import moderatorRoutes from './moderator.routes';
 import { AuthenticationGuard } from '@appModule/guards/authentication.guard/authentication.guard';
+import disasterVictimListRoutes from './disaster-victim-list.routes';
 const layoutRoutes: Routes = [
   {
     path: '',
@@ -17,7 +18,8 @@ const layoutRoutes: Routes = [
         canActivate: [AuthenticationGuard]
       },
       ...voluntarilyListRoutes,
-      ...moderatorRoutes
+      ...moderatorRoutes,
+      ...disasterVictimListRoutes
     ]
   }
 ];

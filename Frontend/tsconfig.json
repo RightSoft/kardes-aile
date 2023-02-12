@@ -15,6 +15,7 @@
       "@authModule/*": ["src/modules/auth/*"],
       "@matchListsModule/*": ["src/modules/match-lists/*"],
       "@voluntarilyListsModule/*": ["src/modules/voluntarily-lists/*"],
+      "@disasterVictimListsModule/*": ["src/modules/disaster-victim-list/*"],
       "@moderatorModule/*": ["src/modules/moderator/*"]
     },
     "outDir": "./dist/out-tsc",

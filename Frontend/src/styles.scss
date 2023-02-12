@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import "node_modules/bootstrap/scss/bootstrap.scss";
-@import "theme.scss";
+@import './bootstrap/scss/bootstrap.scss';
+@import 'theme.scss';
 
 $main_color: #8bb752;
 
@@ -14,7 +14,7 @@ $main_color: #8bb752;
   color: var(--bs-white) !important;
   &:disabled,
   &[disabled],
-  &[disabled="true"] {
+  &[disabled='true'] {
     opacity: 0.5;
   }
 }
@@ -23,19 +23,19 @@ $main_color: #8bb752;
   color: $white !important;
 }
 .login-page {
-  background-image: url("./assets/images/loogin-top.svg");
+  background-image: url('./assets/images/loogin-top.svg');
   background-repeat: no-repeat;
   background-position: right top;
   margin-right: calc(var(--bs-gutter-x) * -0.5);
   margin-left: calc(var(--bs-gutter-x) * -0.5);
   .login-wrapper {
-    background-image: url("./assets/images/loogin-bottom.svg");
+    background-image: url('./assets/images/loogin-bottom.svg');
     background-repeat: no-repeat;
     background-position: left bottom;
   }
 }
 
-.padding-l-r-0{
+.padding-l-r-0 {
   padding-left: 0;
   padding-right: 0;
 }

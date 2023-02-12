@@ -1,1 +1,7 @@
-<p>disaster-victim-list works!</p>
+<app-list-tool-box
+  buttonLabel="Yeni Afetzede"
+  checkboxLabel="Silinmiş Afetzedeleri Listele"
+  url="add"
+  (onSearch)="onSearch($event)"
+  (onCheckboxChange)="onCheckboxChange($event)"
+></app-list-tool-box>
