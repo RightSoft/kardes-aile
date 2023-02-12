@@ -147,8 +147,8 @@
         </div>
 </mat-card-content>
 <mat-card-actions align="end" class="p-3">
-  <button mat-raised-button>Iptal</button>
-  <button mat-raised-button class="btn-ascendent"
+  <button mat-raised-button (click)="backToList()">Iptal</button>
+  <button mat-raised-button class="btn-ascendent" type="submit"
   ><mat-icon>save</mat-icon>Kaydet</button>
 </mat-card-actions>
 </mat-card>

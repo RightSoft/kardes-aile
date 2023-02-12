@@ -5,6 +5,7 @@ using KardesAile.CommonTypes.ViewModels;
 using KardesAile.CommonTypes.ViewModels.Supporter;
 using KardesAile.Database.Abstracts;
 using KardesAile.Database.Entities;
+using KardesAile.Database.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace KardesAile.Business.Implementations;
@@ -111,27 +112,12 @@ public class SupporterBusiness : ISupporterBusiness
                         p.Country.Name.Contains(model.Keyword) ||
                         p.Address.Contains(model.Keyword));
         
-        var result = new PagedResultModel<SupporterSearchResultModel>();
-
-        if (model.Page == 1)
-        {
-            result.TotalCount = await query
-                .CountAsync();
-
-            if (result.TotalCount == 0)
-            {
-                return result;
-            }
-        }
-        
-        var list = await query
-            .Include(p=>p.City)
-            .Include(p=>p.Country)
-            .Include(p=>p.User)
+        var result = await query
+            .Include(p => p.City)
+            .Include(p => p.Country)
+            .Include(p => p.User)
             .AsNoTracking()
-            .Skip((model.Page!.Value - 1) * model.PageSize!.Value)
-            .Take(model.PageSize!.Value)
-            .Select(p=> new SupporterSearchResultModel
+            .Select(p => new SupporterSearchResultModel
             {
                 UserId = p.UserId,
                 SupporterId = p.Id,
@@ -146,9 +132,8 @@ public class SupporterBusiness : ISupporterBusiness
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt
             })
-            .ToListAsync();
+            .ToPagedListAsync(model);
 
-        result.List = list;
         return result;
     }
 }
