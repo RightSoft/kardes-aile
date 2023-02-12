@@ -7,30 +7,25 @@
 ></app-list-tool-box>
 
 <div class="mat-elevation-z8">
-  <mat-table [dataSource]="dataSource">
+  <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSorting($event)" matSortActive="createdAt" matSortDirection="desc" matSortDisableClear>
     <ng-container matColumnDef="fullName">
-      <mat-header-cell *matHeaderCellDef> GONULLU </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> GONULLU </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="cityCountyName">
-      <mat-header-cell *matHeaderCellDef> SEHIR/ULKE </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> SEHIR/ULKE </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.cityName}}/{{element.countryName}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="matchingStatus">
-      <mat-header-cell *matHeaderCellDef> ESLESME DURUMU </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> ESLESME DURUMU </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.matchingStatus}} </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="address">
-      <mat-header-cell *matHeaderCellDef> ACIK ADRESI </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
-    </ng-container>
-
     <ng-container matColumnDef="createdAt">
-      <mat-header-cell *matHeaderCellDef> EKLENME TARIHI </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.createdAt}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> EKLENME TARIHI </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy HH:mm'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">

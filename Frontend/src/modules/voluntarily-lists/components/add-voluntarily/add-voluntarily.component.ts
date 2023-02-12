@@ -40,8 +40,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
       phone: this.formBuilder.control('', phoneValidator),
     }, [atLeastOne(Validators.required, ['email','phone'])]),
     address: this.formBuilder.control(''),
-    countryId: this.formBuilder.control(''),
-    cityId: this.formBuilder.control('')
+    countryId: this.formBuilder.control(null),
+    cityId: this.formBuilder.control(null)
   });
   constructor(private voluntarilyService: VoluntarilyService, private navigationService: NavigationService) {
     super('Gönüllü Kayıt');
@@ -84,5 +84,9 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
       });
     }
 
+  }
+
+  backToList(){
+    this.navigationService.navigate('/voluntarily');
   }
 }

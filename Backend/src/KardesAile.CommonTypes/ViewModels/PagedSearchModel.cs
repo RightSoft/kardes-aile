@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using KardesAile.CommonTypes.Enums;
 
 namespace KardesAile.CommonTypes.ViewModels;
 
@@ -10,4 +11,6 @@ public class PagedSearchModel
     
     [Required]
     public int? PageSize { get; set; }
+    
+    public List<SortModel>? SortModels { get; set; }
 }

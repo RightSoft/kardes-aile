@@ -5,6 +5,7 @@ using KardesAile.CommonTypes.ViewModels;
 using KardesAile.CommonTypes.ViewModels.DisasterVictim;
 using KardesAile.Database.Abstracts;
 using KardesAile.Database.Entities;
+using KardesAile.Database.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace KardesAile.Business.Implementations;
@@ -122,28 +123,12 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
             .Where(p => model.IncludeDeleted ||
                         p.User!.Status == UserStatuses.Active || p.User.Status == UserStatuses.Suspended);
 
-        var result = new PagedResultModel<DisasterVictimSearchResultModel>();
-
-        if (model.Page == 1)
-        {
-            result.TotalCount = await _unitOfWork.DisasterVictim
-                .AsQueryable
-                .CountAsync();
-
-            if (result.TotalCount == 0)
-            {
-                return result;
-            }
-        }
-
-        var list = await query
+        var result = await query
             .Include(p => p.City)
             .Include(p => p.TemporaryCity)
             .Include(p => p.Country)
             .Include(p => p.User)
             .AsNoTracking()
-            .Skip((model.Page!.Value - 1) * model.PageSize!.Value)
-            .Take(model.PageSize!.Value)
             .Select(p => new DisasterVictimSearchResultModel
             {
                 Id = p.UserId,
@@ -165,9 +150,8 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt
             })
-            .ToListAsync();
+            .ToPagedListAsync(model);
 
-        result.List = list;
         return result;
     }
 }
