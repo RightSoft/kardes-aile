@@ -6,6 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './add-voluntarily.component.html',
-  styleUrls: ['./add-voluntarily.component.scss'],
+  styleUrls: ['./add-voluntarily.component.scss']
 })
 export default class AddVoluntarilyComponent {}

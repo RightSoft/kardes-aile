@@ -13,9 +13,9 @@ import { LeftAsideHeaderComponent } from '../left-aside-header/left-aside-header
     MatIconModule,
     MatButtonModule,
     RouterModule,
-    LeftAsideHeaderComponent,
+    LeftAsideHeaderComponent
   ],
   templateUrl: './left-aside.component.html',
-  styleUrls: ['./left-aside.component.scss'],
+  styleUrls: ['./left-aside.component.scss']
 })
 export class LeftAsideComponent {}

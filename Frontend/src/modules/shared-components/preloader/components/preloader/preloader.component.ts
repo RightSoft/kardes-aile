@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './preloader.component.html',
-  styleUrls: ['./preloader.component.scss'],
+  styleUrls: ['./preloader.component.scss']
 })
 export class PreloaderComponent {
   private appService = inject(AppService);

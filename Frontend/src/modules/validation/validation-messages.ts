@@ -5,7 +5,7 @@ export const validationMessages: { [key: string]: string } = {
   email: 'Enter a valid e-mail address.',
   phone: 'Enter a valid phone number.',
   url: 'Enter a valid URL.',
-  confirmPassword: 'Passwords are not the same.',
+  confirmPassword: 'Passwords are not the same.'
 };
 export const validationMessagesFunctions = {
   minLength: (length: number) => `Can be at least ${length} characters.`,
@@ -19,5 +19,5 @@ export const validationMessagesFunctions = {
       default:
         return null;
     }
-  },
+  }
 };

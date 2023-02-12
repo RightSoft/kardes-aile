@@ -14,20 +14,20 @@ import { ActivatedRoute, Router } from '@angular/router';
     SearchComponent,
     MatCheckboxModule,
     FormsModule,
-    MatButtonModule,
+    MatButtonModule
   ],
   templateUrl: './list-tool-box.component.html',
   styleUrls: ['./list-tool-box.component.scss'],
   outputs: ['onSearch', 'onCheckboxChange', 'onAddNew'],
   inputs: ['buttonLabel', 'checkboxLabel', 'url'],
   host: {
-    class: 'd-flex',
-  },
+    class: 'd-flex'
+  }
 })
 export class ListToolBoxComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  buttonLabel: string = 'Yeni Ekle';
+  buttonLabel = 'Yeni Ekle';
   checkboxLabel: string;
   url: string;
   private _checked: boolean;
@@ -44,7 +44,7 @@ export class ListToolBoxComponent {
   handleNewButtonClick() {
     if (this.url) {
       this.router.navigate([this.url], {
-        relativeTo: this.activatedRoute,
+        relativeTo: this.activatedRoute
       });
     }
     if (this.onAddNew.observed) {

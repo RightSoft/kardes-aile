@@ -15,16 +15,16 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatButtonModule,
+    MatButtonModule
   ],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   outputs: ['onChange', 'onSearch'],
-  inputs: ['label'],
+  inputs: ['label']
 })
 export class SearchComponent {
   keyword: string;
-  label: string = 'Ara...';
+  label = 'Ara...';
   onChange = new EventEmitter<string>();
   onSearch = new EventEmitter<string>();
   onChangeHandle() {

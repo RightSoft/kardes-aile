@@ -3,7 +3,9 @@ const moderatorRoutes: Routes = [
   {
     path: 'moderator',
     loadComponent: () =>
-      import('@moderatorModule/components/moderator-list/moderator-list.component'),
-  },
+      import(
+        '@moderatorModule/components/moderator-list/moderator-list.component'
+      )
+  }
 ];
 export default moderatorRoutes;

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import BaseListComponent from "@appModule/base-classes/base-list-component.abstract.class";
+import BaseListComponent from '@appModule/base-classes/base-list-component.abstract.class';
 
 @Component({
   selector: 'app-moderator-list',

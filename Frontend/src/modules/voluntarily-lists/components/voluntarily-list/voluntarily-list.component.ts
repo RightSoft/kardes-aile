@@ -8,7 +8,7 @@ import BaseListComponent from '@appModule/base-classes/base-list-component.abstr
   standalone: true,
   imports: [CommonModule, ListToolBoxComponent],
   templateUrl: './voluntarily-list.component.html',
-  styleUrls: ['./voluntarily-list.component.scss'],
+  styleUrls: ['./voluntarily-list.component.scss']
 })
 export default class VoluntarilyListComponent extends BaseListComponent {
   constructor() {

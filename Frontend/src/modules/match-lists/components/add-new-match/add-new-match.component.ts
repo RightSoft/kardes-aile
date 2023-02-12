@@ -19,10 +19,10 @@ import { getValidationMessage } from '@validationModule/get-validation-message';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './add-new-match.component.html',
-  styleUrls: ['./add-new-match.component.scss'],
+  styleUrls: ['./add-new-match.component.scss']
 })
 export class AddNewMatchComponent {
   voluntarilyList$: Observable<any[]>;
@@ -34,7 +34,7 @@ export class AddNewMatchComponent {
     voluntarily: this.formBuilder.control('', Validators.required),
     disasterVictim: this.formBuilder.control('', Validators.required),
     voluntarilyChild: this.formBuilder.control('', Validators.required),
-    disasterVictimChild: this.formBuilder.control('', Validators.required),
+    disasterVictimChild: this.formBuilder.control('', Validators.required)
   });
   constructor() {}
   public get voluntarilyValidationMessage(): string {

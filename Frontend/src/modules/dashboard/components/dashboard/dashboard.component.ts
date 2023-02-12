@@ -7,10 +7,10 @@ import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class'
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: ['./dashboard.component.scss']
 })
 export default class DashboardComponent extends AddPageTitle {
-constructor(){
-  super("Anasayfa")
-}
+  constructor() {
+    super('Anasayfa');
+  }
 }

@@ -7,7 +7,7 @@ export const phoneValidator = (control: AbstractControl): ValidationErrors => {
     const matchValue = String(value).match(phoneRegex);
     if (!matchValue) {
       return {
-        phone: true,
+        phone: true
       };
     }
   }

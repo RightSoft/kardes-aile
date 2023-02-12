@@ -1,7 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 import {
   validationMessages,
-  validationMessagesFunctions,
+  validationMessagesFunctions
 } from './validation-messages';
 
 export const getValidationMessage = (control: AbstractControl) => {

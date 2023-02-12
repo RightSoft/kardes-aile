@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule]
 })
 export class AppComponent {
   title = 'kardes_aile';
