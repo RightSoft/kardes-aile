@@ -8,6 +8,4 @@ import { CommonModule } from '@angular/common';
   templateUrl: './disaster-victim-list.component.html',
   styleUrls: ['./disaster-victim-list.component.scss']
 })
-export class DisasterVictimListComponent {
-
-}
+export class DisasterVictimListComponent {}

@@ -13,9 +13,9 @@ import { PreloaderComponent } from '@sharedComponents/preloader/components/prelo
     RouterModule,
     LeftAsideComponent,
     AppHeaderComponent,
-    PreloaderComponent,
+    PreloaderComponent
   ],
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  styleUrls: ['./layout.component.scss']
 })
 export default class LayoutComponent {}

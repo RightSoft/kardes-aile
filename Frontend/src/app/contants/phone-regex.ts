@@ -1,1 +1,1 @@
-export const phoneRegex: RegExp = /^\d+$/;
+export const phoneRegex = /^\d+$/;

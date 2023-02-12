@@ -10,18 +10,20 @@ export class SnackbarService {
 
   constructor(
     private readonly snackBar: MatSnackBar,
-    private readonly zone: NgZone) {
-  }
+    private readonly zone: NgZone
+  ) {}
 
   show(title: string, text: string) {
-    const panelClass = 'success' ? this.snackBarSuccessStyle : this.snackBarErrorStyle;
+    const panelClass = 'success'
+      ? this.snackBarSuccessStyle
+      : this.snackBarErrorStyle;
 
     this.zone.run(() => {
       const snackBar = this.snackBar.open(text, null, {
         panelClass: panelClass,
         verticalPosition: 'bottom',
         horizontalPosition: 'center',
-        duration: 3000,
+        duration: 3000
       });
 
       snackBar.onAction().subscribe(() => {

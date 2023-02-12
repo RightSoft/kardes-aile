@@ -1,0 +1,20 @@
+@use '@angular/material' as mat;
+
+$primary-palette: mat.define-palette(mat.$green-palette);
+$accent-palette: mat.define-palette(mat.$grey-palette);
+
+$typography: mat.define-typography-config(
+  $font-family: 'Inter'
+);
+
+$theme: mat.define-light-theme((
+ color: (
+   primary: $primary-palette,
+   accent: $accent-palette,
+ ),
+  typography: $typography,
+));
+
+@include mat.core-theme($theme);
+@include mat.all-component-themes($theme);
+@include mat.all-component-typographies($typography);

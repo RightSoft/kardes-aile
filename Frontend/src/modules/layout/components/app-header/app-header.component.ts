@@ -9,8 +9,8 @@ import { AppService } from '@appModule/business/app.service';
   templateUrl: './app-header.component.html',
   styleUrls: ['./app-header.component.scss'],
   host: {
-    class: 'd-block border-bottom mb-3',
-  },
+    class: 'd-block border-bottom mb-3'
+  }
 })
 export class AppHeaderComponent {
   private appService = inject(AppService);

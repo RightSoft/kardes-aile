@@ -38,5 +38,5 @@ export const httpErrorMessages = {
   507: '507 - WEBDAV - Sunucu depolama hatası.',
   508: '508 - WEBDAV - Sunucu sonsuz döngüye girdi.',
   510: '510 - WEBDAV - Sunucu uzantıyı desteklemiyor.',
-  511: '511 - Ağ kimlik doğrulaması gerekiyor.',
+  511: '511 - Ağ kimlik doğrulaması gerekiyor.'
 };

@@ -5,12 +5,12 @@ export const confirmPassword = (form: FormGroup): ValidationErrors => {
   const password = form.get('password').value;
   const rePassword = rePasswordControl.value;
   const error = {
-    confirmPassword: true,
+    confirmPassword: true
   };
   if (password !== rePassword) {
     rePasswordControl.setErrors({
       ...error,
-      ...rePasswordControl.errors,
+      ...rePasswordControl.errors
     });
     return error;
   }

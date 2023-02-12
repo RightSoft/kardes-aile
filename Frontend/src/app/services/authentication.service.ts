@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-import {BehaviorSubject, Observable} from 'rxjs';
-import { AuthenticationResponse } from "@appModule/models/authentication-response";
-import { AuthenticationRequest } from "@appModule/models/authentication-request";
-import { NavigationService } from "@appModule/services/navigation.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthenticationResponse } from '@appModule/models/authentication-response';
+import { AuthenticationRequest } from '@appModule/models/authentication-request';
+import { NavigationService } from '@appModule/services/navigation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,13 @@ export class AuthenticationService {
   private readonly authenticationSubject: BehaviorSubject<AuthenticationResponse>;
   public readonly authentication: Observable<AuthenticationResponse>;
 
-  constructor(private httpClient: HttpClient, private navigationService : NavigationService) {
+  constructor(
+    private httpClient: HttpClient,
+    private navigationService: NavigationService
+  ) {
     this.authenticationSubject = new BehaviorSubject<AuthenticationResponse>(
-      JSON.parse(localStorage.getItem(this.storageKey)));
+      JSON.parse(localStorage.getItem(this.storageKey))
+    );
     this.authentication = this.authenticationSubject.asObservable();
   }
 
@@ -25,15 +29,17 @@ export class AuthenticationService {
   }
 
   public login(model: AuthenticationRequest) {
-    return this.httpClient.post<AuthenticationResponse>("api/authentication/authenticate", model)
-      .pipe(map(result => {
+    return this.httpClient
+      .post<AuthenticationResponse>('api/authentication/authenticate', model)
+      .pipe(
+        map((result) => {
           if (result && result.bearer) {
             localStorage.setItem(this.storageKey, JSON.stringify(result));
             this.authenticationSubject.next(result);
           }
           return result;
-        }
-      ));
+        })
+      );
   }
 
   public logout() {

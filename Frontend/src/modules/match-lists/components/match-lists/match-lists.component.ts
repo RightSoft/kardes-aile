@@ -11,7 +11,7 @@ import { ListToolBoxComponent } from '@sharedComponents/list-tool-box/list-tool-
   standalone: true,
   imports: [CommonModule, MatDialogModule, ListToolBoxComponent],
   templateUrl: './match-lists.component.html',
-  styleUrls: ['./match-lists.component.scss'],
+  styleUrls: ['./match-lists.component.scss']
 })
 export default class MatchListsComponent extends BaseListComponent {
   private dialog = inject(MatDialog);

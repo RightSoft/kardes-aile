@@ -7,7 +7,7 @@ export const emailValidator = (control: AbstractControl): ValidationErrors => {
     const matchValue = String(value).match(emailRegEx);
     if (!matchValue) {
       return {
-        email: true,
+        email: true
       };
     }
   }

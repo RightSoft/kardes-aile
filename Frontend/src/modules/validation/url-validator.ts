@@ -7,7 +7,7 @@ export const urlValidator = (control: AbstractControl): ValidationErrors => {
     const matchValue = String(value).match(urlRegex);
     if (!matchValue) {
       return {
-        url: true,
+        url: true
       };
     }
   }
