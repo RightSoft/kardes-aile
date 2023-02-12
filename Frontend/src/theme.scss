@@ -5,21 +5,29 @@ $accent-palette: mat.define-palette(mat.$grey-palette);
 
 $typography: mat.define-typography-config(
   $font-family: 'Inter',
-  $headline-5: mat.define-typography-level(40px, 52px, 700, $letter-spacing: -0.01em),
-  $headline-6: mat.define-typography-level(28px, 34px, 600, $letter-spacing: -0.01em),
-  $body-1: mat.define-typography-level(15px, 20px, 400, $letter-spacing: -0.01em),
-  $body-2: mat.define-typography-level(13px, 20px, 600, $letter-spacing: -0.01em),
-  $caption: mat.define-typography-level(24px, 32px, 400, $letter-spacing: -0.01em),
-  $button: mat.define-typography-level(17px, 322px, 500, $letter-spacing: -0.01em),
+  $headline-5:
+    mat.define-typography-level(40px, 52px, 700, $letter-spacing: -0.01em),
+  $headline-6:
+    mat.define-typography-level(28px, 34px, 600, $letter-spacing: -0.01em),
+  $body-1:
+    mat.define-typography-level(15px, 20px, 400, $letter-spacing: -0.01em),
+  $body-2:
+    mat.define-typography-level(13px, 20px, 600, $letter-spacing: -0.01em),
+  $caption:
+    mat.define-typography-level(24px, 32px, 400, $letter-spacing: -0.01em),
+  $button:
+    mat.define-typography-level(17px, 322px, 500, $letter-spacing: -0.01em)
 );
 
-$theme: mat.define-light-theme((
- color: (
-   primary: $primary-palette,
-   accent: $accent-palette,
- ),
-  typography: $typography,
-));
+$theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary-palette,
+      accent: $accent-palette
+    ),
+    typography: $typography
+  )
+);
 
 @include mat.core-theme($theme);
 @include mat.all-component-themes($theme);
