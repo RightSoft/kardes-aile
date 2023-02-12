@@ -25,6 +25,8 @@ $main_color: #8bb752;
   background-image: url("./assets/images/loogin-top.svg");
   background-repeat: no-repeat;
   background-position: right top;
+  margin-right: calc(var(--bs-gutter-x) * -0.5);
+  margin-left: calc(var(--bs-gutter-x) * -0.5);
   .login-wrapper {
     background-image: url("./assets/images/loogin-bottom.svg");
     background-repeat: no-repeat;
