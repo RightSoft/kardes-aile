@@ -1,12 +1,5 @@
 <form [formGroup]="form" class="col row row-cols-2">
   <mat-form-field class="col">
-    <mat-label>TCKN</mat-label>
-    <input type="number" matInput formControlName="tckn" />
-    <mat-error>
-      {{ tcknValidationMessage }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
     <mat-label>Ad Soyad</mat-label>
     <input type="text" matInput formControlName="fullName" />
     <mat-error>
@@ -14,7 +7,14 @@
     </mat-error>
   </mat-form-field>
   <mat-form-field class="col">
-    <mat-label>e-Posta</mat-label>
+    <mat-label>TCKN</mat-label>
+    <input type="number" matInput formControlName="tckn" />
+    <mat-error>
+      {{ tcknValidationMessage }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>E-Posta</mat-label>
     <input type="email" matInput formControlName="email" />
     <mat-error>{{ emailValidationMessage }}</mat-error>
   </mat-form-field>
@@ -74,7 +74,7 @@
   <mat-form-field class="col">
     <mat-label>Resim Yükle...</mat-label>
     <input #fileInput type="file" accept=".jpg, .png, .jpeg" class="d-none" />
-    <input type="text" matInput formControlName="picture" />
+    <input matInput type="text" class="d-none" />
     <button
       matSuffix
       mat-stroked-button
@@ -85,5 +85,62 @@
     </button>
     <mat-error>{{ pictureValidationMessage }}</mat-error>
   </mat-form-field>
+  <div class="col"></div>
+  <div class="col row row-cols-1">
+    <div class="col">
+      <input type="checkbox" formControlName="userValidated" />
+      <label class="">Kullanici dogrulandi</label>
+    </div>
+    <div class="col">
+      <input type="checkbox" formControlName="emailValidated" />
+      <label class="">E-posta dogrulandi</label>
+    </div>
+    <div class="col">
+      <input type="checkbox" formControlName="ssnValidated" />
+      <label class="">Kimlik no dogrulandi</label>
+    </div>
+    <div class="col">
+      <input type="checkbox" formControlName="addressValidated" />
+      <label class="">Adres dogrulandi</label>
+    </div>
+  </div>
 </form>
-<div class="col"></div>
+<div class="col">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="">Cocuk Listesi</div>
+    <button mat-button class="p-3" (click)="showAddChildDialog()">Cocuk Ekle</button>
+  </div>
+  <table mat-table [dataSource]="childrens" class="mat-elevation-z0">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> AD SOYAD </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="birthday">
+      <th mat-header-cell *matHeaderCellDef> YAS </th>
+      <td mat-cell *matCellDef="let element"> {{element.birthday}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="gender">
+      <th mat-header-cell *matHeaderCellDef> CINSIYET </th>
+      <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> EYLEM </th>
+      <td mat-cell *matCellDef="let element"> </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+</div>

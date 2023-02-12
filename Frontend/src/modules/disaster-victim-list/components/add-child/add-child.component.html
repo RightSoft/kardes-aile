@@ -1,0 +1,43 @@
+<h2 mat-dialog-title class="bg-ascendent">Cocuk Kayit</h2>
+<mat-dialog-content class="mat-typography">
+  <form class="mt-3 row row-cols-1" [formGroup]="addChildForm">
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Ad Soyad</mat-label>
+      <input
+        type="text"
+        matInput
+        formControlName="name"
+      />
+      <mat-error>
+        {{ nameValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Dogum Tarihi</mat-label>
+      <input
+        type="date"
+        matInput
+        [formControl]="addChildForm.controls.birthday"
+      />
+      <mat-error>
+        {{ nameValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Cinsiyet</mat-label>
+      <mat-select formControlName="gender">
+        <mat-option value="0">Kiz</mat-option>
+        <mat-option value="1">Erkek</mat-option>
+      </mat-select>
+      <mat-error>
+        {{ nameValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close class="p-3">İptal</button>
+  <button mat-button class="btn-ascendent p-3" [mat-dialog-close]="true">
+    Ekle
+  </button>
+</mat-dialog-actions>

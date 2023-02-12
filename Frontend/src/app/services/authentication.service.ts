@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AuthenticationResponse } from '@appModule/models/authentication-response';
-import { AuthenticationRequest } from '@appModule/models/authentication-request';
+import { AuthenticationResponse } from '@appModule/models/auth/authentication-response';
+import { AuthenticationRequest } from '@appModule/models/auth/authentication-request';
 import { NavigationService } from '@appModule/services/navigation.service';
 
 @Injectable({

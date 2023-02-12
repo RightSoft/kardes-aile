@@ -7,16 +7,15 @@ import { finalize } from 'rxjs';
 const appInterceptor = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const appService = inject(AppService);
   const authenticationService = inject(AuthenticationService);
-  const token = authenticationService.authenticationValue?.bearer;
+  const authentication = authenticationService.authenticationValue;
   setTimeout(() => {
     appService.isLoading$.next(true);
   });
 
-  if (token) {
-
+  if (authentication && authentication.bearer) {
     const newRequest = request.clone({
       headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${authentication.bearer}`
       })
     });
 

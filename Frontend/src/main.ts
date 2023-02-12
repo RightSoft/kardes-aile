@@ -18,6 +18,7 @@ import { corsInterceptor } from '@appModule/interceptors/cors.interceptor';
 import { environment } from './environments/environment';
 import { AppErrorHandler } from '@appModule/handlers/error.handler';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { errorInterceptor } from '@appModule/interceptors/error.interceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -32,7 +33,9 @@ bootstrapApplication(AppComponent, {
     ),
     provideRouter(projectRoutes),
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    provideHttpClient(withInterceptors([appInterceptor, corsInterceptor])),
+    provideHttpClient(
+      withInterceptors([appInterceptor, corsInterceptor, errorInterceptor])
+    ),
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline' }
