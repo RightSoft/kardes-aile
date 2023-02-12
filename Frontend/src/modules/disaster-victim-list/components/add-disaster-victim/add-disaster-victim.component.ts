@@ -10,6 +10,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog,MatDialogModule } from '@angular/material/dialog';
+import { AddChildComponent } from '../add-child/add-child.component';
+import { MatTableModule } from '@angular/material/table'  
+import { Children } from '@appModule/models/children';
 
 @Component({
   selector: 'app-add-disaster-victim',
@@ -21,7 +25,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule,
+    MatTableModule
   ],
   templateUrl: './add-disaster-victim.component.html',
   styleUrls: ['./add-disaster-victim.component.scss'],
@@ -30,7 +36,11 @@ import { MatSelectModule } from '@angular/material/select';
   }
 })
 export default class AddDisasterVictimComponent extends AddPageTitle {
+  private dialog = inject(MatDialog);
   private formBuilder = inject(FormBuilder);
+  childrens : Array<Children> = [];
+  displayedColumns: string[] = ['name', 'birthday', 'gender', 'action'];
+
   form = this.formBuilder.group({
     tckn: this.formBuilder.control(undefined, [
       Validators.required,
@@ -52,7 +62,11 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     temporaryAddress: this.formBuilder.control(undefined, Validators.required),
     temporaryCity: this.formBuilder.control(undefined, Validators.required),
     temporaryCountry: this.formBuilder.control(undefined, Validators.required),
-    picture: this.formBuilder.control(undefined, Validators.required)
+    picture: this.formBuilder.control(undefined, Validators.required),
+    userValidated: this.formBuilder.control(undefined),
+    emailValidated: this.formBuilder.control(undefined),
+    ssnValidated: this.formBuilder.control(undefined),
+    addressValidated: this.formBuilder.control(undefined)
   });
   constructor() {
     super('Afetzede Ekle');
@@ -89,5 +103,9 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
   }
   public get pictureValidationMessage(): string {
     return getValidationMessage(this.form.controls.picture);
+  }
+  showAddChildDialog(){
+    console.log('yey');
+    this.dialog.open(AddChildComponent);
   }
 }
