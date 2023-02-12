@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { emailRegEx } from '@constants/email-regex';
+import { emailRegEx } from '@appModule/contants/email-regex';
 
 export const emailValidator = (control: AbstractControl): ValidationErrors => {
   const value = control.value;

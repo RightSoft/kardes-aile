@@ -1,1 +1,89 @@
-<p>add-disaster-victim works!</p>
+<form [formGroup]="form" class="col row row-cols-2">
+  <mat-form-field class="col">
+    <mat-label>TCKN</mat-label>
+    <input type="number" matInput formControlName="tckn" />
+    <mat-error>
+      {{ tcknValidationMessage }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Ad Soyad</mat-label>
+    <input type="text" matInput formControlName="fullName" />
+    <mat-error>
+      {{ fullNameValidationMessage }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>e-Posta</mat-label>
+    <input type="email" matInput formControlName="email" />
+    <mat-error>{{ emailValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Telefon</mat-label>
+    <input type="tel" matInput formControlName="phone" />
+    <mat-error>{{ phoneValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Adres</mat-label>
+    <textarea matInput formControlName="address"></textarea>
+    <mat-error>{{ addressValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Şehir</mat-label>
+    <mat-select formControlName="city">
+      <mat-option *ngFor="let city of []" [value]="city">
+        {{ city }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{ cityValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Ülke</mat-label>
+    <mat-select formControlName="country">
+      <mat-option *ngFor="let country of []" [value]="country">
+        {{ country }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{ countryValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Geçici Adres</mat-label>
+    <textarea matInput formControlName="temporaryAddress"></textarea>
+    <mat-error>
+      {{ temporaryAddressValidationMessage }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Geçici Adres Şehir</mat-label>
+    <mat-select formControlName="temporaryCity">
+      <mat-option *ngFor="let city of []" [value]="city">
+        {{ city }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{ temporaryCityValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Geçici Adres Ülke</mat-label>
+    <mat-select formControlName="temporaryCountry">
+      <mat-option *ngFor="let country of []" [value]="country">
+        {{ country }}
+      </mat-option>
+    </mat-select>
+    <mat-error>{{ temporaryCountryValidationMessage }}</mat-error>
+  </mat-form-field>
+  <mat-form-field class="col">
+    <mat-label>Resim Yükle...</mat-label>
+    <input #fileInput type="file" accept=".jpg, .png, .jpeg" class="d-none" />
+    <input type="text" matInput formControlName="picture" />
+    <button
+      matSuffix
+      mat-stroked-button
+      class="me-3"
+      (click)="fileInput.click()"
+    >
+      <mat-icon>folder_open</mat-icon>Browse
+    </button>
+    <mat-error>{{ pictureValidationMessage }}</mat-error>
+  </mat-form-field>
+</form>
+<div class="col"></div>

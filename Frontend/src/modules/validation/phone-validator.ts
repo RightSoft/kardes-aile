@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { phoneRegex } from '@constants/phone-regex';
+import { phoneRegex } from '@appModule/contants/phone-regex';
 
 export const phoneValidator = (control: AbstractControl): ValidationErrors => {
   const value = control.value;
