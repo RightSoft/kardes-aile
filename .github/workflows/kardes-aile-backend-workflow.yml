@@ -24,9 +24,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
           
-          
       - run: |
-          docker build -f ./Backend/src/KardesAile.AspNetCoreHost/Dockerfile -t kardesaileregistry.azurecr.io/kardes-aile-image .
+          docker build -f ./Backend/src/KardesAile.AspNetCoreHost/DockerfileAzure -t kardesaileregistry.azurecr.io/kardes-aile-image .
           docker push kardesaileregistry.azurecr.io/kardes-aile-image
           
       - name: Lowercase the repo name and username
