@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { phoneRegex } from '@appModule/contants/phone-regex';
+import { phoneRegex } from "@appModule/constants/phone-regex";
 
 export const phoneValidator = (control: AbstractControl): ValidationErrors => {
   const value = control.value;
@@ -7,7 +7,7 @@ export const phoneValidator = (control: AbstractControl): ValidationErrors => {
     const matchValue = String(value).match(phoneRegex);
     if (!matchValue) {
       return {
-        phone: true
+        phone: true,
       };
     }
   }

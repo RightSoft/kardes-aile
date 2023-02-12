@@ -103,7 +103,13 @@ public class SupporterBusiness : ISupporterBusiness
         var query = _unitOfWork.Supporter
             .AsQueryable
             .Where(p => model.IncludeDeleted ||
-                        p.User!.Status == UserStatuses.Active || p.User.Status == UserStatuses.Suspended);
+                        p.User!.Status == UserStatuses.Active || p.User.Status == UserStatuses.Suspended)
+            .Where(p => string.IsNullOrEmpty(model.Keyword) ||
+                        p.User.FirstName.Contains(model.Keyword) ||
+                        p.User.LastName.Contains(model.Keyword) ||
+                        p.City.Name.Contains(model.Keyword) ||
+                        p.Country.Name.Contains(model.Keyword) ||
+                        p.Address.Contains(model.Keyword));
         
         var result = new PagedResultModel<SupporterSearchResultModel>();
 

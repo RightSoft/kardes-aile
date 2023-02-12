@@ -16,4 +16,6 @@ public class SupporterSearchResultModel
     public string? CountryName { get; set; }
     public UserStatuses Status { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    public string MatchingStatus { get; set; }
 }
