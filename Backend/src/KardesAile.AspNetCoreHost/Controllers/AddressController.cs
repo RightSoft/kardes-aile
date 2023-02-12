@@ -1,5 +1,7 @@
 using KardesAile.Business.Interfaces;
 using KardesAile.CommonTypes.Enums;
+using KardesAile.CommonTypes.ViewModels.Address;
+using KardesAile.CommonTypes.ViewModels.Error;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +21,10 @@ public class AddressController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = nameof(UserRoles.User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CountryResultModel>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> GetCountries()
     {
         return Ok(await _addressBusiness.GetCountries());
@@ -26,6 +32,10 @@ public class AddressController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = nameof(UserRoles.User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CityResultModel>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> GetCities([FromQuery] Guid countryId)
     {
         return Ok(await _addressBusiness.GetCities(countryId));
