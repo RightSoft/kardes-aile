@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using KardesAile.AspNetCoreHost.Authentication;
 using KardesAile.AspNetCoreHost.Middlewares;
 using KardesAile.Business.Context;
@@ -14,6 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -104,6 +105,22 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
+builder.Host
+    .UseSerilog((builderContext, loggerConfiguration) =>
+    {
+        loggerConfiguration
+            .Enrich.WithProperty("ApplicationName", builderContext.HostingEnvironment.ApplicationName)
+            .Enrich.FromLogContext()
+            .MinimumLevel.Warning()
+            .WriteTo.Console()
+            .WriteTo.PostgreSQL(
+                connectionString: builderContext.Configuration.GetConnectionString("DbConnection"),
+                tableName: "error_logs",
+                needAutoCreateTable: true,
+                schemaName: KardesAileDbContext.SchemaName
+            );
+    });
 
 var app = builder.Build();
 
