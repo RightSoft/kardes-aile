@@ -7,6 +7,8 @@ public class City : IEntity
     public City()
     {
         Supporters = new HashSet<Supporter>();
+        DisasterVictimsCities = new HashSet<DisasterVictim>();
+        DisasterVictimsTemporaryCities = new HashSet<DisasterVictim>();
     }
     
     public Guid Id { get; set; }
@@ -17,5 +19,8 @@ public class City : IEntity
 
     public Guid CountryId { get; set; }
     public Country? Country { get; set; }
+    
     public ICollection<Supporter> Supporters { get; set; }
+    public ICollection<DisasterVictim> DisasterVictimsCities { get; set; }
+    public ICollection<DisasterVictim> DisasterVictimsTemporaryCities { get; set; }
 }

@@ -8,6 +8,7 @@ public class Country : IEntity
     {
         Cities = new HashSet<City>();
         Supporters = new HashSet<Supporter>();
+        DisasterVictims = new HashSet<DisasterVictim>();
     }
 
     public Guid Id { get; set; }
@@ -18,4 +19,5 @@ public class Country : IEntity
 
     public ICollection<City> Cities { get; set; }
     public ICollection<Supporter> Supporters { get; set; }
+    public ICollection<DisasterVictim> DisasterVictims { get; set; }
 }

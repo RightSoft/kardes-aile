@@ -15,5 +15,13 @@ public class CityEntityConfiguration : CreatableEntityConfigurationBase<City>
             .HasForeignKey(x => x.CountryId);
         builder.HasIndex(x => x.Name)
             .IsUnique();
+        
+        builder.HasMany(x => x.DisasterVictimsCities)
+            .WithOne(x => x.City)
+            .HasForeignKey(e => e.CityId);
+        
+        builder.HasMany(x => x.DisasterVictimsTemporaryCities)
+            .WithOne(x => x.TemporaryCity)
+            .HasForeignKey(e => e.TemporaryCityId);
     }
 }

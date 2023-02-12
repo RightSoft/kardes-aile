@@ -9,6 +9,7 @@ public class User : BaseEntity
     {
         Children = new HashSet<Child>();
         Supporters = new HashSet<Supporter>();
+        DisasterVictims = new HashSet<DisasterVictim>();
     }
     
     public UserStatuses Status { get; set; }
@@ -24,4 +25,5 @@ public class User : BaseEntity
 
     public ICollection<Child> Children { get; set; }
     public ICollection<Supporter> Supporters { get; set; }
+    public ICollection<DisasterVictim> DisasterVictims { get; set; }
 }

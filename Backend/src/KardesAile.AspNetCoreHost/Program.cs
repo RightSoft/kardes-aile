@@ -22,6 +22,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddScoped<IAuthenticationBusiness, AuthenticationBusiness>();
 builder.Services.AddScoped<IAddressBusiness, AddressBusiness>();
 builder.Services.AddScoped<ISupporterBusiness, SupporterBusiness>();
+builder.Services.AddScoped<IDisasterVictimBusiness, DisasterVictimBusiness>();
 builder.Services.AddScoped<IChildBusiness, ChildBusiness>();
 builder.Services.AddScoped<IMatchingBusiness, MatchingBusiness>();
 
