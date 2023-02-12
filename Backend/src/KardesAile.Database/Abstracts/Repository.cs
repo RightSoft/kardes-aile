@@ -13,6 +13,8 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
 
     public IQueryable<T> AsQueryable => EntitySet.AsQueryable();
 
+    public IQueryable<T> AsNoTracking => EntitySet.AsNoTracking();
+
     public void Update(T entity)
     {
         EntitySet.Update(entity);

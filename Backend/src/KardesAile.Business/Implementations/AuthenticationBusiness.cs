@@ -1,6 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using KardesAile.Business.Interfaces;
 using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.Errors;
@@ -12,6 +9,9 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace KardesAile.Business.Implementations;
@@ -53,6 +53,7 @@ public class AuthenticationBusiness : IAuthenticationBusiness
             throw Errors.UsernamePasswordDenied;
 
         var result = GenerateAuthenticationToken(user);
+
         return result;
     }
 
