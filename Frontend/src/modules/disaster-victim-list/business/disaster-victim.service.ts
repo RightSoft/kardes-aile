@@ -18,7 +18,9 @@ export class DisasterVictimService {
   ) {
     return this.http.post<PagedResultModel<DisasterVictimSearchResultModel>>(`${this.apiUrl}/Search`, disasterVictimSearchRequestModel);
   }
-
+  public get(id: string) {
+    return this.http.get<DisasterVictimSearchResultModel>(`${this.apiUrl}/get/${id}`, { responseType: "json" });
+  }
   public create(createDisasterVictimModel: CreateDisasterVictimModel) {
     return this.http.post(`${this.apiUrl}/create`, createDisasterVictimModel, { responseType: "json" });
   }
@@ -28,7 +30,7 @@ export class DisasterVictimService {
   }
 
   public delete(userId: string) {
-    return this.http.delete(`${this.apiUrl}/delete?id=${userId}`);
+    return this.http.delete(`${this.apiUrl}/delete/${userId}`);
   }
 
 }

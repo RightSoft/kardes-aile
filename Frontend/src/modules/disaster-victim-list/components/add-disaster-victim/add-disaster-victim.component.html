@@ -8,7 +8,7 @@
   </mat-form-field>
   <mat-form-field class="col">
     <mat-label>TCKN</mat-label>
-    <input type="number" matInput formControlName="tckn" />
+    <input type="number" matInput formControlName="identityNumber" />
     <mat-error>
       {{ tcknValidationMessage }}
     </mat-error>
@@ -31,8 +31,8 @@
   <mat-form-field class="col">
     <mat-label>Ülke</mat-label>
     <mat-select
-      formControlName="country"
-      (valueChange)="homeCountryChanged($event)"
+      formControlName="countryId"
+      (valueChange)="countryChanged($event)"
     >
       <mat-option *ngFor="let country of countryList$" [value]="country.id">
         {{ country.name }}
@@ -42,7 +42,7 @@
   </mat-form-field>
   <mat-form-field class="col">
     <mat-label>Şehir</mat-label>
-    <mat-select formControlName="city">
+    <mat-select formControlName="cityId">
       <mat-option *ngFor="let city of cityList$" [value]="city.id">
         {{ city.name }}
       </mat-option>
@@ -57,20 +57,10 @@
       {{ temporaryAddressValidationMessage }}
     </mat-error>
   </mat-form-field>
-
-  <mat-form-field class="col">
-    <mat-label>Geçici Adres Ülke</mat-label>
-    <mat-select formControlName="temporaryCountryId" (valueChange)="tempCountryChanged($event)">
-      <mat-option *ngFor="let country of countryList$" [value]="country.id">
-        {{ country.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error>{{ temporaryCountryValidationMessage }}</mat-error>
-  </mat-form-field>
   <mat-form-field class="col">
     <mat-label>Geçici Adres Şehir</mat-label>
     <mat-select formControlName="temporaryCityId">
-      <mat-option *ngFor="let city of tempCityList$" [value]="city.id">
+      <mat-option *ngFor="let city of cityList$" [value]="city.id">
         {{ city.name }}
       </mat-option>
     </mat-select>
@@ -92,7 +82,7 @@
   </mat-form-field> -->
   <div class="col row row-cols-1">
     <div class="col">
-      <input type="checkbox" formControlName="ssnValidated" />
+      <input type="checkbox" formControlName="identityNumberValidated" />
       <label class="">Kimlik no dogrulandi</label>
     </div>
     <div class="col">
