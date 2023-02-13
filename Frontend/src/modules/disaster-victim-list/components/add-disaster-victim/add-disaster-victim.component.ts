@@ -1,3 +1,5 @@
+import { DisasterVictimService } from '@disasterVictimListsModule/business/disaster-victim.service';
+import { NavigationService } from '@appModule/services/navigation.service';
 import { phoneValidator } from './../../../validation/phone-validator';
 import { emailValidator } from './../../../validation/email-validator';
 import { getValidationMessage } from '@validationModule/get-validation-message';
@@ -10,11 +12,20 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialog,MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddChildComponent } from '../add-child/add-child.component';
-import { MatTableModule } from '@angular/material/table'  
+import { MatTableModule } from '@angular/material/table'
 import { Children } from '@appModule/models/children';
-
+import { CreateDisasterVictimModel } from '@appModule/models/create-disaster-victim.model';
+import { UpdateDisasterVictimModel } from '@appModule/models/update-disaster-victim.model';
+import { CreateChildModel } from '@appModule/models/create-child.model';
+import { Genders } from '@appModule/models/shared/genders.enum';
+import { AddressService } from '@appModule/services/address.service';
+import { CountryResultModel } from '@appModule/models/country-result.model';
+import { ChildResultModel } from '@appModule/models/child-result.model';
+import { CityResultModel } from '@appModule/models/city-result.model';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-add-disaster-victim',
   standalone: true,
@@ -38,13 +49,24 @@ import { Children } from '@appModule/models/children';
 export default class AddDisasterVictimComponent extends AddPageTitle {
   private dialog = inject(MatDialog);
   private formBuilder = inject(FormBuilder);
-  childrens : Array<Children> = [];
-  displayedColumns: string[] = ['name', 'birthday', 'gender', 'action'];
-
+  countryList$: CountryResultModel[];
+  cityList$: CityResultModel[];
+  tempCityList$: CityResultModel[];
+  childrens: Array<CreateChildModel> = [];
+  displayedColumns: string[] = ['name', 'birthDate', 'gender', 'action'];
+  disasterVictimId: string = undefined;
+  constructor(private disasterVictimService: DisasterVictimService, private addressService: AddressService, private navigationService: NavigationService, private route: ActivatedRoute, private location: Location) {
+    const id = route.snapshot.paramMap.get('id');
+    super(id ? 'Afetzede Güncelle' : 'Afetzede Kayit');
+    if (id) {
+      this.disasterVictimId = id;
+    }
+  }
   form = this.formBuilder.group({
+    id: this.disasterVictimId,
     tckn: this.formBuilder.control(undefined, [
       Validators.required,
-      Validators.min(99999999999),
+      Validators.min(9999999999),
       Validators.max(99999999999)
     ]),
     fullName: this.formBuilder.control(undefined, Validators.required),
@@ -60,17 +82,22 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     city: this.formBuilder.control(undefined, Validators.required),
     country: this.formBuilder.control(undefined, Validators.required),
     temporaryAddress: this.formBuilder.control(undefined, Validators.required),
-    temporaryCity: this.formBuilder.control(undefined, Validators.required),
-    temporaryCountry: this.formBuilder.control(undefined, Validators.required),
-    picture: this.formBuilder.control(undefined, Validators.required),
-    userValidated: this.formBuilder.control(undefined),
-    emailValidated: this.formBuilder.control(undefined),
+    temporaryCityId: this.formBuilder.control(undefined, Validators.required),
+    temporaryCountryId: this.formBuilder.control(undefined, Validators.required),
     ssnValidated: this.formBuilder.control(undefined),
-    addressValidated: this.formBuilder.control(undefined)
+    addressValidated: this.formBuilder.control(undefined),
   });
-  constructor() {
-    super('Afetzede Ekle');
+
+  ngAfterViewInit() {
+    this.addressService.countries().subscribe((result) => {
+      console.log(result);
+      this.countryList$ = result.sort((a, b) => a.name.localeCompare(b.name));;
+    });
   }
+  public get countries(): ReadonlyArray<CountryResultModel> {
+    return this.countryList$;
+  }
+
   public get tcknValidationMessage(): string {
     return getValidationMessage(this.form.controls.tckn);
   }
@@ -96,16 +123,105 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     return getValidationMessage(this.form.controls.temporaryAddress);
   }
   public get temporaryCityValidationMessage(): string {
-    return getValidationMessage(this.form.controls.temporaryCity);
+    return getValidationMessage(this.form.controls.temporaryCityId);
   }
   public get temporaryCountryValidationMessage(): string {
-    return getValidationMessage(this.form.controls.temporaryCountry);
+    return getValidationMessage(this.form.controls.temporaryCountryId);
   }
-  public get pictureValidationMessage(): string {
-    return getValidationMessage(this.form.controls.picture);
+
+  public calculateAge(birthDate: Date): string {
+    var timeDiff = Math.abs(Date.now() - new Date(birthDate).getTime());
+    return Math.floor(timeDiff / (1000 * 3600 * 24) / 365.25).toString();
   }
-  showAddChildDialog(){
-    console.log('yey');
-    this.dialog.open(AddChildComponent);
+  public getGender(gender: number): string {
+    return Object.values(Genders)[gender].toString();
+  }
+  public showChildDialog(action: string, obj: ChildResultModel, index: number) {
+    this.dialog.open(AddChildComponent, { data: { action, obj } }).afterClosed().subscribe(result => {
+      if (!result) return;
+      if (result.event == 'Add') {
+        this.childrens = [...this.childrens, result.data]
+      } else if (result.event == 'Update') {
+        this.childrens[index] = result.data;
+        this.childrens = [...this.childrens];
+      }
+    });
+  }
+  public removeChild(child: ChildResultModel) {
+    this.childrens = this.childrens.filter((el) => el !== child);
+  }
+  public updateChild(child: ChildResultModel) {
+    const index = this.childrens.findIndex((el) => el === child);
+    this.showChildDialog('Update', child, index);
+  }
+
+  public homeCountryChanged(id: string) {
+    this.addressService.cities(id).subscribe((result) => {
+      console.log(result);
+      this.cityList$ = result.sort((a, b) => a.name.localeCompare(b.name));;
+    });
+  }
+  public tempCountryChanged(id: string) {
+    this.addressService.cities(id).subscribe((result) => {
+      console.log(result);
+      this.tempCityList$ = result.sort((a, b) => a.name.localeCompare(b.name));
+    });
+  }
+
+  submit() {
+    console.log(this.form.value);
+    this.childrens = this.childrens.map((el) => {
+      el.gender = Number(el.gender);
+      return el;
+    });
+    if (this.form.valid) {
+
+      if (!this.disasterVictimId) {
+        const model = {
+          firstName: this.form.value.fullName.split(' ')[0],
+          lastName: this.form.value.fullName.split(' ')[1],
+          email: this.form.value.email,
+          phone: this.form.value.phone,
+          address: this.form.value.address,
+          cityId: this.form.value.city,
+          countryId: this.form.value.country,
+          temporaryAddress : this.form.value.temporaryAddress,
+          temporaryCityId : this.form.value.temporaryCityId,
+          temporaryCountryId : this.form.value.temporaryCountryId,
+          identityNumber:this.form.value.tckn.toString(),
+          identityNumberValidated:this.form.value.ssnValidated,
+          children: this.childrens
+        } as CreateDisasterVictimModel;
+        this.disasterVictimService.create(model).subscribe(() => {
+          this.backToList();
+        });
+      }
+      else {
+        const updateModel = {
+          id: this.disasterVictimId,
+          firstName: this.form.value.fullName.split(' ')[0],
+          lastName: this.form.value.fullName.split(' ')[1],
+          email: this.form.value.email,
+          phone: this.form.value.phone,
+          address: this.form.value.address,
+          cityId: this.form.value.city,
+          countryId: this.form.value.country,
+          temporaryAddress : this.form.value.temporaryAddress,
+          temporaryCityId : this.form.value.temporaryCityId,
+          temporaryCountryId : this.form.value.temporaryCountryId,
+          identityNumber:this.form.value.tckn.toString(),
+          identityNumberValidated:this.form.value.ssnValidated,
+          status: 0,
+          children: this.childrens
+        } as UpdateDisasterVictimModel;
+
+        this.disasterVictimService.update(updateModel).subscribe(() => {
+          this.backToList();
+        });
+      }
+    }
+  }
+  public backToList() {
+    this.navigationService.navigate('/disaster-victim-list');
   }
 }

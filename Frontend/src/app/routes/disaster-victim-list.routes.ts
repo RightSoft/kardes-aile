@@ -13,6 +13,13 @@ const disasterVictimListRoutes: Routes = [
       import(
         '@disasterVictimListsModule/components/add-disaster-victim/add-disaster-victim.component'
       )
+  },
+  {
+    path: 'disaster-victim/edit/:id',
+    loadComponent: () =>
+      import(
+        '@disasterVictimListsModule/components/add-disaster-victim/add-disaster-victim.component'
+      )
   }
 ];
 export default disasterVictimListRoutes;

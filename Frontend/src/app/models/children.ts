@@ -1,6 +1,6 @@
 export class Children {
     public name: string;
-    public birthday: Date;
+    public birthDate: Date;
     public gender: string;
   }
   
