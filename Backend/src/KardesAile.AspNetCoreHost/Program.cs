@@ -21,7 +21,6 @@ using Microsoft.ApplicationInsights.Extensibility;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHealthChecks();
-
 builder.Services.AddScoped<IAuthenticationBusiness, AuthenticationBusiness>();
 builder.Services.AddScoped<IAddressBusiness, AddressBusiness>();
 builder.Services.AddScoped<ISupporterBusiness, SupporterBusiness>();

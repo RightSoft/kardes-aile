@@ -9,13 +9,14 @@ public class CityEntityConfiguration : CreatableEntityConfigurationBase<City>
     {
         base.Configure(builder);
         builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
+        builder.Property(e => e.StateCode).HasMaxLength(5).IsRequired();
         builder.HasOne(x => x.Country)
             .WithMany(x => x.Cities)
             .IsRequired()
             .HasForeignKey(x => x.CountryId);
-        builder.HasIndex(x => x.Name)
-            .IsUnique();
-        
+
+        builder.HasIndex(x => x.Name);
+
         builder.HasMany(x => x.DisasterVictimsCities)
             .WithOne(x => x.City)
             .HasForeignKey(e => e.CityId);

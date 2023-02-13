@@ -22,7 +22,8 @@ public class AddressBusiness : IAddressBusiness
             .Select(p => new CountryResultModel
             {
                 Id = p.Id,
-                Name = p.Name
+                Name = p.Name,
+                CountryCode = p.CountryCode
             })
             .ToListAsync();
         return result;
@@ -38,7 +39,8 @@ public class AddressBusiness : IAddressBusiness
             {
                 Id = p.Id,
                 CountryId = p.CountryId,
-                Name = p.Name
+                Name = p.Name,
+                StateCode = p.StateCode
             })
             .ToListAsync();
         return result;

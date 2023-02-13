@@ -13,6 +13,7 @@ public class City : IEntity
     
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
+    public string StateCode { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; } = null!;
     public uint Version { get; set; }

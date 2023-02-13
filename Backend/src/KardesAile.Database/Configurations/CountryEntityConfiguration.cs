@@ -9,6 +9,7 @@ public class CountryEntityConfiguration : CreatableEntityConfigurationBase<Count
     {
         base.Configure(builder);
         builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
+        builder.Property(e => e.CountryCode).HasMaxLength(3).IsRequired();
         builder.HasIndex(x => x.Name)
             .IsUnique();
     }
