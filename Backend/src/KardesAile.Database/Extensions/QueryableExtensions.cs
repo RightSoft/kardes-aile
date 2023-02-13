@@ -20,7 +20,7 @@ public static class QueryableExtensions
 
 	    private static async Task<IQueryable<T>> PageAsync<T>(this IQueryable<T> queryable, PagedSearchModel pagedSearchModel)
         {
-            if (pagedSearchModel.PageSize == 0)
+            if (pagedSearchModel.PageSize == 0 || await queryable.AnyAsync() != true)
             {
                 return queryable;
             }
@@ -56,7 +56,6 @@ public static class QueryableExtensions
             {
                 result.TotalCount = await query.CountAsync();
             }
-            if (result.TotalCount == 0) return result;
             
             var pagedQueryable = await query.PageAsync(pagedSearchModel);
             result.List = await pagedQueryable.ToListAsync();
