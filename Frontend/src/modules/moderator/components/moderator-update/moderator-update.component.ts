@@ -61,7 +61,11 @@ export default class ModeratorUpdateComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group(
       {
-        fullName: this.formBuilder.control('', [
+        firstName: this.formBuilder.control('', [
+          Validators.required,
+          Validators.maxLength(100)
+        ]),
+        lastName: this.formBuilder.control('', [
           Validators.required,
           Validators.maxLength(100)
         ]),
@@ -115,7 +119,7 @@ export default class ModeratorUpdateComponent implements OnInit {
     this.moderatorService.update(this.id, model).subscribe(() => {
       this.snackbarService.show(
         'Success',
-        `Moderator: ${model.fullName} updated successfully.`
+        `Moderator: ${model.firstName} ${model.lastName} updated successfully.`
       );
       this.onCancel();
     });

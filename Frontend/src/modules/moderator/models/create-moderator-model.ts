@@ -1,5 +1,6 @@
 export class CreateModeratorModel {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }

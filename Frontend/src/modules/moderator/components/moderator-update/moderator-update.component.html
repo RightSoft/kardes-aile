@@ -5,59 +5,67 @@
           fxLayoutAlign="stretch">
       <div class="row">
         <div class="col-md-6">
-      <mat-form-field appearance="outline" class="d-block mb-3">
-        <mat-label>Full Name</mat-label>
-        <input matInput formControlName="fullName" type="text" autofocus required />
-        <mat-error *ngIf="form.hasError('required', 'fullName')">
-          Please enter the name and surname
-        </mat-error>
-      </mat-form-field>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Ad</mat-label>
+            <input matInput formControlName="firstName" type="text" autofocus required />
+            <mat-error *ngIf="form.hasError('required', 'firstName')">
+              Please enter the firstName
+            </mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline" class="d-block mb-3">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" required />
-        <mat-error *ngIf="form.hasError('required', 'email')">
-          Please enter the email address
-        </mat-error>
-      </mat-form-field>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Soyad</mat-label>
+            <input matInput formControlName="lastName" type="text" autofocus required />
+            <mat-error *ngIf="form.hasError('required', 'lastName')">
+              Please enter the lastName
+            </mat-error>
+          </mat-form-field>
 
-      <mat-checkbox formControlName="updatePassword"
-                    (change)="onUpdatePasswordChange($event.checked)" class="d-block mb-3">
-        Update Password
-      </mat-checkbox>
+          <mat-form-field appearance="outline" class="d-block mb-3">
+            <mat-label>E-Posta</mat-label>
+            <input matInput formControlName="email" type="email" required />
+            <mat-error *ngIf="form.hasError('required', 'email')">
+              Please enter the email address
+            </mat-error>
+          </mat-form-field>
 
-      <ng-container *ngIf="updatePassword">
+          <mat-checkbox formControlName="updatePassword"
+                        (change)="onUpdatePasswordChange($event.checked)" class="d-block mb-3">
+            Şifreyi Güncelle
+          </mat-checkbox>
 
-        <mat-form-field appearance="outline" class="d-block mb-3">
-          <mat-label>Password</mat-label>
-          <input matInput formControlName="password" type="password" required />
-          <mat-error *ngIf="form.hasError('required', 'password')">
-            Please enter the password
-          </mat-error>
-        </mat-form-field>
+          <ng-container *ngIf="updatePassword">
 
-        <mat-form-field appearance="outline" class="d-block mb-3">
-          <mat-label>Re-Password</mat-label>
-          <input matInput formControlName="repassword" type="password" required />
-          <mat-error *ngIf="form.hasError('required', 'repassword')">
-            Please enter the password again
-          </mat-error>
-          <mat-error *ngIf="form.hasError('mustMatch', 'repassword')">
-            Passwords don't match
-          </mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="d-block mb-3">
+              <mat-label>Şifre</mat-label>
+              <input matInput formControlName="password" type="password" required />
+              <mat-error *ngIf="form.hasError('required', 'password')">
+                Please enter the password
+              </mat-error>
+            </mat-form-field>
 
-      </ng-container>
+            <mat-form-field appearance="outline" class="d-block mb-3">
+              <mat-label>Re-Password</mat-label>
+              <input matInput formControlName="repassword" type="password" required />
+              <mat-error *ngIf="form.hasError('required', 'repassword')">
+                Please enter the password again
+              </mat-error>
+              <mat-error *ngIf="form.hasError('mustMatch', 'repassword')">
+                Passwords don't match
+              </mat-error>
+            </mat-form-field>
+
+          </ng-container>
         </div>
       </div>
     </form>
   </mat-card-content>
-    <mat-card-actions align="end" class="p-3">
+  <mat-card-actions align="end" class="p-3">
     <div fxLayout="row"
          fxLayoutAlign="end center"
          fxLayoutGap="12px">
       <button mat-raised-button type="button" (click)="onCancel()">Cancel</button>
       <button mat-raised-button color="primary" type="submit" (click)="onSave()" [disabled]="form.invalid">Save</button>
     </div>
-    </mat-card-actions>
+  </mat-card-actions>
 </mat-card>
