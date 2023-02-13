@@ -25,5 +25,5 @@ public class DisasterVictim : BaseEntity
     public string? IdentityNumber { get; set; }
     public bool IdentityNumberValidated { get; set; }
 
-    public Match? Match { get; set; }
+    public ICollection<Match>? Matches { get; set; }
 }

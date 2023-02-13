@@ -15,7 +15,7 @@ const voluntarilyListRoutes: Routes = [
       )
   },
   {
-    path: 'voluntarily/edit/:id',
+    path: 'voluntarily/:id',
     loadComponent: () =>
       import(
         '@voluntarilyListsModule/components/add-voluntarily/add-voluntarily.component'

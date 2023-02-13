@@ -79,7 +79,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
     return getValidationMessage(this.addSupporterForm.controls.address);
   }
 
-  submit(){
+  onSave(){
     if (this.addSupporterForm.valid) {
 
       if(!this.addSupporterForm.value.supporterId) {
@@ -95,7 +95,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
         } as CreateSupporterModel;
 
         this.voluntarilyService.create(model).subscribe(() => {
-          this.backToList();
+          this.onCancel();
         });
       }
       else {
@@ -112,12 +112,12 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
         } as UpdateSupporterModel;
 
         this.voluntarilyService.update(updateModel).subscribe(() => {
-          this.backToList();
+          this.onCancel();
         });
       }
     }
   }
-  backToList(){
+  onCancel(){
     this.navigationService.navigate('/voluntarily');
   }
 }

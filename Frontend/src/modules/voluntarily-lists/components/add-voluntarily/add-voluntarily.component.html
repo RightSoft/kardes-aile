@@ -1,155 +1,161 @@
-  <form class="mt-3 mb-3" [formGroup]="addSupporterForm" (ngSubmit)="submit()">
-    <mat-card>
-      <mat-card-content>
-        <div class="row">
-          <div class="col-md-6">
+<mat-card class="mb-1">
+  <mat-card-content>
+    <div class="row">
+      <div class="col-md-6">
+        <form [formGroup]="addSupporterForm">
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Adı</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="firstName"
+            />
+            <mat-error>
+              {{ firstNameValidationMessage }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Soyadı</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="lastName"
+            />
+            <mat-error>
+              {{ lastNameValidationMessage }}
+            </mat-error>
+          </mat-form-field>
+          <div formGroupName="emailOrPhoneInfo">
             <mat-form-field class="d-block mb-3">
-              <mat-label>Adı</mat-label>
+              <mat-label>E-posta</mat-label>
               <input
                 type="text"
                 matInput
-                formControlName="firstName"
+                formControlName="email"
               />
               <mat-error>
-                {{ firstNameValidationMessage }}
+                {{ emailValidationMessage }}
               </mat-error>
             </mat-form-field>
-            <mat-form-field class="d-block mb-3">
-              <mat-label>Soyadı</mat-label>
-              <input
-                type="text"
-                matInput
-                formControlName="lastName"
-              />
-              <mat-error>
-                {{ lastNameValidationMessage }}
-              </mat-error>
-            </mat-form-field>
-            <div formGroupName="emailOrPhoneInfo">
-              <mat-form-field class="d-block mb-3">
-                <mat-label>E-posta</mat-label>
-                <input
-                  type="text"
-                  matInput
-                  formControlName="email"
-                />
-                <mat-error>
-                  {{ emailValidationMessage }}
-                </mat-error>
-              </mat-form-field>
 
-              <mat-form-field class="d-block mb-3">
-                <mat-label>Telefon</mat-label>
-                <input
-                  type="text"
-                  matInput
-                  formControlName="phone"
-                />
-                <mat-error>
-                  {{ phoneValidationMessage }}
-                </mat-error>
-              </mat-form-field>
+            <mat-form-field class="d-block mb-3">
+              <mat-label>Telefon</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="phone"
+              />
+              <mat-error>
+                {{ phoneValidationMessage }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Adres</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="address"
+            />
+            <mat-error>
+              {{ addressValidationMessage }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Ülke</mat-label>
+            <input
+              type="text"
+              matInput
+              [matAutocomplete]="countryAutoComplete"
+              formControlName="countryId"
+            />
+            <mat-autocomplete #countryAutoComplete="matAutocomplete">
+              <mat-option
+                *ngFor="let option of countryList$ | async"
+                [value]="option"
+              >
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Şehir</mat-label>
+            <input
+              type="text"
+              matInput
+              [matAutocomplete]="cityAutoComplete"
+              formControlName="cityId"
+            />
+            <mat-autocomplete #cityAutoComplete="matAutocomplete">
+              <mat-option
+                *ngFor="let option of cityList$ | async"
+                [value]="option"
+              >
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <mat-card>
+          <mat-card-content>
+            <mat-toolbar class="mb-1 bg-transparent">
+              <span>Çocuk Listesi</span>
+              <button
+                mat-raised-button
+                class="btn p-2 align-self-baseline ms-auto rounded">
+                <mat-icon>add</mat-icon>
+                Çocuk Ekle
+              </button>
+            </mat-toolbar>
+            <div class="mat-elevation-z8">
+              <mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef> AD SOYAD</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="birthDate">
+                  <mat-header-cell *matHeaderCellDef> YAS</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.birthDate}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="gender">
+                  <mat-header-cell *matHeaderCellDef> CINSIYET</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="primary" aria-label="Edit">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" aria-label="Delete">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
             </div>
-            <mat-form-field class="d-block mb-3">
-              <mat-label>Adres</mat-label>
-              <input
-                type="text"
-                matInput
-                formControlName="address"
-              />
-              <mat-error>
-                {{ addressValidationMessage }}
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="d-block mb-3">
-              <mat-label>Ülke</mat-label>
-              <input
-                type="text"
-                matInput
-                [matAutocomplete]="countryAutoComplete"
-                formControlName="countryId"
-              />
-              <mat-autocomplete #countryAutoComplete="matAutocomplete">
-                <mat-option
-                  *ngFor="let option of countryList$ | async"
-                  [value]="option"
-                >
-                  {{ option }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field class="d-block mb-3">
-              <mat-label>Şehir</mat-label>
-              <input
-                type="text"
-                matInput
-                [matAutocomplete]="cityAutoComplete"
-                formControlName="cityId"
-              />
-              <mat-autocomplete #cityAutoComplete="matAutocomplete">
-                <mat-option
-                  *ngFor="let option of cityList$ | async"
-                  [value]="option"
-                >
-                  {{ option }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-card>
-              <mat-card-content>
-                <mat-toolbar class="mb-1 bg-transparent">
-                  <span>Çocuk Listesi</span>
-                  <button
-                    mat-raised-button
-                    class="btn p-2 align-self-baseline ms-auto rounded">
-                    <mat-icon>add</mat-icon>
-                    Çocuk Ekle
-                  </button>
-                </mat-toolbar>
-                <div class="mat-elevation-z8">
-                  <mat-table [dataSource]="dataSource">
-                    <ng-container matColumnDef="name">
-                      <mat-header-cell *matHeaderCellDef> AD SOYAD </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="birthDate">
-                      <mat-header-cell *matHeaderCellDef> YAS </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.birthDate}} </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="gender">
-                      <mat-header-cell *matHeaderCellDef> CINSIYET </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="actions">
-                      <mat-header-cell  *matHeaderCellDef ></mat-header-cell>
-                      <mat-cell *matCellDef="let row" >
-                        <button mat-icon-button color="primary" aria-label="Edit">
-                          <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" aria-label="Delete">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </mat-cell>
-                    </ng-container>
-
-                    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                  </mat-table>
-                </div>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-</mat-card-content>
-<mat-card-actions align="end" class="p-3">
-  <button mat-raised-button (click)="backToList()">Iptal</button>
-  <button mat-raised-button class="btn-ascendent" type="submit"
-  ><mat-icon>save</mat-icon>Kaydet</button>
-</mat-card-actions>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end" class="p-3">
+    <div fxLayout="row"
+         fxLayoutAlign="end center"
+         fxLayoutGap="12px">
+      <button mat-raised-button type="button" (click)="onCancel()">Iptal</button>
+      <button mat-raised-button color="primary" type="submit" (click)="onSave()"
+              [disabled]="addSupporterForm.invalid"
+      >Kaydet
+      </button>
+    </div>
+  </mat-card-actions>
 </mat-card>
-  </form>

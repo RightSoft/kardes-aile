@@ -15,5 +15,5 @@ public class Supporter : BaseEntity
     public Guid? CityId { get; set; }
     public City? City { get; set; }
 
-    public Match? Match { get; set; }
+    public ICollection<Match>? Matches { get; set; }
 }

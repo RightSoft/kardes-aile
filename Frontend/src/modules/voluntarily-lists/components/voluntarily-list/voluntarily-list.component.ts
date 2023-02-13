@@ -75,7 +75,7 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
   }
 
   edit(id: string){
-    this.navigationService.navigate('/voluntarily/edit/' + id);
+    this.navigationService.navigate(`/voluntarily/${id}`);
   }
 
   delete(userId: string){

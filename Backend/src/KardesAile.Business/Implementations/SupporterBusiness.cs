@@ -148,6 +148,7 @@ public class SupporterBusiness : ISupporterBusiness
             .Include(p => p.City)
             .Include(p => p.Country)
             .Include(p => p.User).ThenInclude(u => u!.Children)
+            .Include(p => p.Matches)
             .AsNoTracking()
             .Select(p => new SupporterSearchResultModel
             {
@@ -163,7 +164,7 @@ public class SupporterBusiness : ISupporterBusiness
                 CountryName = p.Country!.Name,
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt,
-                MatchingStatus = $"{p.Match!.Victim!.User!.Children.Count}/{p.User.Children.Count}"
+                MatchingStatus = $"{p.Matches!.Count}/{p.User.Children.Count}"
             })
             .ToPagedListAsync(model);
 

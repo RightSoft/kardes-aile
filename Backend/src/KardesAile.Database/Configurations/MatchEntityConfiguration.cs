@@ -11,14 +11,14 @@ public class MatchEntityConfiguration : ModifiableEntityConfigurationBase<Match>
 
         builder.Property(e => e.Active).IsRequired();
         builder.HasOne(x => x.Supporter)
-            .WithOne(x => x.Match)
+            .WithMany(x => x.Matches)
             .IsRequired()
-            .HasForeignKey<Match>(x => x.SupporterId);
+            .HasForeignKey(x => x.SupporterId);
 
         builder.HasOne(x => x.Victim)
-            .WithOne(x => x.Match)
+            .WithMany(x => x.Matches)
             .IsRequired()
-            .HasForeignKey<Match>(x => x.VictimId);
+            .HasForeignKey(x => x.VictimId);
 
         builder.HasOne(x => x.VictimChild)
             .WithOne(x => x.VictimMatch)
