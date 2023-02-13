@@ -20,6 +20,8 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddHealthChecks();
 builder.Services.AddScoped<IAuthenticationBusiness, AuthenticationBusiness>();
 builder.Services.AddScoped<IAddressBusiness, AddressBusiness>();
