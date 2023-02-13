@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using KardesAile.AspNetCoreHost;
+using Microsoft.ApplicationInsights.Extensibility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,8 +108,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddOpenTelemetryTracingToApplicationInsights(builder.Configuration);
+
 builder.Host
-    .UseSerilog((builderContext, loggerConfiguration) =>
+    .UseSerilog((builderContext, services, loggerConfiguration) =>
     {
         loggerConfiguration
             .Enrich.WithProperty("ApplicationName", builderContext.HostingEnvironment.ApplicationName)
@@ -119,8 +123,11 @@ builder.Host
                 tableName: "error_logs",
                 needAutoCreateTable: true,
                 schemaName: KardesAileDbContext.SchemaName
-            );
+            )
+            .WriteTo.ApplicationInsights(services.GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Traces);
     });
+
+builder.WebHost.CaptureStartupErrors(true);
 
 var app = builder.Build();
 
@@ -130,7 +137,7 @@ app.UseExceptionHandler(appError => { appError.Run(GlobalExceptionManager.Handle
 
 app.MapGet("/", () => "API");
 
-if (app.Environment.IsDevelopment()) 
+if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 
 app.UseSwagger();
