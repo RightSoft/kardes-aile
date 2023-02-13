@@ -5,5 +5,6 @@ public enum UserRoles
     GlobalAdmin,
     Supporter,
     DisasterVictim,
-    User
+    User, 
+    Moderator
 }

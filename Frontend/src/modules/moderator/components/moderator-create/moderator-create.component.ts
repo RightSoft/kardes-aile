@@ -51,7 +51,11 @@ export default class ModeratorCreateComponent
   ngOnInit() {
     this.form = this.formBuilder.group(
       {
-        fullName: this.formBuilder.control('', [
+        firstName: this.formBuilder.control('', [
+          Validators.required,
+          Validators.maxLength(100)
+        ]),
+        lastName: this.formBuilder.control('', [
           Validators.required,
           Validators.maxLength(100)
         ]),
@@ -83,7 +87,7 @@ export default class ModeratorCreateComponent
     this.moderatorService.create(model).subscribe(() => {
       this.snackbarService.show(
         'Success',
-        `Moderator: ${model.fullName} created successfully.`
+        `Moderator: ${model.firstName} ${model.lastName} created successfully.`
       );
       this.onCancel();
     });

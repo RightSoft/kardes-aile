@@ -1,5 +1,6 @@
 export class UpdateModeratorModel {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   updatePassword: boolean;

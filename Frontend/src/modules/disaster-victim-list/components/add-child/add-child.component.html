@@ -12,13 +12,12 @@
         {{ nameValidationMessage }}
       </mat-error>
     </mat-form-field>
-    <mat-form-field class="d-block mb-3">
+    <mat-form-field appearance="fill"  class="d-block mb-3">
       <mat-label>Dogum Tarihi</mat-label>
-      <input
-        type="date"
-        matInput
-        [formControl]="addChildForm.controls.birthday"
-      />
+      <input matInput [matDatepicker]="picker" [formControl]="addChildForm.controls.birthDate">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
       <mat-error>
         {{ nameValidationMessage }}
       </mat-error>
@@ -26,8 +25,8 @@
     <mat-form-field class="d-block mb-3">
       <mat-label>Cinsiyet</mat-label>
       <mat-select formControlName="gender">
-        <mat-option value="0">Kiz</mat-option>
         <mat-option value="1">Erkek</mat-option>
+        <mat-option value="2">Kiz</mat-option>
       </mat-select>
       <mat-error>
         {{ nameValidationMessage }}
@@ -36,8 +35,8 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close class="p-3">İptal</button>
-  <button mat-button class="btn-ascendent p-3" [mat-dialog-close]="true">
-    Ekle
+  <button mat-button (click)="closeDialog()" class="p-3">İptal</button>
+  <button mat-button class="btn-ascendent p-3" (click)="doAction()">
+    {{submitButtonText}}
   </button>
 </mat-dialog-actions>
