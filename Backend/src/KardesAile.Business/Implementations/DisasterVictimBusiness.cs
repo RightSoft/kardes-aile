@@ -1,6 +1,7 @@
 using KardesAile.Business.Interfaces;
 using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.Errors;
+using KardesAile.CommonTypes.Exceptions;
 using KardesAile.CommonTypes.ViewModels;
 using KardesAile.CommonTypes.ViewModels.DisasterVictim;
 using KardesAile.Database.Abstracts;
@@ -19,6 +20,44 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
+    public async Task<DisasterVictimSearchResultModel> Get(Guid id)
+    {
+        var disasterVictim = await _unitOfWork.DisasterVictim
+            .AsQueryable
+            .Include(p => p.City)
+            .Include(p => p.Country)
+            .Include(p => p.TemporaryCity)
+            .Include(p => p.User)
+            .AsNoTracking()
+            .Select(p => new DisasterVictimSearchResultModel
+            {
+                Id = p.Id,
+                UserId = p.UserId,
+                FirstName = p.User!.FirstName,
+                LastName = p.User!.LastName,
+                Phone = p.User!.Phone,
+                Email = p.User!.Email,
+                Address = p.Address,
+                AddressValidated = p.AddressValidated,
+                CityId = p.CityId,
+                CityName = p.City!.Name,
+                TemporaryAddress = p.TemporaryAddress,
+                TemporaryCityId = p.TemporaryCityId,
+                TemporaryCityName = p.TemporaryCity!.Name,
+                CountryId = p.CountryId,
+                CountryName = p.Country!.Name,
+                IdentityNumber = p.IdentityNumber,
+                IdentityNumberValidated = p.IdentityNumberValidated,
+                Status = p.User.Status,
+                CreatedAt = p.CreatedAt
+            }).FirstOrDefaultAsync(p => p.Id == id);
+        
+        if (disasterVictim == null)
+            throw new BusinessException($"Disaster Victim could not be found. Id {id}");
+
+        return disasterVictim;
+    }
+    
     public async Task Create(CreateDisasterVictimModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
@@ -72,7 +111,7 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
             .AsQueryable
             .Include(p => p.User)
             .AsSplitQuery()
-            .FirstOrDefaultAsync(p => p.UserId == model.Id);
+            .FirstOrDefaultAsync(p => p.Id == model.Id);
 
         if (disasterVictim == null)
         {
@@ -131,7 +170,8 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
             .AsNoTracking()
             .Select(p => new DisasterVictimSearchResultModel
             {
-                Id = p.UserId,
+                Id = p.Id,
+                UserId = p.UserId,
                 FirstName = p.User!.FirstName,
                 LastName = p.User!.LastName,
                 Phone = p.User!.Phone,
