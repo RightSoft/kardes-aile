@@ -19,7 +19,7 @@
     </ng-container>
 
     <ng-container matColumnDef="matchingStatus">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> ESLESME DURUMU </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> ESLESME DURUMU </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.matchingStatus}} </mat-cell>
     </ng-container>
 
@@ -28,13 +28,18 @@
       <mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy HH:mm'}} </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> DURUMU </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{UserStatusesEnum[element.status].toString()}} </mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="actions">
       <mat-header-cell  *matHeaderCellDef ></mat-header-cell>
       <mat-cell *matCellDef="let row" >
-        <button mat-icon-button color="primary" aria-label="Edit">
+        <button mat-icon-button color="primary" aria-label="Edit" (click)="edit(row.supporterId)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" aria-label="Delete">
+        <button mat-icon-button color="warn" aria-label="Delete" (click)="delete(row.userId)">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-cell>

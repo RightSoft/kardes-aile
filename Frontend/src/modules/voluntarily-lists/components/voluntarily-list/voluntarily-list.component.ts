@@ -13,6 +13,8 @@ import {MatIconModule} from "@angular/material/icon";
 import { MatSortModule, Sort } from "@angular/material/sort";
 import {SortDirection} from "@appModule/models/shared/sort-direction.enum";
 import {SearchSortModel} from "@appModule/models/search-sort.model";
+import {NavigationService} from "@appModule/services/navigation.service";
+import {UserStatuses} from "@appModule/models/shared/user-statuses.enum";
 
 @Component({
   selector: 'app-voluntarily-list',
@@ -23,14 +25,15 @@ import {SearchSortModel} from "@appModule/models/search-sort.model";
 })
 export default class VoluntarilyListComponent extends BaseListComponent implements AfterViewInit{
 
-  displayedColumns: string[] = ['fullName', 'cityCountyName', 'matchingStatus', 'createdAt', 'actions'];
+  displayedColumns: string[] = ['fullName', 'cityCountyName', 'matchingStatus', 'createdAt', 'status', 'actions'];
   dataSource: MatTableDataSource<SupporterSearchResultModel> = new MatTableDataSource<SupporterSearchResultModel>();
   pagedSupporterData: PagedResultModel<SupporterSearchResultModel> = new PagedResultModel<SupporterSearchResultModel>();
   searchSupporterData: SearchSupporterModel = new SearchSupporterModel(1, 10);
 
+  UserStatusesEnum = UserStatuses;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private voluntarilyService: VoluntarilyService) {
+  constructor(private voluntarilyService: VoluntarilyService, private navigationService: NavigationService) {
     super('Gönüllü Listesi');
     this.onSearch();
   }
@@ -68,6 +71,16 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
     this.voluntarilyService.search(this.searchSupporterData).subscribe((result) => {
       this.dataSource = new MatTableDataSource<SupporterSearchResultModel>(result.list);
       this.pagedSupporterData = result;
+    });
+  }
+
+  edit(id: string){
+    this.navigationService.navigate('/voluntarily/edit/' + id);
+  }
+
+  delete(userId: string){
+    this.voluntarilyService.delete(userId).subscribe((_) => {
+      this.onSearch();
     });
   }
 }

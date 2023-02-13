@@ -1,7 +1,8 @@
 import {UserStatuses} from "@appModule/models/shared/user-statuses.enum";
+import {getValidationMessage} from "@validationModule/get-validation-message";
 
 export class SupporterSearchResultModel {
-  public id : string;
+  public supporterId : string;
   public firstName : string;
   public lastName : string;
   public phone : string;

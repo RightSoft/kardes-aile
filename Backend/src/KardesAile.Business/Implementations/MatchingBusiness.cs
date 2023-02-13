@@ -4,6 +4,7 @@ using KardesAile.CommonTypes.ViewModels;
 using KardesAile.CommonTypes.ViewModels.Match;
 using KardesAile.Database.Abstracts;
 using KardesAile.Database.Entities;
+using KardesAile.Database.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace KardesAile.Business.Implementations;
@@ -82,26 +83,11 @@ public class MatchingBusiness : IMatchingBusiness
                     p.SupporterChild!.Name.ToUpper().Contains(filter) ||
                     p.VictimChild!.Name.ToUpper().Contains(filter)));
 
-        var result = new PagedResultModel<MatchResultModel>();
-
-        if (model.Page == 1)
-        {
-            result.TotalCount = await query
-                .CountAsync();
-
-            if (result.TotalCount == 0)
-            {
-                return result;
-            }
-        }
-
-        var list = await query
+        var result = await query
             .Include(p => p.Supporter!.User)
             .Include(p => p.SupporterChild)
-            .Include(p=>p.Victim!.User)
+            .Include(p => p.Victim!.User)
             .Include(p => p.VictimChild)
-            .Skip((model.Page!.Value - 1) * model.PageSize!.Value)
-            .Take(model.PageSize!.Value)
             .Select(p => new MatchResultModel
             {
                 VictimId = p.VictimId,
@@ -117,9 +103,8 @@ public class MatchingBusiness : IMatchingBusiness
                 SupporterChildId = p.SupporterChildId,
                 SupporterChildName = p.SupporterChild!.Name
             })
-            .ToListAsync();
+            .ToPagedListAsync(model);
 
-        result.List = list;
         return result;
     }
 }

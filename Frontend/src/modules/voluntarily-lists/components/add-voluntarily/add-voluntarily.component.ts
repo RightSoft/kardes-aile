@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {AfterViewInit, Component, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {VoluntarilyService} from "@voluntarilyListsModule/business/voluntarily.service";
 import AddPageTitle from "@appModule/base-classes/add-page-title.abstract.class";
@@ -18,6 +18,8 @@ import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
 import {CreateSupporterModel} from "@appModule/models/create-supporter.model";
 import {NavigationService} from "@appModule/services/navigation.service";
+import {ActivatedRoute} from "@angular/router";
+import {UpdateSupporterModel} from "@appModule/models/update-supporter.model";
 
 @Component({
   selector: 'app-add-voluntarily',
@@ -26,13 +28,15 @@ import {NavigationService} from "@appModule/services/navigation.service";
   templateUrl: './add-voluntarily.component.html',
   styleUrls: ['./add-voluntarily.component.scss']
 })
-export default class AddVoluntarilyComponent extends AddPageTitle {
+export default class AddVoluntarilyComponent extends AddPageTitle implements AfterViewInit{
   countryList$: Observable<any[]>;
   cityList$: Observable<any[]>;
   dataSource: MatTableDataSource<ChildResultModel> = new MatTableDataSource<ChildResultModel>();
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'actions'];
   private formBuilder = inject(FormBuilder);
   addSupporterForm = this.formBuilder.group({
+    supporterId: this.formBuilder.control(null),
+    userId: this.formBuilder.control(null),
     firstName: this.formBuilder.control('', Validators.required),
     lastName: this.formBuilder.control('', Validators.required),
     emailOrPhoneInfo:  new FormGroup({
@@ -41,10 +45,19 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     }, [atLeastOne(Validators.required, ['email','phone'])]),
     address: this.formBuilder.control(''),
     countryId: this.formBuilder.control(null),
-    cityId: this.formBuilder.control(null)
+    cityId: this.formBuilder.control(null),
+    status: this.formBuilder.control(null)
   });
-  constructor(private voluntarilyService: VoluntarilyService, private navigationService: NavigationService) {
-    super('Gönüllü Kayıt');
+  constructor(private voluntarilyService: VoluntarilyService, private navigationService: NavigationService, private route: ActivatedRoute) {
+    const id = route.snapshot.paramMap.get('id');
+    super(id ? 'Gönüllü Güncelle' : 'Gönüllü Kayıt');
+
+    if(id) {
+      voluntarilyService.get(id).subscribe(result => {
+        this.addSupporterForm.patchValue(result);
+        this.addSupporterForm.patchValue({'emailOrPhoneInfo': { email: result.email, phone: result.phone}});
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -68,24 +81,42 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
   submit(){
     if (this.addSupporterForm.valid) {
-      const model = {
-        firstName: this.addSupporterForm.value.firstName,
-        lastName: this.addSupporterForm.value.lastName,
-        email: this.addSupporterForm.value.emailOrPhoneInfo.email,
-        phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
-        address: this.addSupporterForm.value.address,
-        cityId: this.addSupporterForm.value.cityId,
-        countryId: this.addSupporterForm.value.countryId,
-        children: []
-      } as CreateSupporterModel;
 
-      this.voluntarilyService.create(model).subscribe((result) => {
-        this.navigationService.navigate('/voluntarily');
-      });
+      if(!this.addSupporterForm.value.supporterId) {
+        const model = {
+          firstName: this.addSupporterForm.value.firstName,
+          lastName: this.addSupporterForm.value.lastName,
+          email: this.addSupporterForm.value.emailOrPhoneInfo.email,
+          phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
+          address: this.addSupporterForm.value.address,
+          cityId: this.addSupporterForm.value.cityId,
+          countryId: this.addSupporterForm.value.countryId,
+          children: []
+        } as CreateSupporterModel;
+
+        this.voluntarilyService.create(model).subscribe(() => {
+          this.backToList();
+        });
+      }
+      else {
+        const updateModel = {
+          userId: this.addSupporterForm.value.userId,
+          firstName: this.addSupporterForm.value.firstName,
+          lastName: this.addSupporterForm.value.lastName,
+          email: this.addSupporterForm.value.emailOrPhoneInfo.email,
+          phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
+          address: this.addSupporterForm.value.address,
+          cityId: this.addSupporterForm.value.cityId,
+          countryId: this.addSupporterForm.value.countryId,
+          status: this.addSupporterForm.value.status,
+        } as UpdateSupporterModel;
+
+        this.voluntarilyService.update(updateModel).subscribe(() => {
+          this.backToList();
+        });
+      }
     }
-
   }
-
   backToList(){
     this.navigationService.navigate('/voluntarily');
   }

@@ -19,6 +19,17 @@ public class SupporterController : ControllerBase
     {
         _supporterBusiness = supporterBusiness ?? throw new ArgumentNullException(nameof(supporterBusiness));
     }
+    
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
+    public async Task<IActionResult> Get([FromRoute] Guid id)
+    {
+        return Ok(await _supporterBusiness.Get(id));
+    }
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
@@ -44,13 +55,13 @@ public class SupporterController : ControllerBase
         return Ok();
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
-    public async Task<IActionResult> Delete([FromQuery] Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         await _supporterBusiness.Delete(id);
         return Ok();

@@ -13,6 +13,13 @@ const voluntarilyListRoutes: Routes = [
       import(
         '@voluntarilyListsModule/components/add-voluntarily/add-voluntarily.component'
       )
+  },
+  {
+    path: 'voluntarily/edit/:id',
+    loadComponent: () =>
+      import(
+        '@voluntarilyListsModule/components/add-voluntarily/add-voluntarily.component'
+        )
   }
 ];
 export default voluntarilyListRoutes;

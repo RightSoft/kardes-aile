@@ -5,6 +5,7 @@ namespace KardesAile.Business.Interfaces;
 
 public interface ISupporterBusiness
 {
+    Task<SupporterSearchResultModel> Get(Guid id);
     Task Create(CreateSupporterModel model);
     Task Update(UpdateSupporterModel model);
     Task Delete(Guid id);

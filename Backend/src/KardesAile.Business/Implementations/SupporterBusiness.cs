@@ -1,6 +1,7 @@
 using KardesAile.Business.Interfaces;
 using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.Errors;
+using KardesAile.CommonTypes.Exceptions;
 using KardesAile.CommonTypes.ViewModels;
 using KardesAile.CommonTypes.ViewModels.Supporter;
 using KardesAile.Database.Abstracts;
@@ -17,6 +18,36 @@ public class SupporterBusiness : ISupporterBusiness
     public SupporterBusiness(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+    }
+
+    public async Task<SupporterSearchResultModel> Get(Guid id)
+    {
+        var supporter = await _unitOfWork.Supporter
+            .AsQueryable
+            .Include(p => p.City)
+            .Include(p => p.Country)
+            .Include(p => p.User)
+            .AsNoTracking()
+            .Select(p => new SupporterSearchResultModel
+            {
+                UserId = p.UserId,
+                SupporterId = p.Id,
+                FirstName = p.User!.FirstName,
+                LastName = p.User!.LastName,
+                Phone = p.User!.Phone,
+                Email = p.User!.Email,
+                CityId = p.CityId,
+                CityName = p.City!.Name,
+                CountryId = p.CountryId,
+                CountryName = p.Country!.Name,
+                Status = p.User.Status,
+                CreatedAt = p.CreatedAt
+            }).FirstOrDefaultAsync(p => p.SupporterId == id);
+        
+        if (supporter == null)
+            throw new BusinessException($"Supporter could not be found. Id {id}");
+
+        return supporter;
     }
 
     public async Task Create(CreateSupporterModel model)
@@ -101,21 +132,22 @@ public class SupporterBusiness : ISupporterBusiness
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
 
+        var filter = model.Keyword?.ToUpperInvariant();
         var query = _unitOfWork.Supporter
             .AsQueryable
             .Where(p => model.IncludeDeleted ||
                         p.User!.Status == UserStatuses.Active || p.User.Status == UserStatuses.Suspended)
-            .Where(p => string.IsNullOrEmpty(model.Keyword) ||
-                        p.User.FirstName.Contains(model.Keyword) ||
-                        p.User.LastName.Contains(model.Keyword) ||
-                        p.City.Name.Contains(model.Keyword) ||
-                        p.Country.Name.Contains(model.Keyword) ||
-                        p.Address.Contains(model.Keyword));
+            .Where(p => string.IsNullOrEmpty(filter) ||
+                        p.User!.FirstName.ToUpper().Contains(filter) ||
+                        p.User!.LastName.ToUpper().Contains(filter) ||
+                        p.City!.Name.ToUpper().Contains(filter) ||
+                        p.Country!.Name.ToUpper().Contains(filter) ||
+                        p.Address!.ToUpper().Contains(filter));
         
         var result = await query
             .Include(p => p.City)
             .Include(p => p.Country)
-            .Include(p => p.User)
+            .Include(p => p.User).ThenInclude(u => u!.Children)
             .AsNoTracking()
             .Select(p => new SupporterSearchResultModel
             {
@@ -130,7 +162,8 @@ public class SupporterBusiness : ISupporterBusiness
                 CountryId = p.CountryId,
                 CountryName = p.Country!.Name,
                 Status = p.User.Status,
-                CreatedAt = p.CreatedAt
+                CreatedAt = p.CreatedAt,
+                MatchingStatus = $"{p.Match!.Victim!.User!.Children.Count}/{p.User.Children.Count}"
             })
             .ToPagedListAsync(model);
 

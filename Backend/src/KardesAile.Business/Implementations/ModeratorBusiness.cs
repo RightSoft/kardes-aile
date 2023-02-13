@@ -7,6 +7,7 @@ using KardesAile.Database.Abstracts;
 using KardesAile.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using KardesAile.Database.Extensions;
 
 namespace KardesAile.Business.Implementations;
 
@@ -133,29 +134,22 @@ public class ModeratorBusiness : IModeratorBusiness
         var moderators = _unitOfWork.Moderators
             .AsNoTracking
             .Where(m => (model.IncludeDeleted || !m.IsDeleted)
-                && (string.IsNullOrEmpty(model.Query)
-                    || EF.Functions.Like(m.FullName.ToLower(), $"%{model.Query.ToLower()}%")
-                    || EF.Functions.Like(m.FullName.ToLower(), $"%{model.Query.ToLower()}%")));
+                        && (string.IsNullOrEmpty(model.Query)
+                            || EF.Functions.Like(m.FullName.ToLower(), $"%{model.Query.ToLower()}%")
+                            || EF.Functions.Like(m.FullName.ToLower(), $"%{model.Query.ToLower()}%")));
 
-        result.TotalCount = await moderators.CountAsync();
-
-        if(result.TotalCount > 0)
-        {
-            result.List = await moderators
-                .OrderBy(m => m.Email)
-                .ThenBy(m => m.FullName)
-                .Skip(((model.Page ?? 1) - 1) * (model.PageSize ?? 100))
-                .Take(model.PageSize ?? 100)
-                .Select(moderator => new SearchModeratorResult
-                {
-                    Id = moderator.Id,
-                    FullName = moderator.FullName,
-                    Email = moderator.Email,
-                    CreatedAt = moderator.CreatedAt,
-                    IsDeleted = moderator.IsDeleted
-                })
-                .ToListAsync();
-        }
+        result = await moderators
+            .OrderBy(m => m.Email)
+            .ThenBy(m => m.FullName)
+            .Select(moderator => new SearchModeratorResult
+            {
+                Id = moderator.Id,
+                FullName = moderator.FullName,
+                Email = moderator.Email,
+                CreatedAt = moderator.CreatedAt,
+                IsDeleted = moderator.IsDeleted
+            })
+            .ToPagedListAsync(model);
 
         return result;
     }
