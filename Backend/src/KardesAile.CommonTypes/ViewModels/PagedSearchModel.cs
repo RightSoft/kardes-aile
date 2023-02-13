@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using KardesAile.CommonTypes.Enums;
 
 namespace KardesAile.CommonTypes.ViewModels;
 

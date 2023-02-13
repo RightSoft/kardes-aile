@@ -20,18 +20,19 @@ public static class QueryableExtensions
 
 	    private static async Task<IQueryable<T>> PageAsync<T>(this IQueryable<T> queryable, PagedSearchModel pagedSearchModel)
         {
-            if (pagedSearchModel.PageSize == 0 || await queryable.AnyAsync() != true)
+            if (pagedSearchModel.PageSize == 0)
             {
                 return queryable;
             }
             var skip = pagedSearchModel.Page!.Value == 0 ? 0 : (pagedSearchModel.Page!.Value - 1) * pagedSearchModel.PageSize!.Value;
 
-            if (pagedSearchModel.SortModels!.Count == 0 || string.IsNullOrEmpty(pagedSearchModel.SortModels[0].SortName))
+            if (pagedSearchModel.SortModels == null || pagedSearchModel.SortModels.Count == 0
+                                                    || string.IsNullOrEmpty(pagedSearchModel.SortModels[0].SortName))
                 return queryable.Skip(skip).Take(pagedSearchModel.PageSize!.Value);
 
-            var sort = pagedSearchModel.SortModels[0];
-            var expression = CreateExpression(typeof(T), sort.SortName);
-            IOrderedQueryable<T> ordered =  sort.SortDirection == SortDirection.Descending ? 
+            var orderSort = pagedSearchModel.SortModels[0];
+            var expression = CreateExpression(typeof(T), orderSort.SortName);
+            IOrderedQueryable<T> ordered =  orderSort.SortDirection == SortDirection.Descending ? 
                 Queryable.OrderByDescending(queryable, expression) :
                 Queryable.OrderBy(queryable, expression);
 
@@ -49,13 +50,17 @@ public static class QueryableExtensions
         public static async Task<PagedResultModel<T>> ToPagedListAsync<T>(this IQueryable<T> query,
             PagedSearchModel pagedSearchModel) where T : class
         {
-            var result = new PagedResultModel<T>
+            var result = new PagedResultModel<T>();
+
+            if (pagedSearchModel.Page == 1)
             {
-                TotalCount = pagedSearchModel.Page == 1 ? await query.CountAsync() : 0
-            };
+                result.TotalCount = await query.CountAsync();
+            }
+            if (result.TotalCount == 0) return result;
+            
             var pagedQueryable = await query.PageAsync(pagedSearchModel);
             result.List = await pagedQueryable.ToListAsync();
-
+            
             return result;
         }
 
