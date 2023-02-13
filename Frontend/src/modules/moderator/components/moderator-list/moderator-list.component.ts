@@ -1,9 +1,19 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import BaseListComponent from '@appModule/base-classes/base-list-component.abstract.class';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
 import { ListToolBoxComponent } from '@sharedComponents/list-tool-box/list-tool-box.component';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SearchModeratorResult } from '@moderatorModule/models/search-moderator-result';
 import { ModeratorService } from '@moderatorModule/moderator.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,12 +21,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { PagedResultModel } from '@appModule/models/paged-result.model';
 import { SearchModeratorModel } from '@moderatorModule/models/search-moderator-model';
 import { AppConstants } from '@appModule/contants/app-constants';
-import { catchError, filter, merge, of, startWith, switchMap, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, filter, of, switchMap, tap } from 'rxjs';
 import { NavigationService } from '@appModule/services/navigation.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '@sharedComponents/confirmation-dialog/components/confirmation-dialog.component';
 import { SnackbarService } from '@appModule/services/snackbar.service';
+import { SearchSupporterModel } from '@appModule/models/search-supporter.model';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { SortDirection } from '@appModule/models/shared/sort-direction.enum';
+import { SearchSortModel } from '@appModule/models/search-sort.model';
+import {
+  UserStatuses,
+  UserStatusesLabel
+} from '@appModule/models/shared/user-statuses.enum';
 
 @Component({
   selector: 'app-moderator-list',
@@ -28,7 +45,8 @@ import { SnackbarService } from '@appModule/services/snackbar.service';
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSortModule
   ],
   templateUrl: './moderator-list.component.html',
   styleUrls: ['./moderator-list.component.scss']
@@ -39,18 +57,24 @@ export default class ModeratorListComponent
 {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  length: number;
-  pageSize: number = AppConstants.DefaultPageSize;
-  pageSizeOptions: number[];
   displayedColumns: string[] = [
-    'name',
+    'fullName',
     'email',
     'createdAt',
-    'isDeleted',
+    'status',
     'actions'
   ];
 
-  dataSource: SearchModeratorResult[];
+  dataSource: MatTableDataSource<SearchModeratorResult> =
+    new MatTableDataSource<SearchModeratorResult>();
+  pagedSupporterData: PagedResultModel<SearchModeratorResult> =
+    new PagedResultModel<SearchModeratorResult>();
+  searchData: SearchModeratorModel = new SearchSupporterModel(
+    1,
+    AppConstants.DefaultPageSize
+  );
+  userStatuses = UserStatuses;
+  @Input() projectsNeedsRefresh = new EventEmitter<boolean>();
 
   constructor(
     private moderatorService: ModeratorService,
@@ -59,25 +83,12 @@ export default class ModeratorListComponent
     private snackbarService: SnackbarService
   ) {
     super('Moderatör Listesi');
-    this.dataSource = [];
+    this.onSearch();
   }
 
   ngAfterViewInit() {
-    merge(this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          return this.onSearch(this.keyword).pipe(
-            map((data) => {
-              this.setPaginationResult(data);
-            }),
-            catchError((error) => {
-              return of(error);
-            })
-          );
-        })
-      )
-      .subscribe();
+    this.dataSource = new MatTableDataSource<SearchModeratorResult>([]);
+    this.dataSource.paginator = this.paginator;
   }
 
   onUpdate(row: SearchModeratorResult) {
@@ -85,8 +96,6 @@ export default class ModeratorListComponent
   }
 
   onDelete(data: SearchModeratorResult) {
-    console.log('onDelete');
-
     this.dialog
       .open(ConfirmationDialogComponent, {
         width: '300px',
@@ -102,6 +111,7 @@ export default class ModeratorListComponent
         }),
         switchMap(() => this.moderatorService.delete(data.id)),
         tap(() => this.snackbarService.show('Success', 'Successfully deleted')),
+        tap(() => this.onSearch()),
         catchError((error) => {
           return of(error);
         })
@@ -114,21 +124,55 @@ export default class ModeratorListComponent
   }
 
   override onSearch(keyword?: string) {
-    const request = new SearchModeratorModel();
-    request.query = keyword;
-    request.page = 1;
-    request.pageSize = this.paginator.pageSize;
-    request.includeDeleted = this.isChecked;
-    return this.moderatorService.search(request);
-  }
-
-  private setPaginationResult(data: PagedResultModel<SearchModeratorResult>) {
-    if (this.paginator.pageIndex === 0) {
-      this.length = data.totalCount;
-      this.pageSize = 10;
-      this.pageSizeOptions = [10, 25, 50];
+    if (keyword) {
+      this.searchData.query = keyword;
     }
 
-    this.dataSource = data.list;
+    this.searchData.includeDeleted = this.isChecked;
+
+    this.moderatorService.search(this.searchData).subscribe((result) => {
+      this.dataSource = new MatTableDataSource<SearchModeratorResult>(
+        result.list
+      );
+      this.pagedSupporterData = result;
+    });
+  }
+
+  onChangePaging($event: PageEvent) {
+    this.searchData.page = $event.pageIndex;
+    this.onSearch();
+  }
+
+  onSorting($event: Sort) {
+    const sortDirection =
+      $event.direction == 'desc'
+        ? SortDirection.Descending
+        : SortDirection.Ascending;
+
+    this.searchData.sortModels = [];
+
+    if($event.active == 'fullName'){
+      this.searchData.sortModels.push({
+        sortName: 'firstName',
+        sortDirection: sortDirection
+      } as SearchSortModel);
+      this.searchData.sortModels.push({
+        sortName: 'lastName',
+        sortDirection: sortDirection
+      } as SearchSortModel);
+    } else {
+      this.searchData.sortModels.push({
+        sortName: $event.active,
+        sortDirection: sortDirection
+      } as SearchSortModel);
+    }
+
+
+
+    this.onSearch();
+  }
+
+  getStatusLabel(status: number): string {
+    return UserStatusesLabel.get(status);
   }
 }

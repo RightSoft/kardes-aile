@@ -1,6 +1,7 @@
 export interface SearchModeratorResult {
   id: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   createdAt: Date;
   isDeleted: boolean;
