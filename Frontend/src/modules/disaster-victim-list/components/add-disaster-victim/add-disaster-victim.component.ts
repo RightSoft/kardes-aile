@@ -60,11 +60,20 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     super(id ? 'Afetzede Güncelle' : 'Afetzede Kayit');
     if (id) {
       this.disasterVictimId = id;
+      disasterVictimService.get(id).subscribe(result => {
+        this.addressService.cities(result.countryId).subscribe((cResult) => {
+          console.log(result);
+          this.cityList$ = cResult.sort((a, b) => a.name.localeCompare(b.name));;
+          this.form.patchValue(result);
+          this.form.patchValue({fullName : `${result.firstName} ${result.lastName}`})
+        });
+
+      });
     }
   }
   form = this.formBuilder.group({
     id: this.disasterVictimId,
-    tckn: this.formBuilder.control(undefined, [
+    identityNumber: this.formBuilder.control(undefined, [
       Validators.required,
       Validators.min(9999999999),
       Validators.max(99999999999)
@@ -79,12 +88,11 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
       phoneValidator
     ]),
     address: this.formBuilder.control(undefined, Validators.required),
-    city: this.formBuilder.control(undefined, Validators.required),
-    country: this.formBuilder.control(undefined, Validators.required),
+    cityId: this.formBuilder.control(undefined, Validators.required),
+    countryId: this.formBuilder.control(undefined, Validators.required),
     temporaryAddress: this.formBuilder.control(undefined, Validators.required),
     temporaryCityId: this.formBuilder.control(undefined, Validators.required),
-    temporaryCountryId: this.formBuilder.control(undefined, Validators.required),
-    ssnValidated: this.formBuilder.control(undefined),
+    identityNumberValidated: this.formBuilder.control(undefined),
     addressValidated: this.formBuilder.control(undefined),
   });
 
@@ -99,7 +107,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
   }
 
   public get tcknValidationMessage(): string {
-    return getValidationMessage(this.form.controls.tckn);
+    return getValidationMessage(this.form.controls.identityNumber);
   }
   public get fullNameValidationMessage(): string {
     return getValidationMessage(this.form.controls.fullName);
@@ -114,10 +122,10 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     return getValidationMessage(this.form.controls.address);
   }
   public get cityValidationMessage(): string {
-    return getValidationMessage(this.form.controls.city);
+    return getValidationMessage(this.form.controls.cityId);
   }
   public get countryValidationMessage(): string {
-    return getValidationMessage(this.form.controls.country);
+    return getValidationMessage(this.form.controls.countryId);
   }
   public get temporaryAddressValidationMessage(): string {
     return getValidationMessage(this.form.controls.temporaryAddress);
@@ -125,9 +133,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
   public get temporaryCityValidationMessage(): string {
     return getValidationMessage(this.form.controls.temporaryCityId);
   }
-  public get temporaryCountryValidationMessage(): string {
-    return getValidationMessage(this.form.controls.temporaryCountryId);
-  }
+
 
   public calculateAge(birthDate: Date): string {
     var timeDiff = Math.abs(Date.now() - new Date(birthDate).getTime());
@@ -155,16 +161,10 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     this.showChildDialog('Update', child, index);
   }
 
-  public homeCountryChanged(id: string) {
+  public countryChanged(id: string) {
     this.addressService.cities(id).subscribe((result) => {
       console.log(result);
       this.cityList$ = result.sort((a, b) => a.name.localeCompare(b.name));;
-    });
-  }
-  public tempCountryChanged(id: string) {
-    this.addressService.cities(id).subscribe((result) => {
-      console.log(result);
-      this.tempCityList$ = result.sort((a, b) => a.name.localeCompare(b.name));
     });
   }
 
@@ -183,13 +183,11 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           email: this.form.value.email,
           phone: this.form.value.phone,
           address: this.form.value.address,
-          cityId: this.form.value.city,
-          countryId: this.form.value.country,
-          temporaryAddress : this.form.value.temporaryAddress,
-          temporaryCityId : this.form.value.temporaryCityId,
-          temporaryCountryId : this.form.value.temporaryCountryId,
-          identityNumber:this.form.value.tckn.toString(),
-          identityNumberValidated:this.form.value.ssnValidated,
+          cityId: this.form.value.cityId,
+          countryId: this.form.value.countryId,
+          temporaryAddress: this.form.value.temporaryAddress,
+          identityNumber: this.form.value.identityNumber.toString(),
+          identityNumberValidated: this.form.value.identityNumberValidated,
           children: this.childrens
         } as CreateDisasterVictimModel;
         this.disasterVictimService.create(model).subscribe(() => {
@@ -204,17 +202,16 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           email: this.form.value.email,
           phone: this.form.value.phone,
           address: this.form.value.address,
-          cityId: this.form.value.city,
-          countryId: this.form.value.country,
-          temporaryAddress : this.form.value.temporaryAddress,
-          temporaryCityId : this.form.value.temporaryCityId,
-          temporaryCountryId : this.form.value.temporaryCountryId,
-          identityNumber:this.form.value.tckn.toString(),
-          identityNumberValidated:this.form.value.ssnValidated,
+          cityId: this.form.value.cityId,
+          countryId: this.form.value.countryId,
+          temporaryAddress: this.form.value.temporaryAddress,
+          temporaryCityId: this.form.value.temporaryCityId,
+          identityNumber: this.form.value.identityNumber.toString(),
+          identityNumberValidated: this.form.value.identityNumberValidated,
           status: 0,
           children: this.childrens
         } as UpdateDisasterVictimModel;
-
+        console.log('hereee');
         this.disasterVictimService.update(updateModel).subscribe(() => {
           this.backToList();
         });
