@@ -21,7 +21,7 @@ public class SupporterController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -32,7 +32,7 @@ public class SupporterController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -44,7 +44,7 @@ public class SupporterController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -56,7 +56,7 @@ public class SupporterController : ControllerBase
     }
     
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -68,7 +68,7 @@ public class SupporterController : ControllerBase
     }
     
     [HttpPost]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(PagedResultModel<SupporterSearchResultModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]

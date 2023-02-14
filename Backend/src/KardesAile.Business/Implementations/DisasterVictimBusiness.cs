@@ -151,8 +151,10 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
     {
         var user = await _unitOfWork.User
             .AsQueryable
-            .FirstOrDefaultAsync(p => p.Id == id &&
-                                      (p.Status == UserStatuses.Active || p.Status == UserStatuses.Suspended));
+            .FirstOrDefaultAsync(p =>
+                p.Id == id &&
+                p.Role == UserRoles.DisasterVictim &&
+                (p.Status == UserStatuses.Active || p.Status == UserStatuses.Suspended));
 
         if (user == null)
         {

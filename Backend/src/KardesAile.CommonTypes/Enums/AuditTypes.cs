@@ -6,5 +6,6 @@ public enum AuditTypes
     Supporter,
     DisasterVictim,
     Child,
-    Matching
+    Matching,
+    Moderator
 }

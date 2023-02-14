@@ -16,23 +16,25 @@ namespace KardesAile.Business.Implementations;
 public class ModeratorBusiness : IModeratorBusiness
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuditContext _auditContext;
 
-    public ModeratorBusiness(IUnitOfWork unitOfWork)
+    public ModeratorBusiness(IUnitOfWork unitOfWork, IAuditContext auditContext)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _auditContext = auditContext ?? throw new ArgumentNullException(nameof(auditContext));
     }
 
     public async Task CreateAsync(CreateModeratorModel model)
     {
         if (model == null)
         {
-            throw new ArgumentNullException(nameof(model));       
+            throw new ArgumentNullException(nameof(model));
         }
-        
+
         await TrimAndValidateEmailAsync(null, model.Email!);
 
         var password = GeneratePasswordHash(model.Password!);
-        
+
         User user = new()
         {
             FirstName = model.FirstName!.Trim(),
@@ -47,6 +49,9 @@ public class ModeratorBusiness : IModeratorBusiness
             Status = UserStatuses.Active
         };
 
+        _auditContext.Start(AuditTypes.Moderator, "Moderator created");
+        _auditContext.AddEffectedUser(user);
+
         _unitOfWork.User.Add(user);
 
         await _unitOfWork.SaveChangesAsync();
@@ -56,16 +61,20 @@ public class ModeratorBusiness : IModeratorBusiness
     {
         var user = await _unitOfWork.User
             .AsQueryable
-            .SingleOrDefaultAsync(m => m.Id == id);
+            .SingleOrDefaultAsync(m =>
+                m.Id == id &&
+                m.Role == UserRoles.Moderator &&
+                (m.Status == UserStatuses.Active || m.Status == UserStatuses.Suspended));
 
         if (user is null)
         {
             throw new BusinessException($"Moderator could not be found. Id {id}");
         }
 
-        user.Status = UserStatuses.Deleted;
+        _auditContext.Start(AuditTypes.Moderator, "Moderator deleted");
+        _auditContext.AddEffectedUser(user);
 
-        _unitOfWork.User.Update(user);
+        user.Status = UserStatuses.Deleted;
 
         await _unitOfWork.SaveChangesAsync();
     }
@@ -74,11 +83,11 @@ public class ModeratorBusiness : IModeratorBusiness
     {
         var user = await _unitOfWork.User
             .AsNoTracking
-            .SingleOrDefaultAsync(m => m.Id == id);
+            .SingleOrDefaultAsync(m => m.Id == id && m.Role == UserRoles.Moderator);
 
         if (user is null)
         {
-            throw new BusinessException($"Moderator could not be found. Id {id}");     
+            throw new BusinessException($"Moderator could not be found. Id {id}");
         }
 
         ModeratorResult result = new()
@@ -99,51 +108,53 @@ public class ModeratorBusiness : IModeratorBusiness
 
         var users = _unitOfWork.User
             .AsNoTracking
-            .Where(m => (model.IncludeDeleted || m.Status == UserStatuses.Active || m.Status == UserStatuses.Suspended)
-                        && (m.Role == UserRoles.Moderator) 
-                        && (string.IsNullOrEmpty(model.Query)
-                            || EF.Functions.Like(m.FirstName.ToLower(), $"%{model.Query.ToLower()}%")
-                            || EF.Functions.Like(m.LastName.ToLower(), $"%{model.Query.ToLower()}%")
-                            || EF.Functions.Like(m.Email.ToLower(), $"%{model.Query.ToLower()}%")
-                        ));
-            result.TotalCount = await users.CountAsync();
-            
-            result = await users
-                .OrderBy(m => m.Email)
-                .ThenBy(m => m.FirstName)
-                .ThenBy(m => m.LastName)
-                .Skip(((model.Page ?? 1) - 1) * (model.PageSize ?? 100))
-                .Take(model.PageSize ?? 100)
-                .Select(user => new SearchModeratorResult
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    CreatedAt = user.CreatedAt,
-                    Status = user.Status
-                })
-                .ToPagedListAsync(model);
+            .Where(m =>
+                m.Role == UserRoles.Moderator &&
+                (model.IncludeDeleted || m.Status == UserStatuses.Active || m.Status == UserStatuses.Suspended) &&
+                (string.IsNullOrEmpty(model.Query) ||
+                 EF.Functions.Like(m.FirstName.ToLower(), $"%{model.Query.ToLower()}%") ||
+                 EF.Functions.Like(m.LastName.ToLower(), $"%{model.Query.ToLower()}%") ||
+                 EF.Functions.Like(m.Email.ToLower(), $"%{model.Query.ToLower()}%")
+                ));
+        result.TotalCount = await users.CountAsync();
 
-            return result;
+        result = await users
+            .OrderBy(m => m.Email)
+            .ThenBy(m => m.FirstName)
+            .ThenBy(m => m.LastName)
+            .Select(user => new SearchModeratorResult
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt,
+                Status = user.Status
+            })
+            .ToPagedListAsync(model);
+
+        return result;
     }
 
     public async Task UpdateAsync(Guid id, UpdateModeratorModel model)
     {
         await TrimAndValidateEmailAsync(id, model.Email!);
-        
+
         var user = await _unitOfWork.User
             .AsQueryable
-            .SingleOrDefaultAsync(m => m.Id == id);
+            .SingleOrDefaultAsync(m => m.Id == id && m.Role == UserRoles.Moderator);
 
         if (user is null)
         {
             throw new BusinessException($"Moderator could not be found. Id {id}");
         }
 
+        _auditContext.Start(AuditTypes.Moderator, "Moderator updated");
+        _auditContext.AddEffectedUser(user);
+
         user.FirstName = model.FirstName!.Trim();
         user.LastName = model.LastName!.Trim();
-        user.Email = model.Email!.Trim();  // TODO : Should the email be updated?
+        //user.Email = model.Email!.Trim();
 
         if (model.UpdatePassword)
         {
@@ -151,12 +162,10 @@ public class ModeratorBusiness : IModeratorBusiness
             user.Salt = password.Item1;
             user.Hash = password.Item2;
         }
-        
-        _unitOfWork.User.Update(user);
 
         await _unitOfWork.SaveChangesAsync();
     }
-    
+
     private async Task TrimAndValidateEmailAsync(Guid? id, string email)
     {
         email = email.Trim();
@@ -172,7 +181,7 @@ public class ModeratorBusiness : IModeratorBusiness
 
         if (isEmailInUse)
         {
-            throw new BusinessException($"{email} is already in use.");  
+            throw new BusinessException($"{email} is already in use.");
         }
     }
 

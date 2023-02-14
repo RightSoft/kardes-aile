@@ -77,6 +77,7 @@ public class ChildBusiness : IChildBusiness
     {
         var result = await _unitOfWork.Child
             .AsQueryable
+            .AsNoTracking()
             .Where(p => p.UserId == userId)
             .Select(p=> new ChildResultModel
             {

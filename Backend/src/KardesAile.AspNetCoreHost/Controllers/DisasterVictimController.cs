@@ -19,9 +19,9 @@ public class DisasterVictimController : ControllerBase
     {
         _disasterVictimBusiness = disasterVictimBusiness ?? throw new ArgumentNullException(nameof(disasterVictimBusiness));
     }
-    
+
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -32,7 +32,7 @@ public class DisasterVictimController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -44,7 +44,7 @@ public class DisasterVictimController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -54,9 +54,9 @@ public class DisasterVictimController : ControllerBase
         await _disasterVictimBusiness.Update(model);
         return Ok();
     }
-    
+
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -66,9 +66,9 @@ public class DisasterVictimController : ControllerBase
         await _disasterVictimBusiness.Delete(id);
         return Ok();
     }
-    
+
     [HttpPost]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResultModel<DisasterVictimSearchResultModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]

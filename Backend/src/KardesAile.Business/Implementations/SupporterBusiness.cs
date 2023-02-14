@@ -131,14 +131,16 @@ public class SupporterBusiness : ISupporterBusiness
     {
         var user = await _unitOfWork.User
             .AsQueryable
-            .FirstOrDefaultAsync(p => p.Id == id &&
-                                      (p.Status == UserStatuses.Active || p.Status == UserStatuses.Suspended));
+            .FirstOrDefaultAsync(p =>
+                p.Id == id &&
+                p.Role == UserRoles.Supporter &&
+                (p.Status == UserStatuses.Active || p.Status == UserStatuses.Suspended));
 
         if (user == null)
         {
             throw Errors.SupporterNotFound;
         }
-        
+
         _auditContext.Start(AuditTypes.Supporter, "Supporter deleted");
         _auditContext.AddEffectedUser(user);
 
