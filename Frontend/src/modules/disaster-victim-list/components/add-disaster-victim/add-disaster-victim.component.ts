@@ -26,6 +26,7 @@ import { ChildResultModel } from '@appModule/models/child-result.model';
 import { CityResultModel } from '@appModule/models/city-result.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { ChildService } from '@appModule/services/child.service';
 @Component({
   selector: 'app-add-disaster-victim',
   standalone: true,
@@ -55,17 +56,20 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
   childrens: Array<CreateChildModel> = [];
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'action'];
   disasterVictimId: string = undefined;
-  constructor(private disasterVictimService: DisasterVictimService, private addressService: AddressService, private navigationService: NavigationService, private route: ActivatedRoute, private location: Location) {
+  constructor(private disasterVictimService: DisasterVictimService, private addressService: AddressService, private navigationService: NavigationService, private route: ActivatedRoute, private location: Location, private childService: ChildService) {
     const id = route.snapshot.paramMap.get('id');
     super(id ? 'Afetzede Güncelle' : 'Afetzede Kayit');
     if (id) {
       this.disasterVictimId = id;
       disasterVictimService.get(id).subscribe(result => {
+        this.childService.list(result.userId).subscribe(childResult => {
+          this.childrens = childResult;
+        });
         this.addressService.cities(result.countryId).subscribe((cResult) => {
           console.log(result);
-          this.cityList$ = cResult.sort((a, b) => a.name.localeCompare(b.name));;
+          this.cityList$ = cResult.sort((a, b) => a.name.localeCompare(b.name));
           this.form.patchValue(result);
-          this.form.patchValue({fullName : `${result.firstName} ${result.lastName}`})
+          this.form.patchValue({ fullName: `${result.firstName} ${result.lastName}` })
         });
 
       });
@@ -174,6 +178,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
       el.gender = Number(el.gender);
       return el;
     });
+    console.log(this.form.valid);
     if (this.form.valid) {
 
       if (!this.disasterVictimId) {

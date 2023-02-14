@@ -12,8 +12,8 @@ export class ChildService {
 
     constructor(private http: HttpClient) { }
 
-    public list(id: string) {
-        return this.http.get<Array<ChildResultModel>>(`${this.apiUrl}/list/${id}`, { responseType: "json" });
+    public list(userId: string) {
+        return this.http.get<Array<ChildResultModel>>(`${this.apiUrl}/list/${userId}`, { responseType: "json" });
     }
 
     public create(createChildModel: CreateChildModel) {

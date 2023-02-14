@@ -1,5 +1,6 @@
 export class DisasterVictimSearchResultModel {
     id: string;
+    userId:string;
     firstName: string;
     lastName: string;
     phone: string;
