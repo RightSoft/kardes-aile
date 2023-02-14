@@ -30,9 +30,7 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {
   AddVoluntarilyChildComponent
 } from "@voluntarilyListsModule/components/add-voluntarily-child/add-voluntarily-child.component";
-import {ChildModel} from "@appModule/models/child/child.model";
 import {GendersLabel} from "@appModule/models/shared/genders.enum";
-import {CreateChildModel} from "@appModule/models/child/create-child.model";
 
 @Component({
   selector: 'app-add-voluntarily',
@@ -45,8 +43,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   countryList: CountryResultModel[];
   filteredCountryList$: Observable<CountryResultModel[]>;
   cityList: CityResultModel[];
-  dataSource: MatTableDataSource<ChildResultModel> = new MatTableDataSource<ChildResultModel>();
-  children: ChildModel[];
+  children: ChildResultModel[];
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'actions'];
   private formBuilder = inject(FormBuilder);
   addSupporterForm = this.formBuilder.group({
@@ -138,7 +135,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
           address: this.addSupporterForm.value.address,
           cityId: this.addSupporterForm.value.cityId,
           countryId: this.addSupporterForm.value.countryId,
-          children: this.children as CreateChildModel[]
+          children: this.children.map(child => ({name: child.name, birthDate: child.birthDate, gender: child.gender}))
         } as CreateSupporterModel;
 
         this.voluntarilyService.create(model).subscribe(() => {
@@ -197,7 +194,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   }
 
   getChildren() {
-    return new MatTableDataSource<ChildModel>(this.children);
+    return new MatTableDataSource<ChildResultModel>(this.children);
   }
 
   getAge(birthDate: Date): string {

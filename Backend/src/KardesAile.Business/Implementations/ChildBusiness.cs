@@ -35,11 +35,11 @@ public class ChildBusiness : IChildBusiness
         return result;
     }
     
-    public async Task Add(Guid userId, CreateChildModel model)
+    public async Task Add(CreateChildModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-
-        var user = await GetUser(userId);
+        
+        var user = await GetUser(model.UserId!.Value);
         
         _auditContext.Start(AuditTypes.Child, "Child added");
         _auditContext.AddEffectedUser(user);
@@ -49,9 +49,29 @@ public class ChildBusiness : IChildBusiness
             Name = model.Name!,
             BirthDate = DateOnly.FromDateTime(model.BirthDate!.Value),
             Gender = model.Gender!.Value,
-            UserId = userId,
+            UserId = model.UserId!.Value,
         });
 
+        await _unitOfWork.SaveChangesAsync();
+    }
+    
+    public async Task Update(UpdateChildModel model)
+    {
+        if (model == null) throw new ArgumentNullException(nameof(model));
+        
+        var child = await _unitOfWork.Child
+            .AsQueryable
+            .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+        var user = await GetUser(child.UserId);
+        
+        _auditContext.Start(AuditTypes.Child, "Child updated");
+        _auditContext.AddEffectedUser(user);
+
+        child.Name = model.Name;
+        child.Gender = model.Gender;
+        child.BirthDate = DateOnly.FromDateTime(model.BirthDate);
+        
         await _unitOfWork.SaveChangesAsync();
     }
     

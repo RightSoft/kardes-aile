@@ -15,6 +15,12 @@ import {SortDirection} from "@appModule/models/shared/sort-direction.enum";
 import {SearchSortModel} from "@appModule/models/shared/search-sort.model";
 import {NavigationService} from "@appModule/services/navigation.service";
 import {UserStatuses, UserStatusesLabel} from "@appModule/models/shared/user-statuses.enum";
+import {
+  ConfirmationDialogComponent
+} from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
+import {catchError, of, switchMap, tap} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {SnackbarService} from "@appModule/services/snackbar.service";
 
 @Component({
   selector: 'app-voluntarily-list',
@@ -30,7 +36,10 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
   searchSupporterData: SearchSupporterModel = new SearchSupporterModel(1, 10);
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private voluntarilyService: VoluntarilyService, private navigationService: NavigationService) {
+  constructor(private voluntarilyService: VoluntarilyService,
+              private navigationService: NavigationService,
+              private dialog: MatDialog,
+              private snackbarService: SnackbarService) {
     super('Gönüllü Listesi');
     this.onSearch();
   }
@@ -80,14 +89,33 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
     });
   }
 
-  edit(id: string) {
+  onEdit(id: string) {
     this.navigationService.navigate(`/voluntarily/${id}`);
   }
 
-  delete(userId: string) {
-    this.voluntarilyService.delete(userId).subscribe((_) => {
-      this.onSearch();
-    });
+  onDelete(userId: string) {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        width: '300px',
+        data: {
+          title: 'Uyarı',
+          message: 'Kaydı silmek istediğinize emin misiniz?'
+        }
+      })
+      .afterClosed()
+      .pipe(
+        switchMap(() => this.voluntarilyService.delete(userId)),
+        tap(() => this.snackbarService.show('Success', 'Successfully deleted')),
+        tap(() => this.onSearch()),
+        catchError((error) => {
+          return of(error);
+        })
+      )
+      .subscribe((data) => {
+        if (data && data.ok === false) {
+          this.snackbarService.show('Error', data.message);
+        }
+      });
   }
 
   getUserStatusLabel(status: UserStatuses) {

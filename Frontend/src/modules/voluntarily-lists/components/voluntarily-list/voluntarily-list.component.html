@@ -38,10 +38,10 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button (click)="edit(row.supporterId)" aria-label="Edit" color="primary" mat-icon-button>
+        <button (click)="onEdit(row.supporterId)" aria-label="Edit" color="primary" mat-icon-button>
           <mat-icon>edit</mat-icon>
         </button>
-        <button (click)="delete(row.userId)" aria-label="Delete" color="warn" mat-icon-button>
+        <button (click)="onDelete(row.userId)" aria-label="Delete" color="warn" mat-icon-button>
           <mat-icon>delete</mat-icon>
         </button>
       </mat-cell>

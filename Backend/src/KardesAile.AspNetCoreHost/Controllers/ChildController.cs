@@ -30,25 +30,37 @@ public class ChildController : ControllerBase
         return Ok(await _childBusiness.List(userId));
     }
 
-    [HttpPost("{userId:guid:required}")]
+    [HttpPost]
     [Authorize(Roles = nameof(UserRoles.User))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
-    public async Task<IActionResult> Add([FromRoute] Guid userId, [FromBody] CreateChildModel model)
+    public async Task<IActionResult> Add([FromBody] CreateChildModel model)
     {
-        await _childBusiness.Add(userId, model);
+        await _childBusiness.Add(model);
+        return Ok();
+    }
+    
+    [HttpPut]
+    [Authorize(Roles = nameof(UserRoles.User))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
+    public async Task<IActionResult> Update([FromBody] UpdateChildModel model)
+    {
+        await _childBusiness.Update(model);
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id:guid:required}")]
     [Authorize(Roles = nameof(UserRoles.User))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
-    public async Task<IActionResult> Remove([FromQuery] Guid id)
+    public async Task<IActionResult> Remove([FromRoute] Guid id)
     {
         await _childBusiness.Remove(id);
         return Ok();
