@@ -1,21 +1,20 @@
-import { DisasterVictimService } from './../../business/disaster-victim.service';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ListToolBoxComponent } from '@sharedComponents/list-tool-box/list-tool-box.component';
+import {DisasterVictimService} from './../../business/disaster-victim.service';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ListToolBoxComponent} from '@sharedComponents/list-tool-box/list-tool-box.component';
 import BaseListComponent from '@appModule/base-classes/base-list-component.abstract.class';
-import { lastValueFrom } from 'rxjs';
-import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { MatSortModule, Sort } from "@angular/material/sort";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { DisasterVictimSearchResultModel } from '@appModule/models/disaster-victim-search-result.model';
-import { PagedResultModel } from '@appModule/models/paged-result.model';
-import { UserStatuses } from '@appModule/models/shared/user-statuses.enum';
-import { DisasterVictimSearchRequestModel } from '@appModule/models/disaster-victim-search-request.model';
-import { NavigationService } from '@appModule/services/navigation.service';
-import { SortDirection } from '@appModule/models/shared/sort-direction.enum';
-import { SearchSortModel } from '@appModule/models/search-sort.model';
+import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatSortModule, Sort} from "@angular/material/sort";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {DisasterVictimSearchResultModel} from '@appModule/models/disaster-victim/disaster-victim-search-result.model';
+import {PagedResultModel} from '@appModule/models/shared/paged-result.model';
+import {UserStatuses} from '@appModule/models/shared/user-statuses.enum';
+import {DisasterVictimSearchRequestModel} from '@appModule/models/disaster-victim/disaster-victim-search-request.model';
+import {NavigationService} from '@appModule/services/navigation.service';
+import {SortDirection} from '@appModule/models/shared/sort-direction.enum';
+import {SearchSortModel} from '@appModule/models/shared/search-sort.model';
 
 @Component({
   selector: 'app-disaster-victim-list',
@@ -38,6 +37,7 @@ export default class DisasterVictimListComponent
     super('Afetzede Listesi');
     this.onSearch();
   }
+
   ngAfterViewInit() {
     this.dataSource = new MatTableDataSource<DisasterVictimSearchResultModel>([]);
     this.dataSource.paginator = this.paginator;
@@ -57,22 +57,37 @@ export default class DisasterVictimListComponent
       this.pagedVictimData = result;
     });
   }
+
   onSorting($event: Sort) {
     const sortDirection = $event.direction == 'desc' ? SortDirection.Descending : SortDirection.Ascending;
     this.disasterVictimRequestModel.sortModels = [];
     if ($event.active == 'fullName') {
-      this.disasterVictimRequestModel.sortModels.push({ sortName: 'firstName', sortDirection: sortDirection } as SearchSortModel);
-      this.disasterVictimRequestModel.sortModels.push({ sortName: 'lastName', sortDirection: sortDirection } as SearchSortModel);
-    }
-    else if ($event.active == 'cityCountryName') {
-      this.disasterVictimRequestModel.sortModels.push({ sortName: 'cityName', sortDirection: sortDirection } as SearchSortModel);
-      this.disasterVictimRequestModel.sortModels.push({ sortName: 'countryName', sortDirection: sortDirection } as SearchSortModel);
-    }
-    else {
-      this.disasterVictimRequestModel.sortModels.push({ sortName: $event.active, sortDirection: sortDirection } as SearchSortModel);
+      this.disasterVictimRequestModel.sortModels.push({
+        sortName: 'firstName',
+        sortDirection: sortDirection
+      } as SearchSortModel);
+      this.disasterVictimRequestModel.sortModels.push({
+        sortName: 'lastName',
+        sortDirection: sortDirection
+      } as SearchSortModel);
+    } else if ($event.active == 'cityCountryName') {
+      this.disasterVictimRequestModel.sortModels.push({
+        sortName: 'cityName',
+        sortDirection: sortDirection
+      } as SearchSortModel);
+      this.disasterVictimRequestModel.sortModels.push({
+        sortName: 'countryName',
+        sortDirection: sortDirection
+      } as SearchSortModel);
+    } else {
+      this.disasterVictimRequestModel.sortModels.push({
+        sortName: $event.active,
+        sortDirection: sortDirection
+      } as SearchSortModel);
     }
     this.onSearch();
   }
+
   edit(id: string) {
     this.navigationService.navigate('disaster-victim/edit/' + id);
   }

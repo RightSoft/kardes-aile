@@ -10,15 +10,15 @@ import {atLeastOne} from "@validationModule/custom-validator";
 import {emailValidator} from "@validationModule/email-validator";
 import {phoneValidator} from "@validationModule/phone-validator";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {ChildResultModel} from "@appModule/models/child-result.model";
+import {ChildResultModel} from "@appModule/models/child/child-result.model";
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
-import {CreateSupporterModel} from "@appModule/models/create-supporter.model";
+import {CreateSupporterModel} from "@appModule/models/supporter/create-supporter.model";
 import {NavigationService} from "@appModule/services/navigation.service";
 import {ActivatedRoute} from "@angular/router";
-import {UpdateSupporterModel} from "@appModule/models/update-supporter.model";
+import {UpdateSupporterModel} from "@appModule/models/supporter/update-supporter.model";
 import {FlexModule} from "@angular/flex-layout";
 import {CacheService} from "@appModule/services/cache.service";
 import {CountryResultModel} from "@appModule/models/country-result.model";
@@ -30,9 +30,9 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {
   AddVoluntarilyChildComponent
 } from "@voluntarilyListsModule/components/add-voluntarily-child/add-voluntarily-child.component";
-import {ChildModel} from "@appModule/models/child.model";
+import {ChildModel} from "@appModule/models/child/child.model";
 import {GendersLabel} from "@appModule/models/shared/genders.enum";
-import {CreateChildModel} from "@appModule/models/create-child.model";
+import {CreateChildModel} from "@appModule/models/child/create-child.model";
 
 @Component({
   selector: 'app-add-voluntarily',

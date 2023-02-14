@@ -1,6 +1,6 @@
-import {CreateChildModel} from "@appModule/models/create-child.model";
+import {CreateChildModel} from "@appModule/models/child/create-child.model";
 
-export class CreateSupporterModel {
+export class CreateDisasterVictimModel {
   public firstName: string;
   public lastName: string;
   public phone: string;

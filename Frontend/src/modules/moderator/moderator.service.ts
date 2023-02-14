@@ -1,11 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { PagedResultModel } from '@appModule/models/paged-result-model';
-import { CreateModeratorModel } from './models/create-moderator-model';
-import { ModeratorResult } from './models/moderator-result';
-import { SearchModeratorModel } from './models/search-moderator-model';
-import { SearchModeratorResult } from './models/search-moderator-result';
-import { UpdateModeratorModel } from './models/update-moderator-model';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {PagedResultModel} from '@appModule/models/shared/paged-result.model';
+import {CreateModeratorModel} from './models/create-moderator-model';
+import {ModeratorResult} from './models/moderator-result';
+import {SearchModeratorModel} from './models/search-moderator-model';
+import {SearchModeratorResult} from './models/search-moderator-result';
+import {UpdateModeratorModel} from './models/update-moderator-model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,8 @@ import { UpdateModeratorModel } from './models/update-moderator-model';
 export class ModeratorService {
   private readonly _baseUrl = `api/moderators`;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   get(id: string) {
     return this.httpClient.get<ModeratorResult>(`${this._baseUrl}/${id}`);

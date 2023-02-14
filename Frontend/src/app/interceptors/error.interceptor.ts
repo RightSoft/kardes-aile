@@ -1,7 +1,7 @@
-import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { inject } from '@angular/core';
-import { AuthenticationService } from '@appModule/services/authentication.service';
+import {HttpEvent, HttpHandlerFn, HttpRequest} from '@angular/common/http';
+import {catchError, Observable, throwError} from 'rxjs';
+import {inject} from '@angular/core';
+import {AuthenticationService} from '@appModule/services/authentication.service';
 
 export function errorInterceptor(
   req: HttpRequest<any>,
@@ -12,7 +12,6 @@ export function errorInterceptor(
     catchError((error) => {
       if (error.status === 401) {
         authenticationService.logout();
-        location.reload();
       }
       return throwError(error);
     })

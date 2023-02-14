@@ -9,8 +9,8 @@ import {getValidationMessage} from '@validationModule/get-validation-message';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ChildResultModel} from '@appModule/models/child-result.model';
-import {ChildModel} from "@appModule/models/child.model";
+import {ChildResultModel} from '@appModule/models/child/child-result.model';
+import {ChildModel} from "@appModule/models/child/child.model";
 import {Genders, GendersLabel} from "@appModule/models/shared/genders.enum";
 
 @Component({

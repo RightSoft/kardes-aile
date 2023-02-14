@@ -15,13 +15,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {AddChildComponent} from '../add-child/add-child.component';
 import {MatTableModule} from '@angular/material/table'
-import {CreateDisasterVictimModel} from '@appModule/models/create-disaster-victim.model';
-import {UpdateDisasterVictimModel} from '@appModule/models/update-disaster-victim.model';
-import {CreateChildModel} from '@appModule/models/create-child.model';
+import {CreateDisasterVictimModel} from '@appModule/models/disaster-victim/create-disaster-victim.model';
+import {UpdateDisasterVictimModel} from '@appModule/models/disaster-victim/update-disaster-victim.model';
+import {CreateChildModel} from '@appModule/models/child/create-child.model';
 import {Genders} from '@appModule/models/shared/genders.enum';
 import {AddressService} from '@appModule/services/address.service';
 import {CountryResultModel} from '@appModule/models/country-result.model';
-import {ChildResultModel} from '@appModule/models/child-result.model';
+import {ChildResultModel} from '@appModule/models/child/child-result.model';
 import {CityResultModel} from '@appModule/models/city-result.model';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';

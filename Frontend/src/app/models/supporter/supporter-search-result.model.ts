@@ -1,5 +1,5 @@
 import {UserStatuses} from "@appModule/models/shared/user-statuses.enum";
-import {ChildModel} from "@appModule/models/child.model";
+import {ChildModel} from "@appModule/models/child/child.model";
 
 export class SupporterSearchResultModel {
   public supporterId: string;

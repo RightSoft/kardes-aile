@@ -4,15 +4,15 @@ import {ListToolBoxComponent} from '@sharedComponents/list-tool-box/list-tool-bo
 import BaseListComponent from '@appModule/base-classes/base-list-component.abstract.class';
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
-import {PagedResultModel} from "@appModule/models/paged-result.model";
-import {SupporterSearchResultModel} from "@appModule/models/supporter-search-result.model";
-import {SearchSupporterModel} from "@appModule/models/search-supporter.model";
+import {PagedResultModel} from "@appModule/models/shared/paged-result.model";
+import {SupporterSearchResultModel} from "@appModule/models/supporter/supporter-search-result.model";
+import {SearchSupporterModel} from "@appModule/models/supporter/search-supporter.model";
 import {VoluntarilyService} from "@voluntarilyListsModule/business/voluntarily.service";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSortModule, Sort} from "@angular/material/sort";
 import {SortDirection} from "@appModule/models/shared/sort-direction.enum";
-import {SearchSortModel} from "@appModule/models/search-sort.model";
+import {SearchSortModel} from "@appModule/models/shared/search-sort.model";
 import {NavigationService} from "@appModule/services/navigation.service";
 import {UserStatuses, UserStatusesLabel} from "@appModule/models/shared/user-statuses.enum";
 
