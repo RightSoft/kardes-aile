@@ -10,7 +10,6 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ChildResultModel} from '@appModule/models/child/child-result.model';
-import {ChildModel} from "@appModule/models/child/child.model";
 import {Genders, GendersLabel} from "@appModule/models/shared/genders.enum";
 
 @Component({
@@ -77,7 +76,7 @@ export class AddVoluntarilyChildComponent {
         name: this.addChildForm.value.name,
         birthDate: this.addChildForm.value.birthDate,
         gender: this.addChildForm.value.gender
-      } as ChildModel);
+      } as ChildResultModel);
     }
   }
 
