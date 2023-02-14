@@ -9,6 +9,19 @@
 <div class="mat-elevation-z8 mt-3">
   <mat-table (matSortChange)="onSorting($event)" [dataSource]="dataSource" matSort matSortActive="createdAt"
              matSortDirection="desc" matSortDisableClear>
+    <ng-container matColumnDef="validations">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <div fxLayout="row"
+             fxLayoutAlign="end center"
+             fxLayoutGap="12px">
+          <mat-icon *ngIf="row.emailValidated" svgIcon="email-validated"></mat-icon>
+          <mat-icon *ngIf="!row.emailValidated" svgIcon="email-notvalidated"></mat-icon>
+          <mat-icon *ngIf="row.phoneValidated" color="accent">stay_primary_portrait</mat-icon>
+          <mat-icon *ngIf="!row.phoneValidated" color="warn">phonelink_erase</mat-icon>
+        </div>
+      </mat-cell>
+    </ng-container>
     <ng-container matColumnDef="fullName">
       <mat-header-cell *matHeaderCellDef mat-sort-header> GONULLU</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}}</mat-cell>

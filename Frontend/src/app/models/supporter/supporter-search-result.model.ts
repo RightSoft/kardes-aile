@@ -15,5 +15,7 @@ export class SupporterSearchResultModel {
   public status: UserStatuses;
   public createdAt: Date;
   public matchingStatus: string;
+  public emailValidated: boolean;
+  public phoneValidated: boolean;
   public children: ChildResultModel[];
 }

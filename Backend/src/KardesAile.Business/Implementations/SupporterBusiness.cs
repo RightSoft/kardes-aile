@@ -195,7 +195,9 @@ public class SupporterBusiness : ISupporterBusiness
                 Address = p.Address,
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt,
-                MatchingStatus = $"{p.Matches!.Count}/{p.User.Children.Count}"
+                MatchingStatus = $"{p.Matches!.Count}/{p.User.Children.Count}",
+                EmailValidated = p.User!.EmailValidated,
+                PhoneValidated = p.User!.PhoneValidated,
             })
             .ToPagedListAsync(model);
 

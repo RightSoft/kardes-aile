@@ -18,7 +18,8 @@ public class SupporterSearchResultModel
     public string? Address { get; set; }
     public UserStatuses Status { get; set; }
     public DateTime CreatedAt { get; set; }
-
     public string MatchingStatus { get; set; }
+    public bool EmailValidated { get; set; }
+    public bool PhoneValidated { get; set; }
     public ICollection<ChildResultModel> Children { get; set; }
 }

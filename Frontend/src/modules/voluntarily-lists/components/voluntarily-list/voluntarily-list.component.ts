@@ -21,16 +21,17 @@ import {
 import {catchError, of, switchMap, tap} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {SnackbarService} from "@appModule/services/snackbar.service";
+import {FlexModule} from "@angular/flex-layout";
 
 @Component({
   selector: 'app-voluntarily-list',
   standalone: true,
-  imports: [CommonModule, ListToolBoxComponent, MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatSortModule, MatDialogModule],
+  imports: [CommonModule, ListToolBoxComponent, MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatSortModule, MatDialogModule, FlexModule],
   templateUrl: './voluntarily-list.component.html',
   styleUrls: ['./voluntarily-list.component.scss']
 })
 export default class VoluntarilyListComponent extends BaseListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['fullName', 'cityCountyName', 'matchingStatus', 'createdAt', 'status', 'actions'];
+  displayedColumns: string[] = ['validations', 'fullName', 'cityCountyName', 'matchingStatus', 'createdAt', 'status', 'actions'];
   dataSource: MatTableDataSource<SupporterSearchResultModel> = new MatTableDataSource<SupporterSearchResultModel>();
   pagedSupporterData: PagedResultModel<SupporterSearchResultModel> = new PagedResultModel<SupporterSearchResultModel>();
   searchSupporterData: SearchSupporterModel = new SearchSupporterModel(1, 10);
