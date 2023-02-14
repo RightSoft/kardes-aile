@@ -11,4 +11,5 @@ public static class Errors
     public static BusinessException MatchNotFound = new (4000, "Match not found");
     public static SecurityException UsernamePasswordDenied = new("Invalid username/password");
     public static SecurityException EmailUsed = new("There is a user with this e-mail address.");
+    public static readonly BusinessException EmailOrPhoneRequired = new("E-mail address or phone must be filled");
 }

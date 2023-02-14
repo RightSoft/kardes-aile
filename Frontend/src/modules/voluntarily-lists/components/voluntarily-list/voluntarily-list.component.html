@@ -1,45 +1,47 @@
 <app-list-tool-box
+  (onCheckboxChange)="onCheckboxChange($event)"
+  (onSearch)="onSearch($event)"
   buttonLabel="Yeni Gönüllü"
   checkboxLabel="Silinmiş Gönüllüleri Listele"
   url="add"
-  (onSearch)="onSearch($event)"
-  (onCheckboxChange)="onCheckboxChange($event)"
 ></app-list-tool-box>
 
-<div class="mat-elevation-z8">
-  <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSorting($event)" matSortActive="createdAt" matSortDirection="desc" matSortDisableClear>
+<div class="mat-elevation-z8 mt-3">
+  <mat-table (matSortChange)="onSorting($event)" [dataSource]="dataSource" matSort matSortActive="createdAt"
+             matSortDirection="desc" matSortDisableClear>
     <ng-container matColumnDef="fullName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> GONULLU </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> GONULLU</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="cityCountyName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> SEHIR/ULKE </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.cityName}}/{{element.countryName}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> SEHIR/ULKE</mat-header-cell>
+      <mat-cell
+        *matCellDef="let element"> {{getCityCountryName(element)}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="matchingStatus">
-      <mat-header-cell *matHeaderCellDef> ESLESME DURUMU </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> ESLESME DURUMU</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.matchingStatus}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="createdAt">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> EKLENME TARIHI </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> EKLENME TARIHI</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy HH:mm'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="status">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> DURUMU </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{UserStatusesEnum[element.status].toString()}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> DURUMU</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{getUserStatusLabel(element.status)}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell  *matHeaderCellDef ></mat-header-cell>
-      <mat-cell *matCellDef="let row" >
-        <button mat-icon-button color="primary" aria-label="Edit" (click)="edit(row.supporterId)">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button (click)="edit(row.supporterId)" aria-label="Edit" color="primary" mat-icon-button>
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" aria-label="Delete" (click)="delete(row.userId)">
+        <button (click)="delete(row.userId)" aria-label="Delete" color="warn" mat-icon-button>
           <mat-icon>delete</mat-icon>
         </button>
       </mat-cell>
@@ -48,13 +50,13 @@
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
-  <mat-paginator class="border-top"
-                 aria-label="Select page"
+  <mat-paginator (page)="changePaging($event)"
+                 [length]="pagedSupporterData.totalCount"
+                 [pageIndex]="searchSupporterData.page-1"
                  [pageSizeOptions]="[5, 10, 25, 100]"
                  [pageSize]="searchSupporterData.pageSize"
-                 [pageIndex]="searchSupporterData.page-1"
-                 [length]="pagedSupporterData.totalCount"
-                 (page)="changePaging($event)"
+                 aria-label="Select page"
+                 class="border-top"
   >
   </mat-paginator>
 </div>

@@ -25,6 +25,7 @@ public class AddressBusiness : IAddressBusiness
                 Name = p.Name,
                 CountryCode = p.CountryCode
             })
+            .OrderBy(p => p.Name)
             .ToListAsync();
         return result;
     }

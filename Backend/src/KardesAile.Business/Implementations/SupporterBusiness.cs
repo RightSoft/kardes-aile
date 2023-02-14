@@ -40,6 +40,7 @@ public class SupporterBusiness : ISupporterBusiness
                 CityName = p.City!.Name,
                 CountryId = p.CountryId,
                 CountryName = p.Country!.Name,
+                Address = p.Address,
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt
             }).FirstOrDefaultAsync(p => p.SupporterId == id);
@@ -53,7 +54,10 @@ public class SupporterBusiness : ISupporterBusiness
     public async Task Create(CreateSupporterModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-
+        if (string.IsNullOrEmpty(model.Phone) && string.IsNullOrEmpty(model.Email))
+        {
+            throw Errors.EmailOrPhoneRequired;
+        }
         var user = new User
         {
             Status = UserStatuses.Active,
@@ -162,6 +166,7 @@ public class SupporterBusiness : ISupporterBusiness
                 CityName = p.City!.Name,
                 CountryId = p.CountryId,
                 CountryName = p.Country!.Name,
+                Address = p.Address,
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt,
                 MatchingStatus = $"{p.Matches!.Count}/{p.User.Children.Count}"

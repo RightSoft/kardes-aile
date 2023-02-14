@@ -14,6 +14,7 @@ public class SupporterSearchResultModel
     public string? CityName { get; set; }
     public Guid? CountryId { get; set; }
     public string? CountryName { get; set; }
+    public string? Address { get; set; }
     public UserStatuses Status { get; set; }
     public DateTime CreatedAt { get; set; }
 

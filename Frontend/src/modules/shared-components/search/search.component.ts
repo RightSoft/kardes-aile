@@ -1,10 +1,10 @@
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { Component, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
+import {Component, EventEmitter} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-search',
@@ -27,9 +27,13 @@ export class SearchComponent {
   label = 'Ara...';
   onChange = new EventEmitter<string>();
   onSearch = new EventEmitter<string>();
+
   onChangeHandle() {
     this.onChange.emit(this.keyword);
+    if (!this.keyword)
+      this.onSearch.emit('');
   }
+
   onSearchHandle() {
     this.onSearch.emit(this.keyword);
   }
