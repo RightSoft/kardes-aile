@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {VoluntarilyService} from "@voluntarilyListsModule/business/voluntarily.service";
 import AddPageTitle from "@appModule/base-classes/add-page-title.abstract.class";
@@ -23,21 +23,30 @@ import {FlexModule} from "@angular/flex-layout";
 import {CacheService} from "@appModule/services/cache.service";
 import {CountryResultModel} from "@appModule/models/country-result.model";
 import {CityResultModel} from "@appModule/models/city-result.model";
-import {of, switchMap} from "rxjs";
+import {Observable, of, startWith, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
 import {SnackbarService} from "@appModule/services/snackbar.service";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {
+  AddVoluntarilyChildComponent
+} from "@voluntarilyListsModule/components/add-voluntarily-child/add-voluntarily-child.component";
+import {ChildModel} from "@appModule/models/child.model";
+import {GendersLabel} from "@appModule/models/shared/genders.enum";
+import {CreateChildModel} from "@appModule/models/create-child.model";
 
 @Component({
   selector: 'app-add-voluntarily',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule],
+  imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule],
   templateUrl: './add-voluntarily.component.html',
   styleUrls: ['./add-voluntarily.component.scss']
 })
-export default class AddVoluntarilyComponent extends AddPageTitle implements AfterViewInit {
+export default class AddVoluntarilyComponent extends AddPageTitle {
   countryList: CountryResultModel[];
+  filteredCountryList$: Observable<CountryResultModel[]>;
   cityList: CityResultModel[];
   dataSource: MatTableDataSource<ChildResultModel> = new MatTableDataSource<ChildResultModel>();
+  children: ChildModel[];
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'actions'];
   private formBuilder = inject(FormBuilder);
   addSupporterForm = this.formBuilder.group({
@@ -59,13 +68,25 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
               private navigationService: NavigationService,
               private route: ActivatedRoute,
               private cacheService: CacheService,
-              private snackbar: SnackbarService) {
+              private snackbar: SnackbarService,
+              private dialog: MatDialog) {
     const id = route.snapshot.paramMap.get('id');
     super(id ? 'Gönüllü Güncelle' : 'Gönüllü Kayıt');
 
+    this.children = [];
     this.cacheService.countries.subscribe(result => {
-      this.countryList = result
+      this.countryList = result;
     });
+
+    this.filteredCountryList$ = this.addSupporterForm.controls.countryId.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ?
+          this.countryList?.filter(c => c.name.toUpperCase().startsWith(name.toUpperCase()))
+          : this.countryList?.slice();
+      }),
+    );
 
     if (id) {
       this.addSupporterForm.get('address').addValidators(Validators.required);
@@ -79,6 +100,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
           return of(supporter);
         }),
       ).subscribe(result => {
+        this.children = result.children;
         this.addSupporterForm.patchValue(result);
         this.addSupporterForm.patchValue({'emailOrPhoneInfo': {email: result.email, phone: result.phone}});
       })
@@ -105,10 +127,6 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
     return getValidationMessage(this.addSupporterForm.controls.address);
   }
 
-  ngAfterViewInit() {
-    this.dataSource = new MatTableDataSource<ChildResultModel>([]);
-  }
-
   onSave() {
     if (this.addSupporterForm.valid) {
       if (!this.addSupporterForm.value.supporterId) {
@@ -120,7 +138,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
           address: this.addSupporterForm.value.address,
           cityId: this.addSupporterForm.value.cityId,
           countryId: this.addSupporterForm.value.countryId,
-          children: []
+          children: this.children as CreateChildModel[]
         } as CreateSupporterModel;
 
         this.voluntarilyService.create(model).subscribe(() => {
@@ -162,5 +180,31 @@ export default class AddVoluntarilyComponent extends AddPageTitle implements Aft
 
   getCityName(id: string): string {
     return this.cityList?.find(c => c.id === id)?.name;
+  }
+
+  addOrEditChild(child?: ChildResultModel) {
+    const dialogRef = this.dialog.open(AddVoluntarilyChildComponent, {
+      data: child ?? new ChildResultModel()
+    });
+
+    const subscribeDialog = dialogRef.componentInstance.onSubmitChildEvent.subscribe((child) => {
+      this.children.push(child);
+    });
+
+    dialogRef.afterClosed().subscribe(_ => {
+      subscribeDialog.unsubscribe();
+    });
+  }
+
+  getChildren() {
+    return new MatTableDataSource<ChildModel>(this.children);
+  }
+
+  getAge(birthDate: Date): string {
+    return Math.floor(Math.abs(Date.now() - new Date(birthDate).getTime()) / (1000 * 3600 * 24) / 365.25).toString();
+  }
+
+  getGendersLabel(gender: number): string {
+    return GendersLabel.get(gender);
   }
 }

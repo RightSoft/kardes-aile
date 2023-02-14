@@ -1,4 +1,5 @@
 using KardesAile.CommonTypes.Enums;
+using KardesAile.CommonTypes.ViewModels.Child;
 
 namespace KardesAile.CommonTypes.ViewModels.Supporter;
 
@@ -19,4 +20,5 @@ public class SupporterSearchResultModel
     public DateTime CreatedAt { get; set; }
 
     public string MatchingStatus { get; set; }
+    public ICollection<ChildResultModel> Children { get; set; }
 }

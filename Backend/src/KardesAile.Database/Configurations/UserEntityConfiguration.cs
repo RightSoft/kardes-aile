@@ -10,9 +10,9 @@ public class UserEntityConfiguration : ModifiableEntityConfigurationBase<User>
         base.Configure(builder);
         builder.Property(x => x.FirstName).HasMaxLength(100).IsRequired();
         builder.Property(x => x.LastName).HasMaxLength(100).IsRequired();
-        builder.Property(x => x.Email).HasMaxLength(255).IsRequired();
+        builder.Property(x => x.Email).HasMaxLength(255);
         builder.Property(x => x.EmailValidated).IsRequired();
-        builder.Property(x => x.Phone).HasMaxLength(30).IsRequired();
+        builder.Property(x => x.Phone).HasMaxLength(30);
         builder.Property(x => x.PhoneValidated).IsRequired();
         builder.Property(x => x.Role).IsRequired();
         builder.Property(x => x.Status).IsRequired();

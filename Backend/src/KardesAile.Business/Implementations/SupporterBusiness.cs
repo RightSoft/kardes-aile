@@ -3,6 +3,7 @@ using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.Errors;
 using KardesAile.CommonTypes.Exceptions;
 using KardesAile.CommonTypes.ViewModels;
+using KardesAile.CommonTypes.ViewModels.Child;
 using KardesAile.CommonTypes.ViewModels.Supporter;
 using KardesAile.Database.Abstracts;
 using KardesAile.Database.Entities;
@@ -26,7 +27,7 @@ public class SupporterBusiness : ISupporterBusiness
             .AsQueryable
             .Include(p => p.City)
             .Include(p => p.Country)
-            .Include(p => p.User)
+            .Include(p => p.User).ThenInclude(p => p!.Children)
             .AsNoTracking()
             .Select(p => new SupporterSearchResultModel
             {
@@ -42,7 +43,14 @@ public class SupporterBusiness : ISupporterBusiness
                 CountryName = p.Country!.Name,
                 Address = p.Address,
                 Status = p.User.Status,
-                CreatedAt = p.CreatedAt
+                CreatedAt = p.CreatedAt,
+                Children = p.User.Children.Select(c => new ChildResultModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    BirthDate = c.BirthDate.ToDateTime(TimeOnly.MinValue),
+                    Gender = c.Gender
+                }).ToList()
             }).FirstOrDefaultAsync(p => p.SupporterId == id);
         
         if (supporter == null)

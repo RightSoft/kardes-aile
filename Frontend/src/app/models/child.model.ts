@@ -1,7 +1,6 @@
 import {Genders} from "@appModule/models/shared/genders.enum";
 
-export class ChildResultModel {
-  public id: string;
+export class ChildModel {
   public name: string;
   public birthDate: Date;
   public gender: Genders;

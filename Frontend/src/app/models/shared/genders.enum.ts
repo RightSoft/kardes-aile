@@ -1,7 +1,7 @@
 export enum Genders {
-  Unknown,
-  Male,
-  Female
+  Unknown = 0,
+  Male = 1,
+  Female = 2
 }
 
 export const GendersLabel = new Map<number, string>([

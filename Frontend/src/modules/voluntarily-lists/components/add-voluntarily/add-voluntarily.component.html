@@ -1,6 +1,6 @@
 <mat-card class="mb-1">
   <mat-card-content>
-    <form [formGroup]="addSupporterForm" fxLayout="column" fxLayoutAlign="stretch">
+    <form [formGroup]="addSupporterForm" autocomplete="off" fxLayout="column" fxLayoutAlign="stretch">
       <div class="row">
         <div class="col-md-6">
           <div class="row">
@@ -76,7 +76,7 @@
                               [displayWith]="getCountryName.bind(this)"
             >
               <mat-option
-                *ngFor="let option of countryList"
+                *ngFor="let option of filteredCountryList$ | async"
                 [value]="option.id"
               >
                 {{ option.name }}
@@ -107,14 +107,14 @@
               <mat-toolbar class="mb-1 bg-transparent">
                 <span>Çocuk Listesi</span>
                 <button
-                  class="btn p-2 align-self-baseline ms-auto rounded"
-                  mat-raised-button>
+                  (click)="addOrEditChild()"
+                  class="btn p-2 align-self-baseline ms-auto rounded" mat-raised-button>
                   <mat-icon>add</mat-icon>
                   Çocuk Ekle
                 </button>
               </mat-toolbar>
               <div class="mat-elevation-z8">
-                <mat-table [dataSource]="dataSource">
+                <mat-table [dataSource]="getChildren()">
                   <ng-container matColumnDef="name">
                     <mat-header-cell *matHeaderCellDef> AD SOYAD</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
@@ -122,18 +122,18 @@
 
                   <ng-container matColumnDef="birthDate">
                     <mat-header-cell *matHeaderCellDef> YAS</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.birthDate}} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{ getAge(element.birthDate) }} </mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="gender">
                     <mat-header-cell *matHeaderCellDef> CINSIYET</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{ getGendersLabel(element.gender) }} </mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let row">
-                      <button aria-label="Edit" color="primary" mat-icon-button>
+                      <button (click)="addOrEditChild(row)" aria-label="Edit" color="primary" mat-icon-button>
                         <mat-icon>edit</mat-icon>
                       </button>
                       <button aria-label="Delete" color="warn" mat-icon-button>

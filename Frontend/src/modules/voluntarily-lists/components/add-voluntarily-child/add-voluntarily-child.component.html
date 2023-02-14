@@ -1,0 +1,41 @@
+<h2 class="bg-ascendent" mat-dialog-title>Cocuk Kayit</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="addChildForm" class="mt-3 row row-cols-1">
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Ad Soyad</mat-label>
+      <input
+        formControlName="name"
+        matInput
+        type="text"
+      />
+      <mat-error>
+        {{ nameValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="d-block mb-3">
+      <mat-label>Dogum Tarihi</mat-label>
+      <input [formControl]="addChildForm.controls.birthDate" [matDatepicker]="picker" matInput>
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>
+        {{ birthdayValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="d-block mb-3">
+      <mat-label>Cinsiyet</mat-label>
+      <mat-select formControlName="gender">
+        <mat-option *ngFor="let gender of genders" [value]="gender">{{genderLabels.get(gender)}}</mat-option>
+      </mat-select>
+      <mat-error>
+        {{ genderValidationMessage }}
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button (click)="onCloseDialog()" class="p-3" mat-button>İptal</button>
+  <button (click)="onSaveChild()" class="btn-ascendent p-3" mat-button>
+    {{submitButtonText}}
+  </button>
+</mat-dialog-actions>
