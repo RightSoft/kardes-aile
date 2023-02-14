@@ -49,6 +49,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   countryList: CountryResultModel[];
   filteredCountryList$: Observable<CountryResultModel[]>;
   cityList: CityResultModel[];
+  filteredCityList$: Observable<CityResultModel[]>;
   children: ChildResultModel[];
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'actions'];
   private formBuilder = inject(FormBuilder);
@@ -90,6 +91,16 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
         return name ?
           this.countryList?.filter(c => c.name.toUpperCase().startsWith(name.toUpperCase()))
           : this.countryList?.slice();
+      }),
+    );
+
+    this.filteredCityList$ = this.addSupporterForm.controls.cityId.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ?
+          this.cityList?.filter(c => c.name.toUpperCase().startsWith(name.toUpperCase()))
+          : this.cityList?.slice();
       }),
     );
 

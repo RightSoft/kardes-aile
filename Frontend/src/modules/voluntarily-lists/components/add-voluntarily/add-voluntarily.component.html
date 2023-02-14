@@ -93,7 +93,7 @@
             />
             <mat-autocomplete #cityAutoComplete="matAutocomplete" [displayWith]="getCityName.bind(this)">
               <mat-option
-                *ngFor="let option of cityList"
+                *ngFor="let option of filteredCityList$ | async"
                 [value]="option.id"
               >
                 {{ option.name }}
