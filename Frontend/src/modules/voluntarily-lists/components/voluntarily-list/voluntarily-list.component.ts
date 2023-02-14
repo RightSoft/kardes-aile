@@ -19,13 +19,13 @@ import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
 import {catchError, of, switchMap, tap} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {SnackbarService} from "@appModule/services/snackbar.service";
 
 @Component({
   selector: 'app-voluntarily-list',
   standalone: true,
-  imports: [CommonModule, ListToolBoxComponent, MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatSortModule],
+  imports: [CommonModule, ListToolBoxComponent, MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatSortModule, MatDialogModule],
   templateUrl: './voluntarily-list.component.html',
   styleUrls: ['./voluntarily-list.component.scss']
 })
@@ -39,7 +39,7 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
   constructor(private voluntarilyService: VoluntarilyService,
               private navigationService: NavigationService,
               private dialog: MatDialog,
-              private snackbarService: SnackbarService) {
+              private snackbar: SnackbarService) {
     super('Gönüllü Listesi');
     this.onSearch();
   }
@@ -105,7 +105,7 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
       .afterClosed()
       .pipe(
         switchMap(() => this.voluntarilyService.delete(userId)),
-        tap(() => this.snackbarService.show('Success', 'Successfully deleted')),
+        tap(() => this.snackbar.show('Success', 'Successfully deleted')),
         tap(() => this.onSearch()),
         catchError((error) => {
           return of(error);
@@ -113,7 +113,7 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
       )
       .subscribe((data) => {
         if (data && data.ok === false) {
-          this.snackbarService.show('Error', data.message);
+          this.snackbar.show('Error', data.message);
         }
       });
   }

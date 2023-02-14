@@ -133,10 +133,12 @@
                   <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let row">
-                      <button (click)="addOrEditChild(row)" aria-label="Edit" color="primary" mat-icon-button>
+                      <button (click)="addOrEditChild(row)" aria-label="Edit" color="primary" mat-icon-button
+                              type="button">
                         <mat-icon>edit</mat-icon>
                       </button>
-                      <button aria-label="Delete" color="warn" mat-icon-button>
+                      <button (click)="onDeleteChild(row.id)" aria-label="Delete" color="warn" mat-icon-button
+                              type="button">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </mat-cell>

@@ -23,7 +23,7 @@ import {FlexModule} from "@angular/flex-layout";
 import {CacheService} from "@appModule/services/cache.service";
 import {CountryResultModel} from "@appModule/models/country-result.model";
 import {CityResultModel} from "@appModule/models/city-result.model";
-import {Observable, of, startWith, switchMap} from "rxjs";
+import {catchError, Observable, of, startWith, switchMap, tap} from "rxjs";
 import {map} from "rxjs/operators";
 import {SnackbarService} from "@appModule/services/snackbar.service";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
@@ -31,6 +31,12 @@ import {
   AddVoluntarilyChildComponent
 } from "@voluntarilyListsModule/components/add-voluntarily-child/add-voluntarily-child.component";
 import {GendersLabel} from "@appModule/models/shared/genders.enum";
+import {ChildService} from "@appModule/services/child.service";
+import {CreateChildModel} from "@appModule/models/child/create-child.model";
+import {UpdateChildModel} from "@appModule/models/child/update-child.model";
+import {
+  ConfirmationDialogComponent
+} from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
 
 @Component({
   selector: 'app-add-voluntarily',
@@ -66,7 +72,9 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
               private route: ActivatedRoute,
               private cacheService: CacheService,
               private snackbar: SnackbarService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private childService: ChildService) {
+
     const id = route.snapshot.paramMap.get('id');
     super(id ? 'Gönüllü Güncelle' : 'Gönüllü Kayıt');
 
@@ -140,7 +148,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
         this.voluntarilyService.create(model).subscribe(() => {
           this.onCancel();
-        }).add(() => this.snackbar.show('', 'Yeni kayıt eklendi'));
+        }).add(() => this.snackbar.show('Success', 'Yeni kayıt eklendi'));
       } else {
         const updateModel = {
           userId: this.addSupporterForm.value.userId,
@@ -156,7 +164,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
         this.voluntarilyService.update(updateModel).subscribe(() => {
           this.onCancel();
-        }).add(() => this.snackbar.show('', 'Kayıt güncellendi'));
+        }).add(() => this.snackbar.show('Success', 'Kayıt güncellendi'));
       }
     }
   }
@@ -184,12 +192,68 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
       data: child ?? new ChildResultModel()
     });
 
-    const subscribeDialog = dialogRef.componentInstance.onSubmitChildEvent.subscribe((child) => {
-      this.children.push(child);
+    const subscribeDialog = dialogRef.componentInstance.onSubmitChildEvent.subscribe((child: ChildResultModel) => {
+      if (this.addSupporterForm.value.userId) {
+        if (child.id) {
+          this.childService.update({
+            id: child.id,
+            name: child.name,
+            birthDate: child.birthDate,
+            gender: child.gender
+          } as UpdateChildModel).subscribe(_ => {
+            this.refreshChildren();
+            this.snackbar.show('Success', 'Çocuk kaydı güncellendi.');
+          });
+        } else {
+          this.childService.create({
+            userId: this.addSupporterForm.value.userId,
+            name: child.name,
+            birthDate: child.birthDate,
+            gender: child.gender
+          } as CreateChildModel).subscribe(_ => {
+            this.refreshChildren();
+            this.snackbar.show('Success', 'Yeni çocuk eklendi.');
+          });
+        }
+      } else {
+        this.children.push(child);
+      }
     });
 
     dialogRef.afterClosed().subscribe(_ => {
       subscribeDialog.unsubscribe();
+    });
+  }
+
+  onDeleteChild(id: string) {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        width: '300px',
+        data: {
+          title: 'Uyarı',
+          message: 'Çocuğu silmek istediğinize emin misiniz?'
+        }
+      })
+      .afterClosed()
+      .pipe(
+        switchMap(() => this.childService.delete(id)),
+        tap(() => this.snackbar.show('Success', 'Successfully deleted')),
+        tap(() => this.refreshChildren()),
+        catchError((error) => {
+          return of(error);
+        })
+      )
+      .subscribe((data) => {
+        if (data && data.ok === false) {
+          this.snackbar.show('Error', data.message);
+        }
+      });
+  }
+
+
+  refreshChildren() {
+    this.childService.list(this.addSupporterForm.value.userId).subscribe(result => {
+      this.children = result;
     });
   }
 

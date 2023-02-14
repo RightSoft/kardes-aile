@@ -19,7 +19,7 @@ export class ChildService {
   }
 
   public create(createChildModel: CreateChildModel) {
-    return this.http.post(`${this.apiUrl}/create`, createChildModel, {responseType: "json"});
+    return this.http.post(`${this.apiUrl}/add`, createChildModel, {responseType: "json"});
   }
 
   public update(updateChildModel: UpdateChildModel) {
