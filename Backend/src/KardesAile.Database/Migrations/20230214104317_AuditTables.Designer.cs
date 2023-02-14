@@ -3,6 +3,7 @@ using System;
 using KardesAile.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KardesAile.Database.Migrations
 {
     [DbContext(typeof(KardesAileDbContext))]
-    partial class KardesAileDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230214104317_AuditTables")]
+    partial class AuditTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -548,6 +551,7 @@ namespace KardesAile.Database.Migrations
                         .HasColumnName("created_by");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("email");
@@ -583,6 +587,7 @@ namespace KardesAile.Database.Migrations
                         .HasColumnName("modified_by");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)")
                         .HasColumnName("phone");

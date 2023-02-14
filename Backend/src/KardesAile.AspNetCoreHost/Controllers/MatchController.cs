@@ -21,7 +21,7 @@ public class MatchController: ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -33,7 +33,7 @@ public class MatchController: ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -45,7 +45,7 @@ public class MatchController: ControllerBase
     }
     
     [HttpDelete]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -57,7 +57,7 @@ public class MatchController: ControllerBase
     }
     
     [HttpPost]
-    [Authorize(Roles = nameof(UserRoles.GlobalAdmin))]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResultModel<MatchResultModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]

@@ -19,12 +19,15 @@ namespace KardesAile.Business.Implementations;
 public class AuthenticationBusiness : IAuthenticationBusiness
 {
     private readonly IOptions<JwtOptions> _jwtOptions;
+    private readonly IAuditContext _auditContext;
     private readonly IUnitOfWork _unitOfWork;
 
     public AuthenticationBusiness(
+        IAuditContext auditContext,
         IUnitOfWork unitOfWork,
         IOptions<JwtOptions> jwtOptions)
     {
+        _auditContext = auditContext ?? throw new ArgumentNullException(nameof(auditContext));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _jwtOptions = jwtOptions ?? throw new ArgumentNullException(nameof(jwtOptions));
     }
@@ -52,6 +55,8 @@ public class AuthenticationBusiness : IAuthenticationBusiness
                 .SequenceEqual(calculatedHash))
             throw Errors.UsernamePasswordDenied;
 
+        _auditContext.Start(AuditTypes.User, "Logged in");
+        _auditContext.AddEffectedUser(user);
         var result = GenerateAuthenticationToken(user);
 
         return result;

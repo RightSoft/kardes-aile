@@ -13,10 +13,14 @@ namespace KardesAile.Business.Implementations;
 
 public class DisasterVictimBusiness : IDisasterVictimBusiness
 {
+    private readonly IAuditContext _auditContext;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DisasterVictimBusiness(IUnitOfWork unitOfWork)
+    public DisasterVictimBusiness(
+        IAuditContext auditContext,
+        IUnitOfWork unitOfWork)
     {
+        _auditContext = auditContext ?? throw new ArgumentNullException(nameof(auditContext));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
@@ -51,13 +55,13 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt
             }).FirstOrDefaultAsync(p => p.Id == id);
-        
+
         if (disasterVictim == null)
             throw new BusinessException($"Disaster Victim could not be found. Id {id}");
 
         return disasterVictim;
     }
-    
+
     public async Task Create(CreateDisasterVictimModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
@@ -86,6 +90,9 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
                 Gender = i.Gender!.Value,
             }).ToList()!,
         };
+
+        _auditContext.Start(AuditTypes.DisasterVictim, "Disaster victim created");
+        _auditContext.AddEffectedUser(user);
 
         user.DisasterVictims.Add(new DisasterVictim
         {
@@ -118,6 +125,9 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
             throw Errors.DisasterVictimNotFound;
         }
 
+        _auditContext.Start(AuditTypes.DisasterVictim, "Disaster victim updated");
+        _auditContext.AddEffectedUser(disasterVictim.User);
+
         disasterVictim.Address = model.Address;
         disasterVictim.AddressValidated = model.AddressValidated;
         disasterVictim.TemporaryAddress = model.TemporaryAddress;
@@ -141,12 +151,18 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
     {
         var user = await _unitOfWork.User
             .AsQueryable
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p =>
+                p.Id == id &&
+                p.Role == UserRoles.DisasterVictim &&
+                (p.Status == UserStatuses.Active || p.Status == UserStatuses.Suspended));
 
         if (user == null)
         {
             throw Errors.DisasterVictimNotFound;
         }
+
+        _auditContext.Start(AuditTypes.DisasterVictim, "Disaster victim deleted");
+        _auditContext.AddEffectedUser(user);
 
         user.Status = UserStatuses.Deleted;
 
@@ -160,7 +176,8 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
         var query = _unitOfWork.DisasterVictim
             .AsQueryable
             .Where(p => model.IncludeDeleted ||
-                        p.User!.Status == UserStatuses.Active || p.User.Status == UserStatuses.Suspended);
+                        p.User!.Status == UserStatuses.Active ||
+                        p.User.Status == UserStatuses.Suspended);
 
         var result = await query
             .Include(p => p.City)

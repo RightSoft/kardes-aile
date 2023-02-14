@@ -1,4 +1,5 @@
 using KardesAile.Business.Interfaces;
+using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.Errors;
 using KardesAile.CommonTypes.ViewModels;
 using KardesAile.CommonTypes.ViewModels.Match;
@@ -11,16 +12,58 @@ namespace KardesAile.Business.Implementations;
 
 public class MatchingBusiness : IMatchingBusiness
 {
+    private readonly IAuditContext _auditContext;
     private readonly IUnitOfWork _unitOfWork;
 
-    public MatchingBusiness(IUnitOfWork unitOfWork)
+    public MatchingBusiness(
+        IAuditContext auditContext,
+        IUnitOfWork unitOfWork)
     {
+        _auditContext = auditContext ?? throw new ArgumentNullException(nameof(auditContext));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+    }
+
+    private async Task<Supporter> GetSupporter(Guid supporterId)
+    {
+        var result = await _unitOfWork.Supporter
+            .AsQueryable
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Id == supporterId && p.User.Status == UserStatuses.Active);
+
+        if (result == null)
+        {
+            throw Errors.SupporterNotFound;
+        }
+
+        return result;
+    }
+
+    private async Task<DisasterVictim> GetVictim(Guid victimId)
+    {
+        var result = await _unitOfWork.DisasterVictim
+            .AsQueryable
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Id == victimId && p.User.Status == UserStatuses.Active);
+
+        if (result == null)
+        {
+            throw Errors.DisasterVictimNotFound;
+        }
+
+        return result;
     }
 
     public async Task Create(CreateMatchModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
+
+        var supporter = await GetSupporter(model.SupporterId!.Value);
+        var victim = await GetVictim(model.VictimId!.Value);
+        
+        _auditContext.Start(AuditTypes.Matching, "Matching created");
+        _auditContext.AddEffectedUser(supporter.User);
+        _auditContext.AddEffectedUser(victim.User);
+        
         var match = new Match
         {
             SupporterId = model.SupporterId!.Value,
@@ -36,12 +79,22 @@ public class MatchingBusiness : IMatchingBusiness
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
 
-        var match = await _unitOfWork.Match.FindById(model.MatchId!.Value);
+        var match = await _unitOfWork.Match
+            .AsQueryable
+            .Include(p => p.Supporter)
+            .ThenInclude(p => p.User)
+            .Include(p => p.Victim)
+            .ThenInclude(p => p.User)
+            .FirstOrDefaultAsync(p=>p.Id == model.MatchId!.Value);
 
         if (match == null)
         {
             throw Errors.MatchNotFound;
         }
+        
+        _auditContext.Start(AuditTypes.Matching, "Matching updated");
+        _auditContext.AddEffectedUser(match.Supporter.User);
+        _auditContext.AddEffectedUser(match.Victim.User);
 
         match.SupporterId = model.SupporterId!.Value;
         match.VictimId = model.VictimId!.Value;
@@ -54,12 +107,22 @@ public class MatchingBusiness : IMatchingBusiness
 
     public async Task Delete(Guid matchId)
     {
-        var match = await _unitOfWork.Match.FindById(matchId);
+        var match = await _unitOfWork.Match
+            .AsQueryable
+            .Include(p => p.Supporter)
+            .ThenInclude(p => p.User)
+            .Include(p => p.Victim)
+            .ThenInclude(p => p.User)
+            .FirstOrDefaultAsync(p=>p.Id == matchId);
 
         if (match == null)
         {
             throw Errors.MatchNotFound;
         }
+        
+        _auditContext.Start(AuditTypes.Matching, "Matching deleted");
+        _auditContext.AddEffectedUser(match.Supporter.User);
+        _auditContext.AddEffectedUser(match.Victim.User);
 
         _unitOfWork.Match.Delete(match);
         await _unitOfWork.SaveChangesAsync();

@@ -17,12 +17,14 @@ using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using KardesAile.AspNetCoreHost;
 using Microsoft.ApplicationInsights.Extensibility;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddHealthChecks();
+
 builder.Services.AddScoped<IAuthenticationBusiness, AuthenticationBusiness>();
 builder.Services.AddScoped<IAddressBusiness, AddressBusiness>();
 builder.Services.AddScoped<ISupporterBusiness, SupporterBusiness>();
@@ -30,8 +32,10 @@ builder.Services.AddScoped<IDisasterVictimBusiness, DisasterVictimBusiness>();
 builder.Services.AddScoped<IChildBusiness, ChildBusiness>();
 builder.Services.AddScoped<IMatchingBusiness, MatchingBusiness>();
 builder.Services.AddScoped<IModeratorBusiness, ModeratorBusiness>();
+builder.Services.AddScoped<IAuditBusiness, AuditBusiness>();
 
 builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddScoped<IAuditContext, AuditContext>();
 builder.Services.AddScoped<IAuditColumnValuesGenerator, AuditColumnValuesGenerator>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -117,13 +121,14 @@ builder.Host
         loggerConfiguration
             .Enrich.WithProperty("ApplicationName", builderContext.HostingEnvironment.ApplicationName)
             .Enrich.FromLogContext()
-            .MinimumLevel.Warning()
+            .MinimumLevel.Information()
             .WriteTo.Console()
             .WriteTo.PostgreSQL(
                 connectionString: builderContext.Configuration.GetConnectionString("DbConnection"),
                 tableName: "error_logs",
                 needAutoCreateTable: true,
-                schemaName: KardesAileDbContext.SchemaName
+                schemaName: KardesAileDbContext.SchemaName,
+                restrictedToMinimumLevel: LogEventLevel.Warning
             )
             .WriteTo.ApplicationInsights(services.GetRequiredService<TelemetryConfiguration>(), TelemetryConverter.Traces);
     });

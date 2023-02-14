@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using KardesAile.Database.Abstracts;
 
 namespace KardesAile.Database.Entities;
@@ -16,7 +17,7 @@ public class Country : IEntity
     public string CountryCode { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; } = null!;
-    public uint Version { get; set; }
+    [Timestamp] public uint Version { get; set; }
 
     public ICollection<City> Cities { get; set; }
     public ICollection<Supporter> Supporters { get; set; }

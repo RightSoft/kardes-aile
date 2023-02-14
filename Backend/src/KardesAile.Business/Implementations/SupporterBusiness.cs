@@ -14,10 +14,13 @@ namespace KardesAile.Business.Implementations;
 
 public class SupporterBusiness : ISupporterBusiness
 {
+    private readonly IAuditContext _auditContext;
     private readonly IUnitOfWork _unitOfWork;
 
-    public SupporterBusiness(IUnitOfWork unitOfWork)
+    public SupporterBusiness(IAuditContext auditContext,
+        IUnitOfWork unitOfWork)
     {
+        _auditContext = auditContext ?? throw new ArgumentNullException(nameof(auditContext));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
@@ -52,7 +55,7 @@ public class SupporterBusiness : ISupporterBusiness
                     Gender = c.Gender
                 }).ToList()
             }).FirstOrDefaultAsync(p => p.SupporterId == id);
-        
+
         if (supporter == null)
             throw new BusinessException($"Supporter could not be found. Id {id}");
 
@@ -66,6 +69,7 @@ public class SupporterBusiness : ISupporterBusiness
         {
             throw Errors.EmailOrPhoneRequired;
         }
+
         var user = new User
         {
             Status = UserStatuses.Active,
@@ -83,14 +87,17 @@ public class SupporterBusiness : ISupporterBusiness
                 Gender = i.Gender!.Value,
             }).ToList()!,
         };
-        
+
+        _auditContext.Start(AuditTypes.Supporter, "Supporter created");
+        _auditContext.AddEffectedUser(user);
+
         user.Supporters.Add(new Supporter
         {
             Address = model.Address,
             CountryId = model.CountryId,
             CityId = model.CityId,
         });
-        
+
         _unitOfWork.User.Add(user);
 
         await _unitOfWork.SaveChangesAsync();
@@ -99,6 +106,7 @@ public class SupporterBusiness : ISupporterBusiness
     public async Task Update(UpdateSupporterModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
+
         var supporter = await _unitOfWork.Supporter
             .AsQueryable
             .Include(p => p.User)
@@ -109,7 +117,10 @@ public class SupporterBusiness : ISupporterBusiness
         {
             throw Errors.SupporterNotFound;
         }
-        
+
+        _auditContext.Start(AuditTypes.Supporter, "Supporter updated");
+        _auditContext.AddEffectedUser(supporter.User);
+
         supporter.Address = model.Address;
         supporter.CountryId = model.CountryId;
         supporter.CityId = model.CityId;
@@ -128,15 +139,21 @@ public class SupporterBusiness : ISupporterBusiness
     {
         var user = await _unitOfWork.User
             .AsQueryable
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p =>
+                p.Id == id &&
+                p.Role == UserRoles.Supporter &&
+                (p.Status == UserStatuses.Active || p.Status == UserStatuses.Suspended));
 
         if (user == null)
         {
             throw Errors.SupporterNotFound;
         }
 
+        _auditContext.Start(AuditTypes.Supporter, "Supporter deleted");
+        _auditContext.AddEffectedUser(user);
+
         user.Status = UserStatuses.Deleted;
-        
+
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -148,14 +165,15 @@ public class SupporterBusiness : ISupporterBusiness
         var query = _unitOfWork.Supporter
             .AsQueryable
             .Where(p => model.IncludeDeleted ||
-                        p.User!.Status == UserStatuses.Active || p.User.Status == UserStatuses.Suspended)
+                        p.User!.Status == UserStatuses.Active ||
+                        p.User.Status == UserStatuses.Suspended)
             .Where(p => string.IsNullOrEmpty(filter) ||
                         p.User!.FirstName.ToUpper().Contains(filter) ||
                         p.User!.LastName.ToUpper().Contains(filter) ||
                         p.City!.Name.ToUpper().Contains(filter) ||
                         p.Country!.Name.ToUpper().Contains(filter) ||
                         p.Address!.ToUpper().Contains(filter));
-        
+
         var result = await query
             .Include(p => p.City)
             .Include(p => p.Country)
