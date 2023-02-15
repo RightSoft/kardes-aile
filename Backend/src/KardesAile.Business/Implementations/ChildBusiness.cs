@@ -101,6 +101,7 @@ public class ChildBusiness : IChildBusiness
             .Where(p => p.UserId == userId)
             .Select(p=> new ChildResultModel
             {
+                Id = p.Id,
                 Name = p.Name,
                 BirthDate = p.BirthDate.ToDateTime(TimeOnly.MinValue),
                 Gender = p.Gender
