@@ -27,31 +27,28 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div formGroupName="emailOrPhoneInfo">
-            <mat-form-field class="d-block mb-3">
-              <mat-label>E-posta</mat-label>
-              <input
-                formControlName="email"
-                matInput
-                type="text"
-              />
-              <mat-error>
-                {{ emailValidationMessage }}
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="d-block mb-3">
-              <mat-label>Telefon</mat-label>
-              <input
-                formControlName="phone"
-                matInput
-                type="text"
-              />
-              <mat-error>
-                {{ phoneValidationMessage }}
-              </mat-error>
-            </mat-form-field>
-          </div>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>E-posta</mat-label>
+            <input
+              formControlName="email"
+              matInput
+              type="text"
+            />
+            <mat-error>
+              {{ emailValidationMessage }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3">
+            <mat-label>Telefon</mat-label>
+            <input
+              formControlName="phone"
+              matInput
+              type="text"
+            />
+            <mat-error>
+              {{ phoneValidationMessage }}
+            </mat-error>
+          </mat-form-field>
           <mat-form-field class="d-block mb-3">
             <mat-label>Adres</mat-label>
             <input
@@ -82,6 +79,9 @@
                 {{ option.name }}
               </mat-option>
             </mat-autocomplete>
+            <mat-error>
+              {{ countryValidationMessage }}
+            </mat-error>
           </mat-form-field>
           <mat-form-field class="d-block mb-3">
             <mat-label>Şehir</mat-label>
@@ -99,6 +99,9 @@
                 {{ option.name }}
               </mat-option>
             </mat-autocomplete>
+            <mat-error>
+              {{ cityValidationMessage }}
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">

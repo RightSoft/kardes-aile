@@ -4,9 +4,8 @@ import {VoluntarilyService} from "@voluntarilyListsModule/business/voluntarily.s
 import AddPageTitle from "@appModule/base-classes/add-page-title.abstract.class";
 import {MatInputModule} from "@angular/material/input";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {getValidationMessage} from "@validationModule/get-validation-message";
-import {atLeastOne} from "@validationModule/custom-validator";
 import {emailValidator} from "@validationModule/email-validator";
 import {phoneValidator} from "@validationModule/phone-validator";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
@@ -37,6 +36,7 @@ import {UpdateChildModel} from "@appModule/models/child/update-child.model";
 import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
+import {atLeastOne} from "@validationModule/custom-validator";
 
 @Component({
   selector: 'app-add-voluntarily',
@@ -58,10 +58,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     userId: this.formBuilder.control(null),
     firstName: this.formBuilder.control('', Validators.required),
     lastName: this.formBuilder.control('', Validators.required),
-    emailOrPhoneInfo: new FormGroup({
-      email: this.formBuilder.control(null, emailValidator),
-      phone: this.formBuilder.control(null, phoneValidator),
-    }, [atLeastOne(Validators.required, ['email', 'phone'])]),
+    email: this.formBuilder.control(null, [emailValidator, Validators.required]),
+    phone: this.formBuilder.control(null, [phoneValidator, Validators.required]),
     address: this.formBuilder.control(''),
     countryId: this.formBuilder.control(null),
     cityId: this.formBuilder.control(null),
@@ -106,6 +104,9 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
     if (id) {
       this.addSupporterForm.get('address').addValidators(Validators.required);
+      this.addSupporterForm.get('countryId').addValidators(Validators.required);
+      this.addSupporterForm.get('cityId').addValidators(Validators.required);
+
       voluntarilyService.get(id).pipe(
         switchMap(supporter => {
           if (supporter.countryId)
@@ -118,7 +119,6 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
       ).subscribe(result => {
         this.children = result.children;
         this.addSupporterForm.patchValue(result);
-        this.addSupporterForm.patchValue({'emailOrPhoneInfo': {email: result.email, phone: result.phone}});
       })
     }
   }
@@ -132,15 +132,23 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   }
 
   public get emailValidationMessage(): string {
-    return getValidationMessage(this.addSupporterForm.controls.emailOrPhoneInfo.controls.email);
+    return getValidationMessage(this.addSupporterForm.controls.email);
   }
 
   public get phoneValidationMessage(): string {
-    return getValidationMessage(this.addSupporterForm.controls.emailOrPhoneInfo.controls.phone);
+    return getValidationMessage(this.addSupporterForm.controls.phone);
   }
 
   public get addressValidationMessage(): string {
     return getValidationMessage(this.addSupporterForm.controls.address);
+  }
+
+  public get countryValidationMessage(): string {
+    return getValidationMessage(this.addSupporterForm.controls.countryId);
+  }
+
+  public get cityValidationMessage(): string {
+    return getValidationMessage(this.addSupporterForm.controls.cityId);
   }
 
   onSave() {
@@ -149,8 +157,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
         const model = {
           firstName: this.addSupporterForm.value.firstName,
           lastName: this.addSupporterForm.value.lastName,
-          email: this.addSupporterForm.value.emailOrPhoneInfo.email,
-          phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
+          email: this.addSupporterForm.value.email,
+          phone: this.addSupporterForm.value.phone,
           address: this.addSupporterForm.value.address,
           cityId: this.addSupporterForm.value.cityId,
           countryId: this.addSupporterForm.value.countryId,
@@ -165,8 +173,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
           userId: this.addSupporterForm.value.userId,
           firstName: this.addSupporterForm.value.firstName,
           lastName: this.addSupporterForm.value.lastName,
-          email: this.addSupporterForm.value.emailOrPhoneInfo.email,
-          phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
+          email: this.addSupporterForm.value.email,
+          phone: this.addSupporterForm.value.phone,
           address: this.addSupporterForm.value.address,
           cityId: this.addSupporterForm.value.cityId,
           countryId: this.addSupporterForm.value.countryId,

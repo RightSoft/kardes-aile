@@ -1,14 +1,13 @@
 import {
   FormGroup,
   ValidationErrors,
-  ValidatorFn,
-  Validators,
+  ValidatorFn
 } from '@angular/forms';
 
-export const atLeastOne = (validator: ValidatorFn, controls:string[] = null) => (
+export const atLeastOne = (validator: ValidatorFn, controls: string[] = null) => (
   group: FormGroup,
 ): ValidationErrors | null => {
-  if(!controls){
+  if (!controls) {
     controls = Object.keys(group.controls)
   }
 
