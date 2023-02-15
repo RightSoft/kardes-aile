@@ -18,7 +18,7 @@ import {UserStatuses, UserStatusesLabel} from "@appModule/models/shared/user-sta
 import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
-import {catchError, of, switchMap, tap} from "rxjs";
+import {catchError, filter, of, switchMap, tap} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {SnackbarService} from "@appModule/services/snackbar.service";
 import {FlexModule} from "@angular/flex-layout";
@@ -105,6 +105,9 @@ export default class VoluntarilyListComponent extends BaseListComponent implemen
       })
       .afterClosed()
       .pipe(
+        filter((result) => {
+          return result;
+        }),
         switchMap(() => this.voluntarilyService.delete(userId)),
         tap(() => this.snackbar.show('Success', 'Successfully deleted')),
         tap(() => this.onSearch()),

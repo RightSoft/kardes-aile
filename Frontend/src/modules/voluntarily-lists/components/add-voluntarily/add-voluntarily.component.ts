@@ -23,7 +23,7 @@ import {FlexModule} from "@angular/flex-layout";
 import {CacheService} from "@appModule/services/cache.service";
 import {CountryResultModel} from "@appModule/models/country-result.model";
 import {CityResultModel} from "@appModule/models/city-result.model";
-import {catchError, Observable, of, startWith, switchMap, tap} from "rxjs";
+import {catchError, filter, Observable, of, startWith, switchMap, tap} from "rxjs";
 import {map} from "rxjs/operators";
 import {SnackbarService} from "@appModule/services/snackbar.service";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
@@ -248,6 +248,9 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
         })
         .afterClosed()
         .pipe(
+          filter((result) => {
+            return result;
+          }),
           switchMap(() => this.childService.delete(id)),
           tap(() => this.snackbar.show('Success', 'Successfully deleted')),
           tap(() => this.refreshChildren()),
