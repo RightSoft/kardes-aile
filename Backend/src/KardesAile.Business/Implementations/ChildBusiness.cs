@@ -38,7 +38,8 @@ public class ChildBusiness : IChildBusiness
     public async Task Add(CreateChildModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-
+        if (model.UserId == null) throw Errors.UserNotFound;
+        
         var user = await GetUser(model.UserId!.Value);
 
         _auditContext.Start(AuditTypes.Child, "Child added");
