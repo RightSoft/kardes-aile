@@ -9,7 +9,7 @@ public class DisasterVictimSearchResultModel
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string? Phone { get; set; }
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; } = null!;
     public string? Address { get; set; }
     public Guid? CityId { get; set; }
     public Guid? TemporaryCityId { get; set; }

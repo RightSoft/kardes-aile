@@ -44,7 +44,7 @@ public class AuditBusiness : IAuditBusiness
             .Select(p => new AuditEffectedUserResultModel
             {
                 UserId = p.UserId,
-                Username = p.User.Email
+                Username = (p.User!.Email ?? p.User!.Phone)!
             })
             .ToListAsync();
 
@@ -67,7 +67,7 @@ public class AuditBusiness : IAuditBusiness
                 (string.IsNullOrEmpty(filter) ||
                  p.Action.ToUpper().Contains(filter) ||
                  p.CreatedBy.ToUpper().Contains(filter) ||
-                 p.AuditEffectedUsers.Any(e => e.User.Email.ToUpper().Contains(filter))))
+                 p.AuditEffectedUsers.Any(e => e.User!.Email!.ToUpper().Contains(filter) || e.User!.Phone!.Contains(filter))))
             .Select(p => new AuditSearchResultModel
             {
                 Id = p.Id,

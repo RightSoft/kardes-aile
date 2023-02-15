@@ -28,7 +28,7 @@ public class MatchingBusiness : IMatchingBusiness
         var result = await _unitOfWork.Supporter
             .AsQueryable
             .Include(p => p.User)
-            .FirstOrDefaultAsync(p => p.Id == supporterId && p.User.Status == UserStatuses.Active);
+            .FirstOrDefaultAsync(p => p.Id == supporterId && p.User!.Status == UserStatuses.Active);
 
         if (result == null)
         {
@@ -43,7 +43,7 @@ public class MatchingBusiness : IMatchingBusiness
         var result = await _unitOfWork.DisasterVictim
             .AsQueryable
             .Include(p => p.User)
-            .FirstOrDefaultAsync(p => p.Id == victimId && p.User.Status == UserStatuses.Active);
+            .FirstOrDefaultAsync(p => p.Id == victimId && p.User!.Status == UserStatuses.Active);
 
         if (result == null)
         {
@@ -61,8 +61,8 @@ public class MatchingBusiness : IMatchingBusiness
         var victim = await GetVictim(model.VictimId!.Value);
         
         _auditContext.Start(AuditTypes.Matching, "Matching created");
-        _auditContext.AddEffectedUser(supporter.User);
-        _auditContext.AddEffectedUser(victim.User);
+        _auditContext.AddEffectedUser(supporter.User!);
+        _auditContext.AddEffectedUser(victim.User!);
         
         var match = new Match
         {
@@ -82,9 +82,9 @@ public class MatchingBusiness : IMatchingBusiness
         var match = await _unitOfWork.Match
             .AsQueryable
             .Include(p => p.Supporter)
-            .ThenInclude(p => p.User)
+            .ThenInclude(p => p!.User)
             .Include(p => p.Victim)
-            .ThenInclude(p => p.User)
+            .ThenInclude(p => p!.User)
             .FirstOrDefaultAsync(p=>p.Id == model.MatchId!.Value);
 
         if (match == null)
@@ -93,8 +93,8 @@ public class MatchingBusiness : IMatchingBusiness
         }
         
         _auditContext.Start(AuditTypes.Matching, "Matching updated");
-        _auditContext.AddEffectedUser(match.Supporter.User);
-        _auditContext.AddEffectedUser(match.Victim.User);
+        _auditContext.AddEffectedUser(match.Supporter!.User!);
+        _auditContext.AddEffectedUser(match.Victim!.User!);
 
         match.SupporterId = model.SupporterId!.Value;
         match.VictimId = model.VictimId!.Value;
@@ -110,9 +110,9 @@ public class MatchingBusiness : IMatchingBusiness
         var match = await _unitOfWork.Match
             .AsQueryable
             .Include(p => p.Supporter)
-            .ThenInclude(p => p.User)
+            .ThenInclude(p => p!.User)
             .Include(p => p.Victim)
-            .ThenInclude(p => p.User)
+            .ThenInclude(p => p!.User)
             .FirstOrDefaultAsync(p=>p.Id == matchId);
 
         if (match == null)
@@ -121,8 +121,8 @@ public class MatchingBusiness : IMatchingBusiness
         }
         
         _auditContext.Start(AuditTypes.Matching, "Matching deleted");
-        _auditContext.AddEffectedUser(match.Supporter.User);
-        _auditContext.AddEffectedUser(match.Victim.User);
+        _auditContext.AddEffectedUser(match.Supporter!.User!);
+        _auditContext.AddEffectedUser(match.Victim!.User!);
 
         _unitOfWork.Match.Delete(match);
         await _unitOfWork.SaveChangesAsync();

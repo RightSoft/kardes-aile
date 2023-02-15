@@ -40,6 +40,7 @@ builder.Services.AddScoped<IAuditColumnValuesGenerator, AuditColumnValuesGenerat
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddOptions<JwtOptions>()
     .BindConfiguration("Jwt")
