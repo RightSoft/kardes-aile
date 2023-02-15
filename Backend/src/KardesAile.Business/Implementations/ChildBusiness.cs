@@ -34,13 +34,13 @@ public class ChildBusiness : IChildBusiness
 
         return result;
     }
-    
+
     public async Task Add(CreateChildModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-        
+
         var user = await GetUser(model.UserId!.Value);
-        
+
         _auditContext.Start(AuditTypes.Child, "Child added");
         _auditContext.AddEffectedUser(user);
 
@@ -54,41 +54,45 @@ public class ChildBusiness : IChildBusiness
 
         await _unitOfWork.SaveChangesAsync();
     }
-    
+
     public async Task Update(UpdateChildModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-        
+
         var child = await _unitOfWork.Child
             .AsQueryable
+            .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.Id == model.Id);
-
-        var user = await GetUser(child.UserId);
-        
-        _auditContext.Start(AuditTypes.Child, "Child updated");
-        _auditContext.AddEffectedUser(user);
-
-        child.Name = model.Name;
-        child.Gender = model.Gender;
-        child.BirthDate = DateOnly.FromDateTime(model.BirthDate);
-        
-        await _unitOfWork.SaveChangesAsync();
-    }
-    
-    public async Task Remove(Guid id)
-    {
-        var child = await _unitOfWork.Child
-            .AsQueryable
-            .Include(p=>p.User)
-            .FirstOrDefaultAsync(p => p.Id == id);
 
         if (child == null)
         {
             throw Errors.ChildNotFound;
         }
         
+        _auditContext.Start(AuditTypes.Child, "Child updated");
+        _auditContext.AddEffectedUser(child.User!);
+
+        child.Name = model.Name!;
+        child.Gender = model.Gender!.Value;
+        child.BirthDate = DateOnly.FromDateTime(model.BirthDate!.Value);
+
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task Remove(Guid id)
+    {
+        var child = await _unitOfWork.Child
+            .AsQueryable
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (child == null)
+        {
+            throw Errors.ChildNotFound;
+        }
+
         _auditContext.Start(AuditTypes.Child, "Child removed");
-        _auditContext.AddEffectedUser(child.User);
+        _auditContext.AddEffectedUser(child.User!);
         _unitOfWork.Child.Delete(child);
         await _unitOfWork.SaveChangesAsync();
     }
@@ -99,7 +103,7 @@ public class ChildBusiness : IChildBusiness
             .AsQueryable
             .AsNoTracking()
             .Where(p => p.UserId == userId)
-            .Select(p=> new ChildResultModel
+            .Select(p => new ChildResultModel
             {
                 Name = p.Name,
                 BirthDate = p.BirthDate.ToDateTime(TimeOnly.MinValue),

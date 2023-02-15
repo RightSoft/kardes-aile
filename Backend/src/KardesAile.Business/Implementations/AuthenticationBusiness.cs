@@ -35,12 +35,26 @@ public class AuthenticationBusiness : IAuthenticationBusiness
     public async Task<AuthenticationResultModel> Authenticate(AuthenticationModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-        var user = await _unitOfWork.User
-            .AsQueryable
-            .AsNoTracking()
-            .FirstOrDefaultAsync(p =>
-                p.Email == model.Email &&
-                p.Status == UserStatuses.Active);
+
+        User? user = null;
+        
+        if (!string.IsNullOrEmpty(model.Email))
+        {
+            user = await _unitOfWork.User
+                .AsQueryable
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p =>
+                    p.Status == UserStatuses.Active &&
+                    p.Email == model.Email);
+        } else if (!string.IsNullOrEmpty(model.Phone))
+        {
+            user = await _unitOfWork.User
+                .AsQueryable
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p =>
+                    p.Status == UserStatuses.Active &&
+                    p.Phone == model.Phone);
+        }
 
         if (user == null) throw Errors.UsernamePasswordDenied;
 
@@ -69,7 +83,7 @@ public class AuthenticationBusiness : IAuthenticationBusiness
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Sub, (user.Email ?? user.Phone)!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
             new Claim(ClaimTypes.Role, user.Role.ToString()),
             new Claim(ClaimTypes.Role, UserRoles.User.ToString())
@@ -91,7 +105,7 @@ public class AuthenticationBusiness : IAuthenticationBusiness
             Bearer = new JwtSecurityTokenHandler().WriteToken(token),
             ExpiresAt = expiresAt,
             Role = user.Role,
-            Username = user.Email,
+            Username = (user.Email ?? user.Phone)!,
             Fullname = $"{user.FirstName} {user.LastName}",
         };
     }

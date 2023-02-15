@@ -96,6 +96,7 @@ public class ModeratorBusiness : IModeratorBusiness
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
+            Phone = user.Phone,
             Status = user.Status
         };
 
@@ -114,7 +115,7 @@ public class ModeratorBusiness : IModeratorBusiness
                 (string.IsNullOrEmpty(model.Query) ||
                  EF.Functions.Like(m.FirstName.ToLower(), $"%{model.Query.ToLower()}%") ||
                  EF.Functions.Like(m.LastName.ToLower(), $"%{model.Query.ToLower()}%") ||
-                 EF.Functions.Like(m.Email.ToLower(), $"%{model.Query.ToLower()}%")
+                 EF.Functions.Like(m.Email!.ToLower(), $"%{model.Query.ToLower()}%")
                 ));
         result.TotalCount = await users.CountAsync();
 

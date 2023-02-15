@@ -126,7 +126,7 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
         }
 
         _auditContext.Start(AuditTypes.DisasterVictim, "Disaster victim updated");
-        _auditContext.AddEffectedUser(disasterVictim.User);
+        _auditContext.AddEffectedUser(disasterVictim.User!);
 
         disasterVictim.Address = model.Address;
         disasterVictim.AddressValidated = model.AddressValidated;

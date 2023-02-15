@@ -119,7 +119,7 @@ public class SupporterBusiness : ISupporterBusiness
         }
 
         _auditContext.Start(AuditTypes.Supporter, "Supporter updated");
-        _auditContext.AddEffectedUser(supporter.User);
+        _auditContext.AddEffectedUser(supporter.User!);
 
         supporter.Address = model.Address;
         supporter.CountryId = model.CountryId;
