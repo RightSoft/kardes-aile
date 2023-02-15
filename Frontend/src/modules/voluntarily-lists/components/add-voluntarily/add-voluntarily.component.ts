@@ -237,28 +237,32 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   }
 
   onDeleteChild(id: string) {
-    this.dialog
-      .open(ConfirmationDialogComponent, {
-        width: '300px',
-        data: {
-          title: 'Uyarı',
-          message: 'Çocuğu silmek istediğinize emin misiniz?'
-        }
-      })
-      .afterClosed()
-      .pipe(
-        switchMap(() => this.childService.delete(id)),
-        tap(() => this.snackbar.show('Success', 'Successfully deleted')),
-        tap(() => this.refreshChildren()),
-        catchError((error) => {
-          return of(error);
+    if (id) {
+      this.dialog
+        .open(ConfirmationDialogComponent, {
+          width: '300px',
+          data: {
+            title: 'Uyarı',
+            message: 'Çocuğu silmek istediğinize emin misiniz?'
+          }
         })
-      )
-      .subscribe((data) => {
-        if (data && data.ok === false) {
-          this.snackbar.show('Error', data.message);
-        }
-      });
+        .afterClosed()
+        .pipe(
+          switchMap(() => this.childService.delete(id)),
+          tap(() => this.snackbar.show('Success', 'Successfully deleted')),
+          tap(() => this.refreshChildren()),
+          catchError((error) => {
+            return of(error);
+          })
+        )
+        .subscribe((data) => {
+          if (data && data.ok === false) {
+            this.snackbar.show('Error', data.message);
+          }
+        });
+    } else {
+      this.children = this.children.filter(child => child.id != id);
+    }
   }
 
 
