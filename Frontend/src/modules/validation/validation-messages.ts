@@ -1,11 +1,11 @@
 import {passwordRegEx} from '@appModule/constants/password-regex';
 
 export const validationMessages: { [key: string]: string } = {
-  required: 'Required.',
-  email: 'Enter a valid e-mail address.',
-  phone: 'Enter a valid phone number.',
-  url: 'Enter a valid URL.',
-  confirmPassword: 'Passwords are not the same.'
+  required: 'Zorunlu alan.',
+  email: 'Geçerli bir email adresi giriniz.',
+  phone: 'Geçerli bir telefon numarası giriniz.',
+  url: 'Geçerli bir URL giriniz.',
+  confirmPassword: 'Parolalarınız eşleşmiyor.'
 };
 export const validationMessagesFunctions = {
   minLength: (length: number) => `Can be at least ${length} characters.`,

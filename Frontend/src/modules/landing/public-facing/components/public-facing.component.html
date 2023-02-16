@@ -1,0 +1,171 @@
+<div class="root h-100">
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-column align-items-start container">
+      <div class="mt-3">
+        <div class="row">
+          <div class="col"><h1 class="mb-3">Gönüllü Kayıt</h1></div>
+        </div>
+      </div>
+      <div class="container p-5 content">
+        <div class="row align-items-center justft-content-center">
+          <div class="d-flex flex-column justify-content-center">
+            <form
+              [formGroup]="addSupporterForm"
+              autocomplete="off"
+              fxLayout="column"
+              fxLayoutAlign="stretch"
+            >
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="d-block mb-3">
+                    <input-text
+                      [control]="addSupporterForm.controls['firstName']"
+                      label="Ad Soyad  *"
+                      [validationMessage]="firstNameValidationMessage"
+                    />
+                  </div>
+                  <div formGroupName="emailOrPhoneInfo">
+                    <div class="d-block mb-3">
+                      <input-text
+                        [control]="
+                          addSupporterForm.controls.emailOrPhoneInfo.controls[
+                            'email'
+                          ]
+                        "
+                        label="E-posta"
+                        [validationMessage]="emailValidationMessage"
+                      />
+                    </div>
+                    <div class="d-block mb-3">
+                      <input-text
+                        [control]="
+                          addSupporterForm.controls.emailOrPhoneInfo.controls[
+                            'phone'
+                          ]
+                        "
+                        label="Telefon"
+                        [validationMessage]="phoneValidationMessage"
+                      />
+                    </div>
+                  </div>
+                  <div class="d-block mb-3">
+                    <input-text
+                      [control]="addSupporterForm.controls['address']"
+                      label="Adres"
+                      [validationMessage]="addressValidationMessage"
+                    />
+                  </div>
+                  <div class="d-block mb-3">
+                    <input-select
+                      [control]="addSupporterForm.controls['countryId']"
+                      label="Ülke"
+                      [validationMessage]=""
+                      [optionList]="countryList"
+                      (valueChangeEvent)="onCountrySelect($event)"
+                    />
+                  </div>
+                  <div class="d-block mb-3">
+                    <input-select
+                      [control]="addSupporterForm.controls['cityId']"
+                      label="Şehir"
+                      [validationMessage]=""
+                      [optionList]="cityList"
+                      (valueChangeEvent)="onCitySelect($event)"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div
+                    class="mb-3 d-flex justft-content-between align-items-center bg-transparent"
+                  >
+                    <span>Çocuk Listesi</span>
+                    <button
+                      (click)="addOrEditChild('Add', null)"
+                      class="btn p-2 align-self-baseline ms-auto rounded"
+                      mat-raised-button
+                    >
+                      <mat-icon>add</mat-icon>
+                      Çocuk Ekle
+                    </button>
+                  </div>
+                  <div class="">
+                    <mat-table class="table" [dataSource]="getChildren()">
+                      <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef>
+                          AD SOYAD</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let element">
+                          {{ element.name }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="birthDate">
+                        <mat-header-cell *matHeaderCellDef>
+                          YAS</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let element">
+                          {{ getAge(element.birthDate) }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="gender">
+                        <mat-header-cell *matHeaderCellDef>
+                          CINSIYET</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let element">
+                          {{ getGendersLabel(element.gender) }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <button
+                            (click)="showUpdateChild(row)"
+                            aria-label="Edit"
+                            color="primary"
+                            mat-icon-button
+                            type="button"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            (click)="onDeleteChild(row.id)"
+                            aria-label="Delete"
+                            color="warn"
+                            mat-icon-button
+                            type="button"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row
+                        *matHeaderRowDef="displayedColumns; sticky: true"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="let row; columns: displayedColumns"
+                      ></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
+              <button
+                (click)="onSave()"
+                [disabled]="addSupporterForm.invalid"
+                class="btn-ascendent"
+                mat-raised-button
+                type="submit"
+              >
+                Kaydet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

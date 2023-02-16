@@ -1,0 +1,64 @@
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  input {
+    display: block;
+    padding: 17px 16px 17px 16px;
+    background: #ffffff;
+    border: 1px solid #d0d5dd;
+    box-sizing: border-box;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif !important;
+    background: #ffffff;
+
+    border: 1px solid #d0d5dd;
+    border-radius: 12px;
+  }
+  input.valid {
+    outline: none;
+    padding: 20px 16px 14px 16px;
+  }
+  input.error {
+    border: 1px solid #f97066;
+    box-shadow: 0px 0px 5px #f97066;
+  }
+  input.active ~ label {
+    top: 5px;
+    font-size: 12px;
+  }
+  input:focus,
+  input:focus-visible {
+    outline: none;
+    &:not(.error) {
+      border: 1px solid #555e6b;
+      box-shadow: 0px 0px 5px #b692f6;
+      border-radius: 12px;
+    }
+  }
+  label {
+    color: var(--secondary-400);
+    font-size: 16px;
+    font-family: 'Inter';
+    font-weight: 400;
+    position: absolute;
+    pointer-events: none;
+    left: 16px;
+    top: 17px;
+    transition: 300ms ease all;
+    transform: translate(0px, 0%);
+    letter-spacing: -0.02em;
+  }
+  .icon {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    fill: #ffffff;
+  }
+  .error-message{
+    color:  #f97066;
+  }
+}

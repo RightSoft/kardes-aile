@@ -1,31 +1,32 @@
-import {DisasterVictimService} from '@disasterVictimListsModule/business/disaster-victim.service';
-import {NavigationService} from '@appModule/services/navigation.service';
-import {phoneValidator} from '@validationModule/phone-validator';
-import {emailValidator} from '@validationModule/email-validator';
-import {getValidationMessage} from '@validationModule/get-validation-message';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {ReactiveFormsModule, FormBuilder, Validators} from '@angular/forms';
-import {Component, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { DisasterVictimService } from '@disasterVictimListsModule/business/disaster-victim.service';
+import { NavigationService } from '@appModule/services/navigation.service';
+import { phoneValidator } from '@validationModule/phone-validator';
+import { emailValidator } from '@validationModule/email-validator';
+import { getValidationMessage } from '@validationModule/get-validation-message';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
-import {MatSelectModule} from '@angular/material/select';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import {AddChildComponent} from '../add-child/add-child.component';
-import {MatTableModule} from '@angular/material/table'
-import {CreateDisasterVictimModel} from '@appModule/models/disaster-victim/create-disaster-victim.model';
-import {UpdateDisasterVictimModel} from '@appModule/models/disaster-victim/update-disaster-victim.model';
-import {CreateChildModel} from '@appModule/models/child/create-child.model';
-import {Genders} from '@appModule/models/shared/genders.enum';
-import {AddressService} from '@appModule/services/address.service';
-import {CountryResultModel} from '@appModule/models/country-result.model';
-import {ChildResultModel} from '@appModule/models/child/child-result.model';
-import {CityResultModel} from '@appModule/models/city-result.model';
-import {ActivatedRoute} from '@angular/router';
-import {Location} from '@angular/common';
-import {ChildService} from '@appModule/services/child.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AddChildComponent } from '../add-child/add-child.component';
+import { MatTableModule } from '@angular/material/table'
+import { CreateDisasterVictimModel } from '@appModule/models/disaster-victim/create-disaster-victim.model';
+import { UpdateDisasterVictimModel } from '@appModule/models/disaster-victim/update-disaster-victim.model';
+import { CreateChildModel } from '@appModule/models/child/create-child.model';
+import { Genders } from '@appModule/models/shared/genders.enum';
+import { AddressService } from '@appModule/services/address.service';
+import { CountryResultModel } from '@appModule/models/country-result.model';
+import { ChildResultModel } from '@appModule/models/child/child-result.model';
+import { CityResultModel } from '@appModule/models/city-result.model';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { ChildService } from '@appModule/services/child.service';
+import { UpdateChildModel } from '@appModule/models/child/update-child.model';
 
 @Component({
   selector: 'app-add-disaster-victim',
@@ -51,9 +52,11 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
   countryList$: CountryResultModel[];
   cityList$: CityResultModel[];
   tempCityList$: CityResultModel[];
-  childrens: Array<CreateChildModel> = [];
+  childrens: Array<CreateChildModel | UpdateChildModel> = [];
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'action'];
   disasterVictimId: string = undefined;
+  childrensToBeDeleted: Array<CreateChildModel | UpdateChildModel> = [];
+  userId?: string;
   private dialog = inject(MatDialog);
   private formBuilder = inject(FormBuilder);
   form = this.formBuilder.group({
@@ -77,7 +80,6 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     countryId: this.formBuilder.control(undefined, Validators.required),
     temporaryAddress: this.formBuilder.control(undefined, Validators.required),
     temporaryCityId: this.formBuilder.control(undefined, Validators.required),
-    identityNumberValidated: this.formBuilder.control(undefined),
     addressValidated: this.formBuilder.control(undefined),
   });
 
@@ -87,6 +89,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     if (id) {
       this.disasterVictimId = id;
       disasterVictimService.get(id).subscribe(result => {
+        this.userId = result.userId;
         this.childService.list(result.userId).subscribe(childResult => {
           this.childrens = childResult;
         });
@@ -94,7 +97,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           console.log(result);
           this.cityList$ = cResult.sort((a, b) => a.name.localeCompare(b.name));
           this.form.patchValue(result);
-          this.form.patchValue({fullName: `${result.firstName} ${result.lastName}`})
+          this.form.patchValue({ fullName: `${result.firstName} ${result.lastName}` })
         });
 
       });
@@ -156,8 +159,8 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     return Object.values(Genders)[gender].toString();
   }
 
-  public showChildDialog(action: string, obj: ChildResultModel, index: number) {
-    this.dialog.open(AddChildComponent, {data: {action, obj}}).afterClosed().subscribe(result => {
+  public showChildDialog(action: string, child:CreateChildModel | UpdateChildModel , index: number) {
+    this.dialog.open(AddChildComponent, { data: { action, child } }).afterClosed().subscribe(result => {
       if (!result) return;
       if (result.event == 'Add') {
         this.childrens = [...this.childrens, result.data]
@@ -170,6 +173,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
 
   public removeChild(child: ChildResultModel) {
     this.childrens = this.childrens.filter((el) => el !== child);
+    this.childrensToBeDeleted.push(child);
   }
 
   public updateChild(child: ChildResultModel) {
@@ -203,7 +207,6 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           countryId: this.form.value.countryId,
           temporaryAddress: this.form.value.temporaryAddress,
           identityNumber: this.form.value.identityNumber.toString(),
-          identityNumberValidated: this.form.value.identityNumberValidated,
           children: this.childrens
         } as CreateDisasterVictimModel;
         this.disasterVictimService.create(model).subscribe(() => {
@@ -222,18 +225,42 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           temporaryAddress: this.form.value.temporaryAddress,
           temporaryCityId: this.form.value.temporaryCityId,
           identityNumber: this.form.value.identityNumber.toString(),
-          identityNumberValidated: this.form.value.identityNumberValidated,
           status: 0,
-          children: this.childrens
         } as UpdateDisasterVictimModel;
-        console.log('hereee');
         this.disasterVictimService.update(updateModel).subscribe(() => {
+          this.childrensToBeDeleted.forEach(element => {
+            if ('id' in element)
+              this.childService.delete(element.id).subscribe((res) => { });
+          });
+          this.childrens.forEach(element => {
+            console.log(element);
+            setTimeout(() => {
+              this.addOrUpdateChildren(element);
+            }, 300);
+          });
+        }).add(()=>{
           this.backToList();
         });
       }
     }
   }
-
+  public addOrUpdateChildren(child: (UpdateChildModel | CreateChildModel)) {
+    if ('id' in child) {
+      this.childService.update({
+        id: child.id,
+        name: child.name,
+        birthDate: child.birthDate,
+        gender: child.gender
+      }).subscribe((res) => { console.log('yey') });
+    } else {
+      this.childService.create({
+        userId: this.userId,
+        name: child.name,
+        birthDate: child.birthDate,
+        gender: child.gender
+      }).subscribe((res) => { console.log('yey') });
+    }
+  }
   public backToList() {
     this.navigationService.navigate('/disaster-victim-list');
   }

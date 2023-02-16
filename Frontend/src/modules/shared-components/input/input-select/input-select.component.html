@@ -1,0 +1,30 @@
+<div class="select-wrapper mr-30">
+  <ng-container>
+    <div
+      class="select"
+      [ngClass]="{ active: showOptions }"
+      (click)="toggleOptions($event)"
+    >
+      {{ selectedOption?.name ?? 'Seçiniz' }}
+    </div>
+    <label>{{ label }}</label>
+  </ng-container>
+  <ng-container *ngIf="control.invalid && (control.dirty || control.touched)">
+    <div class="m-1 error-message">{{ validationMessage }}</div>
+  </ng-container>
+  <div
+    class="options-wrapper"
+    *ngIf="showOptions"
+    (clickOutside)="toggleOptions($event)"
+  >
+    <div class="options">
+      <div
+        *ngFor="let option of optionList"
+        class="option"
+        (click)="onValueChange(option)"
+      >
+        {{ option.name }}
+      </div>
+    </div>
+  </div>
+</div>

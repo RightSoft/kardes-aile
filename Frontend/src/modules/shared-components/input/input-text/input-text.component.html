@@ -1,0 +1,18 @@
+<div class="input-wrapper mr-30">
+  <ng-container>
+    <input
+      [formControl]="control"
+      type="text"
+      [ngClass]="{
+        active: control.value.length > 0,
+        valid : control.valid,
+        error: control.invalid && (control.dirty || control.touched)
+      }"
+      (ngModelChange)="onValueChange($event)"
+    />
+    <label [ngClass]="{ active: value.length > 0 }" for="">{{ label }}</label>
+  </ng-container>
+  <ng-container *ngIf="control.invalid && (control.dirty || control.touched)">
+    <div class="m-1 error-message">{{ validationMessage }}</div>
+  </ng-container>
+</div>

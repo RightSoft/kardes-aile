@@ -1,0 +1,33 @@
+:host ::ng-deep .form-field {
+  .mat-mdc-text-field-wrapper.mdc-text-field {
+    background: white;
+  }
+  .mat-mdc-form-field-error-wrapper{
+    padding-left: 0;
+  }
+}
+.content {
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+}
+.table {
+  /* Grey/050 */
+  overflow: hidden;
+  background: #f9fafb;
+  /* Grey/300 */
+
+  border: 2px solid #d0d5dd;
+  border-radius: 12px;
+  .mat-mdc-header-row {
+    border-radius: 12px;
+    .mat-mdc-header-cell {
+      // border-radius: 12px;
+    }
+  }
+  .mat-mdc-row {
+    background: #f9fafb;
+    .mat-mdc-cell {
+      background: #f9fafb;
+    }
+  }
+}
