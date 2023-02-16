@@ -32,10 +32,10 @@
       <mat-header-cell *matHeaderCellDef class="text-right"></mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-column text-right">
         <button mat-icon-button color="primary" aria-label="Edit" (click)="onUpdate(row)">
-          <mat-icon>edit</mat-icon>
+          <mat-icon [svgIcon]="'document'"></mat-icon>
         </button>
         <button mat-icon-button color="warn" aria-label="Delete" (click)="onDelete(row)">
-          <mat-icon>delete</mat-icon>
+          <mat-icon [svgIcon]="'delete'"></mat-icon>
         </button>
       </mat-cell>
     </ng-container>

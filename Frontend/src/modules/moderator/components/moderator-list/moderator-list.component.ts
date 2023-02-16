@@ -34,6 +34,7 @@ import {
   UserStatuses,
   UserStatusesLabel
 } from '@appModule/models/shared/user-statuses.enum';
+import { SvgIconModule } from '@appModule/modules/svg-icon.module';
 
 @Component({
   selector: 'app-moderator-list',
@@ -46,7 +47,8 @@ import {
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatSortModule
+    MatSortModule,
+    SvgIconModule
   ],
   templateUrl: './moderator-list.component.html',
   styleUrls: ['./moderator-list.component.scss']
@@ -110,7 +112,12 @@ export default class ModeratorListComponent
           return result;
         }),
         switchMap(() => this.moderatorService.delete(data.id)),
-        tap(() => this.snackbarService.show('Success', 'Successfully deleted')),
+        tap(() =>
+          this.snackbarService.show(
+            'Success',
+            'Moderatör başarılı bir şekilde silinmiştir'
+          )
+        ),
         tap(() => this.onSearch()),
         catchError((error) => {
           return of(error);
@@ -118,7 +125,7 @@ export default class ModeratorListComponent
       )
       .subscribe((data) => {
         if (data && data.ok === false) {
-          this.snackbarService.show('Error', data.message);
+          //this.snackbarService.show('Error', data.error.error);
         }
       });
   }

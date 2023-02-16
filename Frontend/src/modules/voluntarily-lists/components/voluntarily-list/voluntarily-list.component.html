@@ -15,8 +15,8 @@
         <div fxLayout="row"
              fxLayoutAlign="end center"
              fxLayoutGap="12px">
-          <mat-icon *ngIf="row.emailValidated" svgIcon="email-validated"></mat-icon>
-          <mat-icon *ngIf="!row.emailValidated" svgIcon="email-notvalidated"></mat-icon>
+          <mat-icon *ngIf="row.emailValidated" [svgIcon]="'email_validated'"></mat-icon>
+          <mat-icon *ngIf="!row.emailValidated" [svgIcon]="'email_not_validated'"></mat-icon>
           <mat-icon *ngIf="row.phoneValidated" color="accent">stay_primary_portrait</mat-icon>
           <mat-icon *ngIf="!row.phoneValidated" color="warn">phonelink_erase</mat-icon>
         </div>
