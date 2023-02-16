@@ -171,4 +171,9 @@ export default class ModeratorListComponent
   getStatusLabel(status: number): string {
     return UserStatusesLabel.get(status);
   }
+
+  override onCheckboxChange(isChecked: boolean) {
+    super.onCheckboxChange(isChecked);
+    this.onSearch();
+  }
 }
