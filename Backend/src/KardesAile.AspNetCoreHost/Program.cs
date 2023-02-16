@@ -146,7 +146,7 @@ app.MapGet("/", () => "API");
 
 app.MapGet("{*path:regex(^robots\\w*.txt$)}", (string _) => "API");
 
-if (app.Environment.IsDevelopment())
+// if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 
 app.UseSwagger();
