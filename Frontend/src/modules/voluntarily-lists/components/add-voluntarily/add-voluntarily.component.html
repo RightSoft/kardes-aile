@@ -38,11 +38,10 @@
               {{ emailValidationMessage }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="d-block mb-3">
+          <mat-form-field class="d-block mb-3" floatLabel="always">
             <mat-label>Telefon</mat-label>
             <input
-              formControlName="phone"
-              matInput
+              formControlName="phone" matInput
               type="text"
             />
             <mat-error>
@@ -140,7 +139,7 @@
                               type="button">
                         <mat-icon>edit</mat-icon>
                       </button>
-                      <button (click)="onDeleteChild(row.id)" aria-label="Delete" color="warn" mat-icon-button
+                      <button (click)="onDeleteChild(row)" aria-label="Delete" color="warn" mat-icon-button
                               type="button">
                         <mat-icon>delete</mat-icon>
                       </button>

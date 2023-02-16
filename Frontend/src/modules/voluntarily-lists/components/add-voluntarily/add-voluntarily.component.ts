@@ -22,7 +22,7 @@ import {FlexModule} from "@angular/flex-layout";
 import {CacheService} from "@appModule/services/cache.service";
 import {CountryResultModel} from "@appModule/models/country-result.model";
 import {CityResultModel} from "@appModule/models/city-result.model";
-import {catchError, filter, Observable, of, startWith, switchMap, tap} from "rxjs";
+import {catchError, filter, Observable, of, pairwise, startWith, switchMap, tap} from "rxjs";
 import {map} from "rxjs/operators";
 import {SnackbarService} from "@appModule/services/snackbar.service";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
@@ -36,7 +36,6 @@ import {UpdateChildModel} from "@appModule/models/child/update-child.model";
 import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
-import {atLeastOne} from "@validationModule/custom-validator";
 
 @Component({
   selector: 'app-add-voluntarily',
@@ -102,6 +101,22 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
       }),
     );
 
+    this.addSupporterForm.controls.email.valueChanges.pipe(startWith(null), pairwise())
+      .subscribe(([prev, next]: [any, any]) => {
+        if ((prev && !next) || (!prev && next)) {
+          this.addSupporterForm.get('phone').setValidators(next ? null : [Validators.required, phoneValidator]);
+          this.addSupporterForm.get('phone').updateValueAndValidity();
+        }
+      });
+
+    this.addSupporterForm.controls.phone.valueChanges.pipe(startWith(null), pairwise())
+      .subscribe(([prev, next]: [any, any]) => {
+        if ((prev && !next) || (!prev && next)) {
+          this.addSupporterForm.get('email').setValidators(next ? null : [Validators.required, emailValidator]);
+          this.addSupporterForm.get('email').updateValueAndValidity();
+        }
+      });
+
     if (id) {
       this.addSupporterForm.get('address').addValidators(Validators.required);
       this.addSupporterForm.get('countryId').addValidators(Validators.required);
@@ -154,11 +169,16 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   onSave() {
     if (this.addSupporterForm.valid) {
       if (!this.addSupporterForm.value.supporterId) {
+        if (this.children.length === 0) {
+          this.snackbar.show('Warning', 'Çocuk/lar eklenmeden kayıt yapamazsınız!');
+          return;
+        }
+
         const model = {
           firstName: this.addSupporterForm.value.firstName,
           lastName: this.addSupporterForm.value.lastName,
-          email: this.addSupporterForm.value.email,
-          phone: this.addSupporterForm.value.phone,
+          email: this.addSupporterForm.value.email === '' ? null : this.addSupporterForm.value.email,
+          phone: this.addSupporterForm.value.phone === '' ? null : this.addSupporterForm.value.phone,
           address: this.addSupporterForm.value.address,
           cityId: this.addSupporterForm.value.cityId,
           countryId: this.addSupporterForm.value.countryId,
@@ -244,8 +264,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     });
   }
 
-  onDeleteChild(id: string) {
-    if (id) {
+  onDeleteChild(child: ChildResultModel) {
+    if (child.id) {
       this.dialog
         .open(ConfirmationDialogComponent, {
           width: '300px',
@@ -259,8 +279,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
           filter((result) => {
             return result;
           }),
-          switchMap(() => this.childService.delete(id)),
-          tap(() => this.snackbar.show('Success', 'Successfully deleted')),
+          switchMap(() => this.childService.delete(child.id)),
+          tap(() => this.snackbar.show('Success', 'Çocuk kaydı silindi')),
           tap(() => this.refreshChildren()),
           catchError((error) => {
             return of(error);
@@ -272,7 +292,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
           }
         });
     } else {
-      this.children = this.children.filter(child => child.id != id);
+      this.children = this.children.filter(c => c != child);
     }
   }
 
