@@ -206,6 +206,7 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           cityId: this.form.value.cityId,
           countryId: this.form.value.countryId,
           temporaryAddress: this.form.value.temporaryAddress,
+          temporaryCityId: this.form.value.temporaryCityId,
           identityNumber: this.form.value.identityNumber.toString(),
           children: this.childrens
         } as CreateDisasterVictimModel;
