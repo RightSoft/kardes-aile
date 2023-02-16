@@ -96,7 +96,7 @@ export default class ModeratorUpdateComponent implements OnInit {
         Validators.maxLength(8)
       ]);
       this.form.addValidators(
-        mustMatch('password', 'password2') as ValidatorFn
+        mustMatch('password', 'repassword') as ValidatorFn
       );
     } else {
       passwordControl?.clearValidators();

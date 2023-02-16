@@ -43,7 +43,7 @@ public class ModeratorBusiness : IModeratorBusiness
             Salt = password.Item1,
             Hash = password.Item2,
             EmailValidated = false,
-            Phone = "123",
+            Phone = null,
             PhoneValidated = false,
             Role = UserRoles.Moderator,
             Status = UserStatuses.Active
