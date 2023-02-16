@@ -3,11 +3,7 @@ import {
   NoopAnimationsModule
 } from '@angular/platform-browser/animations';
 import { bootstrapApplication } from '@angular/platform-browser';
-import {
-  enableProdMode,
-  ErrorHandler,
-  importProvidersFrom
-} from '@angular/core';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppComponent } from '@appModule/components/app-component/app.component';
@@ -16,9 +12,10 @@ import projectRoutes from '@appModule/routes';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { corsInterceptor } from '@appModule/interceptors/cors.interceptor';
 import { environment } from './environments/environment';
-import { AppErrorHandler } from '@appModule/handlers/error.handler';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { errorInterceptor } from '@appModule/interceptors/error.interceptor';
+import { errorHandlerInterceptor } from '@appModule/interceptors/error.handler.interceptor';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 if (environment.production) {
   enableProdMode();
@@ -32,13 +29,18 @@ bootstrapApplication(AppComponent, {
       MatSnackBarModule
     ),
     provideRouter(projectRoutes),
-    { provide: ErrorHandler, useClass: AppErrorHandler },
     provideHttpClient(
-      withInterceptors([appInterceptor, corsInterceptor, errorInterceptor])
+      withInterceptors([
+        appInterceptor,
+        corsInterceptor,
+        errorInterceptor,
+        errorHandlerInterceptor
+      ])
     ),
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline' }
-    }
+    },
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 });
