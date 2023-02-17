@@ -7,9 +7,10 @@ export function corsInterceptor(
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> {
   const newRequest = req.clone({
-    url: req.url.startsWith('http')
-      ? req.url
-      : environment.baseUrl + '/' + req.url
+    url:
+      req.url.startsWith('http') || req.url.includes('assets/images')
+        ? req.url
+        : environment.baseUrl + '/' + req.url
   });
 
   return next(newRequest);

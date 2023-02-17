@@ -13,7 +13,6 @@ export class SvgIconModule {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer
   ) {
-    debugger
     this.registerIcons();
   }
 
