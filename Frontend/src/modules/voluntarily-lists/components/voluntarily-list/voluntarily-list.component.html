@@ -15,10 +15,12 @@
         <div fxLayout="row"
              fxLayoutAlign="end center"
              fxLayoutGap="12px">
-          <mat-icon *ngIf="row.emailValidated" [svgIcon]="'email_validated'"></mat-icon>
-          <mat-icon *ngIf="!row.emailValidated" [svgIcon]="'email_not_validated'"></mat-icon>
-          <mat-icon *ngIf="row.phoneValidated" color="accent">stay_primary_portrait</mat-icon>
-          <mat-icon *ngIf="!row.phoneValidated" color="warn">phonelink_erase</mat-icon>
+          <mat-icon *ngIf="row.emailValidated" [svgIcon]="'email_verified'" matTooltip="Email Verified"></mat-icon>
+          <mat-icon *ngIf="!row.emailValidated" [svgIcon]="'email_not_verified'"
+                    matTooltip="Email not verified!"></mat-icon>
+          <mat-icon *ngIf="row.phoneValidated" [svgIcon]="'phone_verified'" matTooltip="Phone verified"></mat-icon>
+          <mat-icon *ngIf="!row.phoneValidated" [svgIcon]="'phone_not_verified'" matTooltip="Phone not verified!">
+          </mat-icon>
         </div>
       </mat-cell>
     </ng-container>

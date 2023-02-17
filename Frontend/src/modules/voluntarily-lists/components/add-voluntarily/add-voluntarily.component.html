@@ -38,7 +38,7 @@
               {{ emailValidationMessage }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="d-block mb-3" floatLabel="always">
+          <mat-form-field class="d-block mb-3">
             <mat-label>Telefon</mat-label>
             <input
               formControlName="phone" matInput
@@ -134,14 +134,14 @@
 
                   <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                      <button (click)="addOrEditChild(row)" aria-label="Edit" color="primary" mat-icon-button
+                    <mat-cell *matCellDef="let row; let i = index;">
+                      <button (click)="addOrEditChild(row, i)" aria-label="Edit" color="primary" mat-icon-button
                               type="button">
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon [svgIcon]="'document'">edit</mat-icon>
                       </button>
                       <button (click)="onDeleteChild(row)" aria-label="Delete" color="warn" mat-icon-button
                               type="button">
-                        <mat-icon>delete</mat-icon>
+                        <mat-icon [svgIcon]="'delete'">delete</mat-icon>
                       </button>
                     </mat-cell>
                   </ng-container>

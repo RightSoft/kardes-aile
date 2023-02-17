@@ -36,11 +36,12 @@ import {UpdateChildModel} from "@appModule/models/child/update-child.model";
 import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
+import {SvgIconModule} from "@appModule/modules/svg-icon.module";
 
 @Component({
   selector: 'app-add-voluntarily',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule],
+  imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule, SvgIconModule],
   templateUrl: './add-voluntarily.component.html',
   styleUrls: ['./add-voluntarily.component.scss']
 })
@@ -226,7 +227,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     return this.cityList?.find(c => c.id === id)?.name;
   }
 
-  addOrEditChild(child?: ChildResultModel) {
+  addOrEditChild(child?: ChildResultModel, currentIdx?: number) {
     const dialogRef = this.dialog.open(AddVoluntarilyChildComponent, {
       data: child ?? new ChildResultModel()
     });
@@ -255,7 +256,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
           });
         }
       } else {
-        this.children.push(child);
+        if (currentIdx >= 0) this.children[currentIdx] = child;
+        else this.children.push(child);
       }
     });
 
