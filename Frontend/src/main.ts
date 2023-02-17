@@ -33,7 +33,6 @@ bootstrapApplication(AppComponent, {
       withInterceptors([
         appInterceptor,
         corsInterceptor,
-        errorInterceptor,
         errorHandlerInterceptor
       ])
     ),

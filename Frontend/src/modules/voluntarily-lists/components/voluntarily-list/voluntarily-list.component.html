@@ -52,10 +52,10 @@
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
         <button (click)="onEdit(row.supporterId)" aria-label="Edit" color="primary" mat-icon-button>
-          <mat-icon>edit</mat-icon>
+          <mat-icon [svgIcon]="'document'">edit</mat-icon>
         </button>
         <button (click)="onDelete(row.userId)" aria-label="Delete" color="warn" mat-icon-button>
-          <mat-icon>delete</mat-icon>
+          <mat-icon [svgIcon]="'delete'">delete</mat-icon>
         </button>
       </mat-cell>
     </ng-container>

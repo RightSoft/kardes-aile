@@ -47,7 +47,8 @@ import { SvgIconModule } from '@appModule/modules/svg-icon.module';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatSortModule
+    MatSortModule,
+    SvgIconModule
   ],
   templateUrl: './moderator-list.component.html',
   styleUrls: ['./moderator-list.component.scss']
