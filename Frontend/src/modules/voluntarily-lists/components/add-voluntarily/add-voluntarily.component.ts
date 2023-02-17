@@ -37,11 +37,12 @@ import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
 import {SvgIconModule} from "@appModule/modules/svg-icon.module";
+import {Ng2TelInputModule} from "ng2-tel-input";
 
 @Component({
   selector: 'app-add-voluntarily',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule, SvgIconModule],
+  imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule, SvgIconModule, Ng2TelInputModule],
   templateUrl: './add-voluntarily.component.html',
   styleUrls: ['./add-voluntarily.component.scss']
 })

@@ -38,10 +38,13 @@
               {{ emailValidationMessage }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="d-block mb-3">
+          <mat-form-field class="d-block mb-3" floatLabel="always">
             <mat-label>Telefon</mat-label>
             <input
-              formControlName="phone" matInput
+              [ng2TelInputOptions]="{initialCountry: 'gb', autoHideDialCode: false, separateDialCode:true}"
+              formControlName="phone"
+              matInput
+              ng2TelInput
               type="text"
             />
             <mat-error>
