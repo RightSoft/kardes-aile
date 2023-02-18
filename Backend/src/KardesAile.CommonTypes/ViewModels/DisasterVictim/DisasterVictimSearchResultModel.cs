@@ -1,4 +1,5 @@
 using KardesAile.CommonTypes.Enums;
+using KardesAile.CommonTypes.ViewModels.Child;
 
 namespace KardesAile.CommonTypes.ViewModels.DisasterVictim;
 
@@ -23,4 +24,5 @@ public class DisasterVictimSearchResultModel
     public bool IdentityNumberValidated { get; set; }
     public bool AddressValidated { get; set; }
     public string? TemporaryAddress { get; set; }
+    public ICollection<ChildResultModel> Children { get; set; } = new List<ChildResultModel>();
 }

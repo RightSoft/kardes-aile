@@ -3,6 +3,7 @@ using KardesAile.CommonTypes.Enums;
 using KardesAile.CommonTypes.Errors;
 using KardesAile.CommonTypes.Exceptions;
 using KardesAile.CommonTypes.ViewModels;
+using KardesAile.CommonTypes.ViewModels.Child;
 using KardesAile.CommonTypes.ViewModels.DisasterVictim;
 using KardesAile.Database.Abstracts;
 using KardesAile.Database.Entities;
@@ -31,7 +32,7 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
             .Include(p => p.City)
             .Include(p => p.Country)
             .Include(p => p.TemporaryCity)
-            .Include(p => p.User)
+            .Include(p => p.User).ThenInclude(p => p!.Children)
             .AsNoTracking()
             .Select(p => new DisasterVictimSearchResultModel
             {
@@ -53,7 +54,14 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
                 IdentityNumber = p.IdentityNumber,
                 IdentityNumberValidated = p.IdentityNumberValidated,
                 Status = p.User.Status,
-                CreatedAt = p.CreatedAt
+                CreatedAt = p.CreatedAt,
+                Children = p.User.Children.Select(c => new ChildResultModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    BirthDate = c.BirthDate.ToDateTime(TimeOnly.MinValue),
+                    Gender = c.Gender
+                }).ToList()
             }).FirstOrDefaultAsync(p => p.Id == id);
 
         if (disasterVictim == null)

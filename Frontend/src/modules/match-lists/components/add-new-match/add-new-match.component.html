@@ -7,14 +7,15 @@
         type="text"
         matInput
         [matAutocomplete]="voluntarilyAutoComplete"
-        formControlName="voluntarily"
+        formControlName="voluntarilySearchKeyword"
       />
-      <mat-autocomplete #voluntarilyAutoComplete="matAutocomplete">
+      <mat-autocomplete #voluntarilyAutoComplete="matAutocomplete" [displayWith]="displayUser">
         <mat-option
-          *ngFor="let option of voluntarilyList$ | async"
+          *ngFor="let option of voluntarilyList$"
           [value]="option"
+          (onSelectionChange)="voluntarilyChanged($event)"
         >
-          {{ option }}
+          {{ displayUser(option) }}
         </mat-option>
       </mat-autocomplete>
       <mat-error>
@@ -27,14 +28,15 @@
         type="text"
         matInput
         [matAutocomplete]="disasterVictimAutoComplete"
-        formControlName="disasterVictim"
+        formControlName="disasterVictimSearchKeyword"
       />
-      <mat-autocomplete #disasterVictimAutoComplete="matAutocomplete">
+      <mat-autocomplete #disasterVictimAutoComplete="matAutocomplete" [displayWith]="displayUser">
         <mat-option
-          *ngFor="let option of disasteVictimList$ | async"
+          *ngFor="let option of disasterVictimList$"
           [value]="option"
+          (onSelectionChange)="disasterVictimChanged($event)"
         >
-          {{ option }}
+          {{ displayUser(option) }}
         </mat-option>
       </mat-autocomplete>
       <mat-error>
@@ -49,12 +51,12 @@
         [matAutocomplete]="voluntarilyChildAutoComplete"
         formControlName="voluntarilyChild"
       />
-      <mat-autocomplete #voluntarilyChildAutoComplete="matAutocomplete">
+      <mat-autocomplete #voluntarilyChildAutoComplete="matAutocomplete" [displayWith]="displayChild">
         <mat-option
-          *ngFor="let option of voluntarilyChildList$ | async"
+          *ngFor="let option of voluntarilyChildList$"
           [value]="option"
         >
-          {{ option }}
+          {{ displayChild(option) }}
         </mat-option>
       </mat-autocomplete>
       <mat-error>
@@ -66,15 +68,15 @@
       <input
         type="text"
         matInput
-        [matAutocomplete]="disasteVictimChildAutoComplete"
-        formControlName="disasteVictimChild"
+        [matAutocomplete]="disasterVictimChildAutoComplete"
+        formControlName="disasterVictimChild"
       />
-      <mat-autocomplete #disasteVictimChildAutoComplete="matAutocomplete">
+      <mat-autocomplete #disasterVictimChildAutoComplete="matAutocomplete" [displayWith]="displayChild">
         <mat-option
-          *ngFor="let option of disasterVictimChildList$ | async"
+          *ngFor="let option of disasterVictimChildList$"
           [value]="option"
         >
-          {{ option }}
+          {{ displayChild(option) }}
         </mat-option>
       </mat-autocomplete>
       <mat-error>
