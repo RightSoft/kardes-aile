@@ -15,10 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
         with:
-          submodules: true
-      - name: Install Dependencies
+          node-version: 16
+      - name: Install dependencies
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm install --force
       - name: Build And Deploy
         id: builddeploy
