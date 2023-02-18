@@ -2,7 +2,7 @@
   .mat-mdc-text-field-wrapper.mdc-text-field {
     background: white;
   }
-  .mat-mdc-form-field-error-wrapper{
+  .mat-mdc-form-field-error-wrapper {
     padding-left: 0;
   }
 }
@@ -28,6 +28,95 @@
     background: #f9fafb;
     .mat-mdc-cell {
       background: #f9fafb;
+    }
+  }
+}
+::ng-deep {
+  .input-wrapper {
+    .iti {
+      width: 100%;
+    }
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    input {
+      display: block;
+      padding: 17px 16px 17px 16px;
+      background: #ffffff;
+      border: 1px solid #d0d5dd;
+      box-sizing: border-box;
+      border-radius: 12px;
+      width: 100%;
+      font-size: 15px;
+      font-weight: 400;
+      font-family: 'Inter', sans-serif !important;
+      background: #ffffff;
+
+      border: 1px solid #d0d5dd;
+      border-radius: 12px;
+    }
+    input.valid {
+      outline: none;
+      padding: 20px 16px 14px 16px;
+    }
+    input.error {
+      border: 1px solid #f97066;
+      box-shadow: 0px 0px 5px #f97066;
+    }
+    input.active ~ label {
+      top: 5px;
+      font-size: 12px;
+    }
+    input:focus,
+    input:focus-visible {
+      outline: none;
+      &:not(.error) {
+        border: 1px solid #555e6b;
+        box-shadow: 0px 0px 5px #b692f6;
+        border-radius: 12px;
+      }
+    }
+    label {
+      color: var(--secondary-400);
+      font-size: 16px;
+      font-family: 'Inter';
+      font-weight: 400;
+      position: absolute;
+      pointer-events: none;
+      left: 16px;
+      top: 17px;
+      transition: 300ms ease all;
+      transform: translate(0px, 0%);
+      letter-spacing: -0.02em;
+    }
+    .icon {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      fill: #ffffff;
+    }
+    .error-message {
+      color: #f97066;
+    }
+  }
+  .iti__country-list {
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 100;
+    position: absolute;
+    top: 60px;
+    border-radius: 12px;
+    height: 200px;
+    overflow-y: scroll;
+    background: white;
+    width: 500px;
+    .iti_country {
+      padding: 12px;
+     
+      &:hover {
+        background: #d0d5dd;
+        cursor: pointer;
+      }
     }
   }
 }

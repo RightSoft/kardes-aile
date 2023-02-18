@@ -36,8 +36,35 @@
                         [validationMessage]="emailValidationMessage"
                       />
                     </div>
-                    <div class="d-block mb-3">
-                      <input-text
+                    <div class="d-block mb-3 input-wrapper">
+                      <input
+                        [ng2TelInputOptions]="{
+                          initialCountry: 'gb',
+                          autoHideDialCode: false,
+                          separateDialCode: true
+                        }"
+                        [ngClass]="{error: addSupporterForm.controls.emailOrPhoneInfo.controls
+                          .phone.invalid && (addSupporterForm.controls.emailOrPhoneInfo.controls
+                          .phone.dirty || addSupporterForm.controls.emailOrPhoneInfo.controls
+                          .phone.touched)}"
+                        formControlName="phone"
+                        matInput
+                        ng2TelInput
+                        type="text"
+                      />
+                      <ng-container
+                        *ngIf="
+                        addSupporterForm.controls.emailOrPhoneInfo.controls
+                        .phone.invalid && (addSupporterForm.controls.emailOrPhoneInfo.controls
+                        .phone.dirty || addSupporterForm.controls.emailOrPhoneInfo.controls
+                        .phone.touched)
+                        "
+                      >
+                        <div class="m-1 error-message">
+                          {{ phoneValidationMessage }}
+                        </div>
+                      </ng-container>
+                      <!-- <input-text
                         [control]="
                           addSupporterForm.controls.emailOrPhoneInfo.controls[
                             'phone'
@@ -45,7 +72,7 @@
                         "
                         label="Telefon"
                         [validationMessage]="phoneValidationMessage"
-                      />
+                      /> -->
                     </div>
                   </div>
                   <div class="d-block mb-3">

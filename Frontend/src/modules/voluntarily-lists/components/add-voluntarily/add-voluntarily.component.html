@@ -38,8 +38,8 @@
               {{ emailValidationMessage }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="d-block mb-3" floatLabel="always">
-            <mat-label>Telefon</mat-label>
+          <mat-form-field class="d-block mb-3 phone-input-wrapper" floatLabel="always">
+            <mat-label class="label">Telefon</mat-label>
             <input
               [ng2TelInputOptions]="{initialCountry: 'gb', autoHideDialCode: false, separateDialCode:true}"
               formControlName="phone"
@@ -51,6 +51,7 @@
               {{ phoneValidationMessage }}
             </mat-error>
           </mat-form-field>
+          
           <mat-form-field class="d-block mb-3">
             <mat-label>Adres</mat-label>
             <input

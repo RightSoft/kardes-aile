@@ -18,10 +18,18 @@
     <input type="email" matInput formControlName="email" />
     <mat-error>{{ emailValidationMessage }}</mat-error>
   </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>Telefon</mat-label>
-    <input type="tel" matInput formControlName="phone" />
-    <mat-error>{{ phoneValidationMessage }}</mat-error>
+  <mat-form-field class="col phone-input-wrapper" floatLabel="always">
+    <mat-label class="label">Telefon</mat-label>
+    <input
+      [ng2TelInputOptions]="{initialCountry: 'tr', autoHideDialCode: false, separateDialCode:true}"
+      formControlName="phone"
+      matInput
+      ng2TelInput
+      type="text"
+    />
+    <mat-error>
+      {{ phoneValidationMessage }}
+    </mat-error>
   </mat-form-field>
   <mat-form-field class="col">
     <mat-label>Adres</mat-label>

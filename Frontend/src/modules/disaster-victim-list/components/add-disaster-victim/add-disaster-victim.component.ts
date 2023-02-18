@@ -27,6 +27,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ChildService } from '@appModule/services/child.service';
 import { UpdateChildModel } from '@appModule/models/child/update-child.model';
+import {Ng2TelInputModule} from "ng2-tel-input";
 
 @Component({
   selector: 'app-add-disaster-victim',
@@ -40,7 +41,8 @@ import { UpdateChildModel } from '@appModule/models/child/update-child.model';
     MatSelectModule,
     MatIconModule,
     MatDialogModule,
-    MatTableModule
+    MatTableModule,
+    Ng2TelInputModule
   ],
   templateUrl: './add-disaster-victim.component.html',
   styleUrls: ['./add-disaster-victim.component.scss'],

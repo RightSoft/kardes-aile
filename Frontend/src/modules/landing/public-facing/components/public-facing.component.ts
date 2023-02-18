@@ -40,10 +40,11 @@ import {
 import { AddChildComponent } from '@disasterVictimListsModule/components/add-child/add-child.component';
 import { InputTextComponent } from '@sharedComponents/input/input-text/input-text.component';
 import { InputSelectComponent } from '@sharedComponents/input/input-select/input-select.component';
+import { Ng2TelInputModule } from 'ng2-tel-input';
 @Component({
     selector: 'app-public-facing',
     standalone: true,
-    imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule, InputTextComponent, InputSelectComponent],
+    imports: [CommonModule, MatInputModule, MatAutocompleteModule, ReactiveFormsModule, MatTableModule, MatIconModule, MatToolbarModule, MatCardModule, MatButtonModule, FlexModule, MatDialogModule, InputTextComponent, InputSelectComponent,Ng2TelInputModule],
     templateUrl: './public-facing.component.html',
     styleUrls: ['./public-facing.component.scss']
 })
