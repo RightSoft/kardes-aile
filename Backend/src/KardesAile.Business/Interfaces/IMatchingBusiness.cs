@@ -5,6 +5,7 @@ namespace KardesAile.Business.Interfaces;
 
 public interface IMatchingBusiness
 {
+    Task<MatchResultModel> Get(Guid id);
     Task Create(CreateMatchModel model);
     Task Update(UpdateMatchModel model);
     Task Delete(Guid matchId);

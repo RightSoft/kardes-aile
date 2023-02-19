@@ -16,4 +16,5 @@ public class MatchResultModel
     public string? VictimChildName { get; set; }
     public Guid? SupporterChildId { get; set; }
     public string? SupporterChildName { get; set; }
+    public Guid Id { get; set; }
 }

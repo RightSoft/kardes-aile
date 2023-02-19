@@ -1,10 +1,10 @@
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
-import {Component, EventEmitter, inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
+import {Component, Inject, inject, Optional} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {debounceTime} from 'rxjs';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {getValidationMessage} from '@validationModule/get-validation-message';
@@ -16,6 +16,11 @@ import {DisasterVictimSearchResultModel} from "@appModule/models/disaster-victim
 import {DisasterVictimSearchRequestModel} from "@appModule/models/disaster-victim/disaster-victim-search-request.model";
 import {ChildResultModel} from "@appModule/models/child/child-result.model";
 import {GendersLabel} from "@appModule/models/shared/genders.enum";
+import {MatchListsService} from "@matchListsModule/business/match-lists.service";
+import {SnackbarService} from "@appModule/services/snackbar.service";
+import {NavigationService} from "@appModule/services/navigation.service";
+import {CreateMatchModel} from "@appModule/models/match/create-match.model";
+import {UpdateMatchModel} from "@appModule/models/match/update-match.model";
 
 @Component({
   selector: 'app-add-new-match',
@@ -32,7 +37,7 @@ import {GendersLabel} from "@appModule/models/shared/genders.enum";
   templateUrl: './add-new-match.component.html',
   styleUrls: ['./add-new-match.component.scss']
 })
-export class AddNewMatchComponent {
+export default class AddNewMatchComponent {
   public genderLabels = GendersLabel;
   searchSupporterData: SearchSupporterModel = new SearchSupporterModel(1, 20);
   searchDisasterVictimData: DisasterVictimSearchRequestModel = new DisasterVictimSearchRequestModel(1, 20);
@@ -41,16 +46,43 @@ export class AddNewMatchComponent {
   voluntarilyChildList$: ChildResultModel[];
   disasterVictimChildList$: ChildResultModel[];
   formBuilder = inject(FormBuilder);
+  pageTitle$ = '';
   addMatchForm = this.formBuilder.group({
-    selectedVoluntarily: this.formBuilder.control(null, Validators.required),
-    voluntarilySearchKeyword: this.formBuilder.control('', Validators.required),
-    selectedDisasterVictim: this.formBuilder.control(null, Validators.required),
-    disasterVictimSearchKeyword: this.formBuilder.control('', Validators.required),
-    voluntarilyChild: this.formBuilder.control('', Validators.required),
-    disasterVictimChild: this.formBuilder.control('', Validators.required)
+    matchId: this.formBuilder.control(null),
+    voluntarilySearchKeyword: this.formBuilder.control(null),
+    disasterVictimSearchKeyword: this.formBuilder.control(null),
+    voluntarilyId: this.formBuilder.control(null, Validators.required),
+    voluntarilyChildId: this.formBuilder.control('', Validators.required),
+    voluntarilyChildSearchKeyword: this.formBuilder.control(null, Validators.required),
+    victimId: this.formBuilder.control(null, Validators.required),
+    disasterVictimChildId: this.formBuilder.control('', Validators.required),
+    disasterVictimChildSearchKeyword: this.formBuilder.control(null, Validators.required)
   });
 
-  constructor(private voluntarilyService: VoluntarilyService, private disasterVictimService: DisasterVictimService) {
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public matchId: { id: string },
+              private matchListsService: MatchListsService,
+              private voluntarilyService: VoluntarilyService,
+              private disasterVictimService: DisasterVictimService,
+              private snackbar: SnackbarService,
+              private navigationService: NavigationService) {
+    this.pageTitle$ = matchId ? 'Eşleşme Güncelle' : 'Eşleşme Kayit';
+
+    if (matchId) {
+      this.matchListsService.get(matchId.id).subscribe(result => {
+        this.addMatchForm.patchValue({
+          disasterVictimSearchKeyword: {firstName: result.victimFirstName, lastName: result.victimLastName},
+          disasterVictimChildSearchKeyword: {id: result.victimChildId, name: result.victimChildName},
+          voluntarilySearchKeyword: {firstName: result.supporterFirstName, lastName: result.supporterLastName},
+          voluntarilyChildSearchKeyword: {id: result.supporterChildId, name: result.supporterChildName},
+          voluntarilyId: result.supporterId,
+          victimId: result.victimId,
+          disasterVictimChildId: result.victimChildId,
+          voluntarilyChildId: result.supporterChildId,
+          matchId: result.id,
+        });
+      })
+    }
+
     this.addMatchForm.controls.voluntarilySearchKeyword.valueChanges
       .pipe(debounceTime(300))
       .subscribe((value) => {
@@ -84,34 +116,52 @@ export class AddNewMatchComponent {
           this.disasterVictimList$ = [];
         }
       });
+
+    this.addMatchForm.controls.voluntarilyId.valueChanges
+      .subscribe(value => {
+        if (value) {
+          this.voluntarilyService
+            .get(value)
+            .subscribe((result) => {
+              this.voluntarilyChildList$ = result.children;
+            })
+        } else {
+          this.voluntarilyChildList$ = [];
+        }
+      });
+
+    this.addMatchForm.controls.victimId.valueChanges
+      .subscribe(value => {
+        if (value) {
+          this.disasterVictimService
+            .get(value)
+            .subscribe((result) => {
+              this.disasterVictimChildList$ = result.children;
+            });
+        } else {
+          this.disasterVictimChildList$ = [];
+        }
+      });
   }
 
   public voluntarilyChanged(value: any) {
     if (value) {
-      this.addMatchForm.controls.selectedVoluntarily.setValue(value.source.value.supporterId);
-
-      this.voluntarilyService
-        .get(value.source.value.supporterId)
-        .subscribe((result) => {
-          this.voluntarilyChildList$ = result.children;
-        });
-    } else {
-      this.voluntarilyChildList$ = [];
+      this.addMatchForm.controls.voluntarilyId.setValue(value.source.value.supporterId);
     }
   }
 
   public disasterVictimChanged(value: any) {
     if (value) {
-      this.addMatchForm.controls.selectedDisasterVictim.setValue(value.source.value.id);
-
-      this.disasterVictimService
-        .get(value.source.value.id)
-        .subscribe((result) => {
-          this.disasterVictimChildList$ = result.children;
-        });
-    } else {
-      this.disasterVictimChildList$ = [];
+      this.addMatchForm.controls.victimId.setValue(value.source.value.id);
     }
+  }
+
+  public voluntarilyChildChanged(value: any) {
+    this.addMatchForm.controls.voluntarilyChildId.setValue(value.source.value.id);
+  }
+
+  public disasterVictimChildChanged(value: any) {
+    this.addMatchForm.controls.disasterVictimChildId.setValue(value.source.value.id);
   }
 
   public get voluntarilyValidationMessage(): string {
@@ -123,11 +173,11 @@ export class AddNewMatchComponent {
   }
 
   public get voluntarilyChildValidationMessage(): string {
-    return getValidationMessage(this.addMatchForm.controls.voluntarilyChild);
+    return getValidationMessage(this.addMatchForm.controls.voluntarilyChildId);
   }
 
   public get disasterVictimChildValidationMessage(): string {
-    return getValidationMessage(this.addMatchForm.controls.disasterVictimChild);
+    return getValidationMessage(this.addMatchForm.controls.disasterVictimChildId);
   }
 
   displayUser(user: any) {
@@ -135,8 +185,44 @@ export class AddNewMatchComponent {
   }
 
   displayChild(childResultModel: ChildResultModel) {
-    return childResultModel && childResultModel.name + ' '
-      + (this.genderLabels ? this.genderLabels.get(childResultModel.gender) + ' ' : '')
-      + new Date(childResultModel.birthDate).toLocaleDateString();
+    if (childResultModel) {
+      return `${childResultModel.name}${(this.genderLabels && childResultModel.gender ? ' ' + this.genderLabels.get(childResultModel.gender) : '')}${(childResultModel.birthDate ? ' ' + new Date(childResultModel.birthDate).toLocaleDateString() : '')}`;
+    } else {
+      return '';
+    }
+  }
+
+  onSave() {
+    if (this.addMatchForm.valid) {
+      if (!this.addMatchForm.value.matchId) {
+        const model = {
+          SupporterId: this.addMatchForm.value.voluntarilyId,
+          SupporterChildId: this.addMatchForm.value.voluntarilyChildId,
+          VictimId: this.addMatchForm.value.victimId,
+          VictimChildId: this.addMatchForm.value.disasterVictimChildId
+        } as CreateMatchModel;
+
+        this.matchListsService.create(model).subscribe(() => {
+          this.onCancel();
+        }).add(() => this.snackbar.show('Success', 'Yeni kayıt eklendi'));
+      } else {
+        const updateModel = {
+          MatchId: this.addMatchForm.value.matchId,
+          SupporterId: this.addMatchForm.value.voluntarilyId,
+          SupporterChildId: this.addMatchForm.value.voluntarilyChildId,
+          VictimId: this.addMatchForm.value.victimId,
+          VictimChildId: this.addMatchForm.value.disasterVictimChildId,
+          Active: true
+        } as UpdateMatchModel;
+
+        this.matchListsService.update(updateModel).subscribe(() => {
+          this.onCancel();
+        }).add(() => this.snackbar.show('Success', 'Kayıt güncellendi'));
+      }
+    }
+  }
+
+  onCancel() {
+    this.navigationService.navigate('/match');
   }
 }

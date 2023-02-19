@@ -10,5 +10,6 @@ public class CreateMatchModel
     public Guid? VictimId { get; set; }
     [Required]
     public Guid? SupporterChildId { get; set; }
+    [Required]
     public Guid? VictimChildId { get; set; }
 }

@@ -5,3 +5,52 @@
   (onSearch)="onSearch($event)"
   (onCheckboxChange)="onCheckboxChange($event)"
 ></app-list-tool-box>
+
+<div class="mat-elevation-z8 mt-3">
+  <mat-table (matSortChange)="onSorting($event)" [dataSource]="dataSource" matSort matSortActive="createdAt"
+             matSortDirection="desc" matSortDisableClear>
+    <ng-container matColumnDef="voluntarilyFullName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> GONULLU</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.supporterFirstName}} {{element.supporterLastName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="victimFullName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> AFETZEDE</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.victimFirstName}} {{element.victimLastName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> EŞLEŞME TARIHI</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy HH:mm'}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> DURUMU</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{getMatchStatusLabel(element.active)}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button (click)="onEdit(row.id)" aria-label="Edit" color="primary" mat-icon-button>
+          <mat-icon [svgIcon]="'document'">edit</mat-icon>
+        </button>
+        <button (click)="onDelete(row.id)" aria-label="Delete" color="warn" mat-icon-button>
+          <mat-icon [svgIcon]="'delete'">delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <mat-paginator (page)="changePaging($event)"
+                 [length]="pagedSupporterData.totalCount"
+                 [pageIndex]="searchMatchData.page-1"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 [pageSize]="searchMatchData.pageSize"
+                 aria-label="Select page"
+                 class="border-top"
+  >
+  </mat-paginator>
+</div>

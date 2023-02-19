@@ -19,6 +19,17 @@ public class MatchController: ControllerBase
     {
         _matchingBusiness = matchingBusiness ?? throw new ArgumentNullException(nameof(matchingBusiness));
     }
+    
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
+    public async Task<IActionResult> Get([FromRoute] Guid id)
+    {
+        return Ok(await _matchingBusiness.Get(id));
+    }
 
     [HttpPost]
     [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]

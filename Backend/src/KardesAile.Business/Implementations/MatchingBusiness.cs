@@ -66,6 +66,7 @@ public class MatchingBusiness : IMatchingBusiness
         
         var match = new Match
         {
+            Active = true,
             SupporterId = model.SupporterId!.Value,
             VictimId = model.VictimId!.Value,
             SupporterChildId = model.SupporterChildId,
@@ -153,6 +154,7 @@ public class MatchingBusiness : IMatchingBusiness
             .Include(p => p.VictimChild)
             .Select(p => new MatchResultModel
             {
+                Id = p.Id,
                 VictimId = p.VictimId,
                 VictimFirstName = p.Victim!.User!.FirstName,
                 VictimLastName = p.Victim!.User!.LastName,
@@ -167,6 +169,38 @@ public class MatchingBusiness : IMatchingBusiness
                 SupporterChildName = p.SupporterChild!.Name
             })
             .ToPagedListAsync(model);
+
+        return result;
+    }
+    
+    public async Task<MatchResultModel> Get(Guid id)
+    {
+        if (id == Guid.Empty) throw new ArgumentNullException(nameof(id));
+        
+        var result = await _unitOfWork.Match
+            .AsQueryable
+            .AsNoTracking()
+            .Include(p => p.Supporter!.User)
+            .Include(p => p.SupporterChild)
+            .Include(p => p.Victim!.User)
+            .Include(p => p.VictimChild)
+            .Select(p => new MatchResultModel
+            {
+                Id = p.Id,
+                VictimId = p.VictimId,
+                VictimFirstName = p.Victim!.User!.FirstName,
+                VictimLastName = p.Victim!.User!.LastName,
+                SupporterId = p.SupporterId,
+                SupporterFirstName = p.Supporter!.User!.FirstName,
+                SupporterLastName = p.Supporter!.User!.LastName,
+                CreatedAt = p.CreatedAt,
+                Active = p.Active,
+                VictimChildId = p.VictimChildId,
+                VictimChildName = p.VictimChild!.Name,
+                SupporterChildId = p.SupporterChildId,
+                SupporterChildName = p.SupporterChild!.Name
+            })
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         return result;
     }
