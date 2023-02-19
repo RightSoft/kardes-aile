@@ -1,102 +1,136 @@
-<form [formGroup]="form" class="col row row-cols-2">
-  <mat-form-field class="col">
-    <mat-label>Ad Soyad</mat-label>
-    <input type="text" matInput formControlName="fullName" />
-    <mat-error>
-      {{ fullNameValidationMessage }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>TCKN</mat-label>
-    <input type="number" matInput formControlName="identityNumber" />
-    <mat-error>
-      {{ tcknValidationMessage }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>E-Posta</mat-label>
-    <input type="email" matInput formControlName="email" />
-    <mat-error>{{ emailValidationMessage }}</mat-error>
-  </mat-form-field>
-  <mat-form-field class="col phone-input-wrapper" floatLabel="always">
-    <mat-label class="label">Telefon</mat-label>
-    <input
-      [ng2TelInputOptions]="{initialCountry: 'tr', autoHideDialCode: false, separateDialCode:true}"
-      formControlName="phone"
-      matInput
-      ng2TelInput
-      type="text"
-    />
-    <mat-error>
-      {{ phoneValidationMessage }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>Adres</mat-label>
-    <textarea matInput formControlName="address"></textarea>
-    <mat-error>{{ addressValidationMessage }}</mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>Ülke</mat-label>
-    <mat-select
-      formControlName="countryId"
-      (valueChange)="countryChanged($event)"
-    >
-      <mat-option *ngFor="let country of countryList$" [value]="country.id">
-        {{ country.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error>{{ countryValidationMessage }}</mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>Şehir</mat-label>
-    <mat-select formControlName="cityId">
-      <mat-option *ngFor="let city of cityList$" [value]="city.id">
-        {{ city.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error>{{ cityValidationMessage }}</mat-error>
-  </mat-form-field>
+<form [formGroup]="form" autocomplete="off" fxLayout="column" fxLayoutAlign="stretch">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
 
-  <mat-form-field class="col">
-    <mat-label>Geçici Adres</mat-label>
-    <textarea matInput formControlName="temporaryAddress"></textarea>
-    <mat-error>
-      {{ temporaryAddressValidationMessage }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="col">
-    <mat-label>Geçici Adres Şehir</mat-label>
-    <mat-select formControlName="temporaryCityId">
-      <mat-option *ngFor="let city of cityList$" [value]="city.id">
-        {{ city.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error>{{ temporaryCityValidationMessage }}</mat-error>
-  </mat-form-field>
-  <!-- <mat-form-field class="col">
-    <mat-label>Resim Yükle...</mat-label>
-    <input #fileInput type="file" accept=".jpg, .png, .jpeg" class="d-none" />
-    <input matInput type="text" class="d-none" />
-    <button
-      matSuffix
-      mat-stroked-button
-      class="me-3"
-      (click)="fileInput.click()"
-    >
-      <mat-icon>folder_open</mat-icon>Browse
-    </button>
-    <mat-error>{{ pictureValidationMessage }}</mat-error>
-  </mat-form-field> -->
-  <div class="col row row-cols-1">
-    <!-- <div class="col">
-      <input type="checkbox" formControlName="identityNumberValidated" />
-      <label class="">Kimlik no dogrulandi</label>
-    </div> -->
-    <!-- <div class="col">
-      <input type="checkbox" formControlName="addressValidated" />
-      <label class="">Adres dogrulandi</label>
-    </div> -->
+        <mat-form-field class="d-block mb-3 col-md-6">
+          <mat-label>Ad</mat-label>
+          <input type="text" matInput formControlName="firstName"/>
+          <mat-error>
+            {{ firstNameValidationMessage }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="d-block mb-3 col-md-6">
+          <mat-label>Soyadı</mat-label>
+          <input
+            formControlName="lastName"
+            matInput
+            type="text"
+          />
+          <mat-error>
+            {{ lastNameValidationMessage }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>TCKN</mat-label>
+          <input type="number" matInput formControlName="identityNumber"/>
+          <mat-error>
+            {{ tcknValidationMessage }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>E-Posta</mat-label>
+          <input type="email" matInput formControlName="email"/>
+          <mat-error>{{ emailValidationMessage }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col phone-input-wrapper" floatLabel="always">
+          <mat-label class="label">Telefon</mat-label>
+          <input
+            [ng2TelInputOptions]="{initialCountry: 'tr', autoHideDialCode: false, separateDialCode:true}"
+            formControlName="phone"
+            matInput
+            ng2TelInput
+            type="text"
+          />
+          <mat-error>
+            {{ phoneValidationMessage }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>Adres</mat-label>
+          <textarea matInput formControlName="address"></textarea>
+          <mat-error>{{ addressValidationMessage }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>Ülke</mat-label>
+          <mat-select
+            formControlName="countryId"
+            (valueChange)="countryChanged($event)"
+          >
+            <mat-option *ngFor="let country of countryList$" [value]="country.id">
+              {{ country.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{ countryValidationMessage }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>Şehir</mat-label>
+          <mat-select formControlName="cityId">
+            <mat-option *ngFor="let city of cityList$" [value]="city.id">
+              {{ city.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{ cityValidationMessage }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>Geçici Adres</mat-label>
+          <textarea matInput formControlName="temporaryAddress"></textarea>
+          <mat-error>
+            {{ temporaryAddressValidationMessage }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+          <mat-label>Geçici Adres Şehir</mat-label>
+          <mat-select formControlName="temporaryCityId">
+            <mat-option *ngFor="let city of cityList$" [value]="city.id">
+              {{ city.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{ temporaryCityValidationMessage }}</mat-error>
+        </mat-form-field>
+      </div>
+      <!-- <mat-form-field class="col">
+        <mat-label>Resim Yükle...</mat-label>
+        <input #fileInput type="file" accept=".jpg, .png, .jpeg" class="d-none" />
+        <input matInput type="text" class="d-none" />
+        <button
+          matSuffix
+          mat-stroked-button
+          class="me-3"
+          (click)="fileInput.click()"
+        >
+          <mat-icon>folder_open</mat-icon>Browse
+        </button>
+        <mat-error>{{ pictureValidationMessage }}</mat-error>
+      </mat-form-field> -->
+      <!--   <div class="col row row-cols-1">
+           <div class="col">
+            <input type="checkbox" formControlName="identityNumberValidated" />
+            <label class="">Kimlik no dogrulandi</label>
+          </div>
+          <div class="col">
+          <input type="checkbox" formControlName="addressValidated" />
+          <label class="">Adres dogrulandi</label>
+        </div>
+      </div>-->
+    </div>
   </div>
 </form>
 <div class="col d-flex flex-column">
@@ -112,13 +146,13 @@
 
     <!-- Position Column -->
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef> AD SOYAD </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> AD SOYAD</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="birthDate">
-      <mat-header-cell *matHeaderCellDef> YAS </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> YAS</mat-header-cell>
       <mat-cell *matCellDef="let element">
         {{ calculateAge(element.birthDate) }}
       </mat-cell>
@@ -126,7 +160,7 @@
 
     <!-- Weight Column -->
     <ng-container matColumnDef="gender">
-      <mat-header-cell *matHeaderCellDef> CINSIYET </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> CINSIYET</mat-header-cell>
       <mat-cell *matCellDef="let element">
         {{ getGender(element.gender) }}
       </mat-cell>
@@ -135,7 +169,8 @@
     <!-- Symbol Column -->
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef class="text-right"
-        >AKSİYONLAR</mat-header-cell
+      >AKSİYONLAR
+      </mat-header-cell
       >
       <mat-cell *matCellDef="let row" class="actions-column text-right">
         <button

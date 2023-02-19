@@ -55,6 +55,7 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
                 IdentityNumberValidated = p.IdentityNumberValidated,
                 Status = p.User.Status,
                 CreatedAt = p.CreatedAt,
+                MatchingStatus = $"{p.Matches!.Count}/{p.User.Children.Count}",
                 Children = p.User.Children.Select(c => new ChildResultModel()
                 {
                     Id = c.Id,
@@ -213,7 +214,8 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
                 IdentityNumber = p.IdentityNumber,
                 IdentityNumberValidated = p.IdentityNumberValidated,
                 Status = p.User.Status,
-                CreatedAt = p.CreatedAt
+                CreatedAt = p.CreatedAt,
+                MatchingStatus = $"{p.Matches!.Count}/{p.User.Children.Count}",
             })
             .ToPagedListAsync(model);
 

@@ -204,7 +204,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
                         return result;
                     }),
                     switchMap(() => this.childService.delete(id)),
-                    tap(() => this.snackbar.show('Success', 'Successfully deleted')),
+                    tap(() => this.snackbar.show('Success', 'Kayit silindi')),
                     tap(() => this.refreshChildren()),
                     catchError((error) => {
                         return of(error);

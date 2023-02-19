@@ -189,7 +189,11 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
         this.voluntarilyService.create(model).subscribe(() => {
           this.onCancel();
-        }).add(() => this.snackbar.show('Success', 'Yeni kayıt eklendi'));
+        }).add(() =>
+        {
+          this.snackbar.show('Success', 'Yeni kayıt eklendi');
+          this.backToList();
+        });
       } else {
         const updateModel = {
           userId: this.addSupporterForm.value.userId,
@@ -205,7 +209,11 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
         this.voluntarilyService.update(updateModel).subscribe(() => {
           this.onCancel();
-        }).add(() => this.snackbar.show('Success', 'Kayıt güncellendi'));
+        }).add(() =>
+        {
+          this.snackbar.show('Success', 'Kayit guncellendi');
+          this.backToList();
+        });
       }
     }
   }
@@ -316,5 +324,9 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
 
   getGendersLabel(gender: number): string {
     return GendersLabel.get(gender);
+  }
+
+  public backToList() {
+    this.navigationService.navigate('/voluntarily');
   }
 }
