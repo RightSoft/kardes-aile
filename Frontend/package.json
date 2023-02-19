@@ -27,6 +27,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "intl-tel-input": "^17.0.19",
     "ng2-tel-input": "^2.3.0",
+    "ngx-captcha": "^13.0.0",
     "prettier-eslint": "^15.0.1",
     "rxjs": "~7.8.0",
     "save-dev": "^0.0.1-security",

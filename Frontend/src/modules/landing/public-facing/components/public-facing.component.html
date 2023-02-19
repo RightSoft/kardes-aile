@@ -20,8 +20,15 @@
                   <div class="d-block mb-3">
                     <input-text
                       [control]="addSupporterForm.controls['firstName']"
-                      label="Ad Soyad  *"
+                      label="Ad  *"
                       [validationMessage]="firstNameValidationMessage"
+                    />
+                  </div>
+                    <div class="d-block mb-3">
+                    <input-text
+                      [control]="addSupporterForm.controls['lastName']"
+                      label="Soyad  *"
+                      [validationMessage]="lastNameValidationMessage"
                     />
                   </div>
                   <div formGroupName="emailOrPhoneInfo">
@@ -100,6 +107,9 @@
                       (valueChangeEvent)="onCitySelect($event)"
                     />
                   </div>
+                  <div class="d-block mb-3">
+                    <ngx-recaptcha2 #kardesaileCaptcha [siteKey]="captchaKey" formControlName="recaptcha"></ngx-recaptcha2>
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <div
@@ -119,7 +129,8 @@
                     <mat-table class="table" [dataSource]="getChildren()">
                       <ng-container matColumnDef="name">
                         <mat-header-cell *matHeaderCellDef>
-                          AD SOYAD</mat-header-cell
+                          AD SOYAD
+                        </mat-header-cell
                         >
                         <mat-cell *matCellDef="let element">
                           {{ element.name }}
@@ -128,7 +139,8 @@
 
                       <ng-container matColumnDef="birthDate">
                         <mat-header-cell *matHeaderCellDef>
-                          YAS</mat-header-cell
+                          YAS
+                        </mat-header-cell
                         >
                         <mat-cell *matCellDef="let element">
                           {{ getAge(element.birthDate) }}
@@ -137,7 +149,8 @@
 
                       <ng-container matColumnDef="gender">
                         <mat-header-cell *matHeaderCellDef>
-                          CINSIYET</mat-header-cell
+                          CINSIYET
+                        </mat-header-cell
                         >
                         <mat-cell *matCellDef="let element">
                           {{ getGendersLabel(element.gender) }}
