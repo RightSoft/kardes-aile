@@ -55,13 +55,13 @@ public class MatchController: ControllerBase
         return Ok();
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [Authorize(Roles = $"{nameof(UserRoles.GlobalAdmin)},{nameof(UserRoles.Moderator)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
-    public async Task<IActionResult> Delete([FromQuery] Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         await _matchingBusiness.Delete(id);
         return Ok();
