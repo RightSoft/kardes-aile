@@ -15,11 +15,24 @@ import {DisasterVictimSearchRequestModel} from '@appModule/models/disaster-victi
 import {NavigationService} from '@appModule/services/navigation.service';
 import {SortDirection} from '@appModule/models/shared/sort-direction.enum';
 import {SearchSortModel} from '@appModule/models/shared/search-sort.model';
+import {
+  ConfirmationDialogComponent
+} from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
+import {catchError, filter, of, switchMap, tap} from "rxjs";
+import {SnackbarService} from "@appModule/services/snackbar.service";
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-disaster-victim-list',
   standalone: true,
-  imports: [CommonModule, ListToolBoxComponent, MatPaginatorModule, MatButtonModule, MatIconModule, MatSortModule, MatTableModule],
+  imports: [CommonModule,
+    ListToolBoxComponent,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSortModule,
+    MatTableModule,
+    MatDialogModule],
   templateUrl: './disaster-victim-list.component.html',
   styleUrls: ['./disaster-victim-list.component.scss']
 })
@@ -33,7 +46,10 @@ export default class DisasterVictimListComponent
   UserStatusesEnum = UserStatuses;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private navigationService: NavigationService, private disasterVictimService: DisasterVictimService) {
+  constructor(private navigationService: NavigationService,
+              private disasterVictimService: DisasterVictimService,
+              private snackbar: SnackbarService,
+              private dialog: MatDialog) {
     super('Afetzede Listesi');
     this.onSearch();
   }
@@ -51,6 +67,7 @@ export default class DisasterVictimListComponent
   override onSearch(keyword?: string) {
     if (keyword)
       this.disasterVictimRequestModel.keyword = keyword;
+    this.disasterVictimRequestModel.includeDeleted = this.isChecked;
 
     this.disasterVictimService.search(this.disasterVictimRequestModel).subscribe((result) => {
       this.dataSource = new MatTableDataSource<DisasterVictimSearchResultModel>(result.list);
@@ -92,9 +109,37 @@ export default class DisasterVictimListComponent
     this.navigationService.navigate('disaster-victim/edit/' + id);
   }
 
-  delete(userId: string) {
-    this.disasterVictimService.delete(userId).subscribe((_) => {
-      this.onSearch();
-    });
+  delete(userId: string)
+  {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        width: '300px',
+        data: {
+          title: 'Uyarı',
+          message: 'Kaydı silmek istediğinize emin misiniz?'
+        }
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => {
+          return result;
+        }),
+        switchMap(() => this.disasterVictimService.delete(userId)),
+        tap(() => this.snackbar.show('Success', 'Kayit silindi')),
+        tap(() => this.onSearch()),
+        catchError((error) => {
+          return of(error);
+        })
+      )
+      .subscribe((data) => {
+        if (data && data.ok === false) {
+          this.snackbar.show('Error', data.message);
+        }
+      });
+  }
+
+  override onCheckboxChange(isChecked: boolean) {
+    super.onCheckboxChange(isChecked);
+    this.onSearch();
   }
 }

@@ -156,7 +156,7 @@ export default class VoluntarilyListComponent
           return result;
         }),
         switchMap(() => this.voluntarilyService.delete(userId)),
-        tap(() => this.snackbar.show('Success', 'Successfully deleted')),
+        tap(() => this.snackbar.show('Success', 'Kayit silindi')),
         tap(() => this.onSearch()),
         catchError((error) => {
           return of(error);

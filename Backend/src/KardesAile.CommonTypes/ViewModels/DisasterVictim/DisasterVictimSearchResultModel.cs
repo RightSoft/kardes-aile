@@ -24,5 +24,7 @@ public class DisasterVictimSearchResultModel
     public bool IdentityNumberValidated { get; set; }
     public bool AddressValidated { get; set; }
     public string? TemporaryAddress { get; set; }
+    
+    public string MatchingStatus { get; set; } = null!;
     public ICollection<ChildResultModel> Children { get; set; } = new List<ChildResultModel>();
 }

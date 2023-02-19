@@ -20,5 +20,6 @@ export class DisasterVictimSearchResultModel {
   identityNumberValidated: boolean;
   addressValidated: boolean;
   temporaryAddress: string
+  public matchingStatus: string;
   children: ChildResultModel[];
 }

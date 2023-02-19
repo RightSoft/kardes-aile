@@ -1,33 +1,34 @@
-import { DisasterVictimService } from '@disasterVictimListsModule/business/disaster-victim.service';
-import { NavigationService } from '@appModule/services/navigation.service';
-import { phoneValidator } from '@validationModule/phone-validator';
-import { emailValidator } from '@validationModule/email-validator';
-import { getValidationMessage } from '@validationModule/get-validation-message';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {DisasterVictimService} from '@disasterVictimListsModule/business/disaster-victim.service';
+import {NavigationService} from '@appModule/services/navigation.service';
+import {phoneValidator} from '@validationModule/phone-validator';
+import {emailValidator} from '@validationModule/email-validator';
+import {getValidationMessage} from '@validationModule/get-validation-message';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {ReactiveFormsModule, FormBuilder, Validators} from '@angular/forms';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddChildComponent } from '../add-child/add-child.component';
-import { MatTableModule } from '@angular/material/table'
-import { CreateDisasterVictimModel } from '@appModule/models/disaster-victim/create-disaster-victim.model';
-import { UpdateDisasterVictimModel } from '@appModule/models/disaster-victim/update-disaster-victim.model';
-import { CreateChildModel } from '@appModule/models/child/create-child.model';
-import { Genders } from '@appModule/models/shared/genders.enum';
-import { AddressService } from '@appModule/services/address.service';
-import { CountryResultModel } from '@appModule/models/country-result.model';
-import { ChildResultModel } from '@appModule/models/child/child-result.model';
-import { CityResultModel } from '@appModule/models/city-result.model';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { ChildService } from '@appModule/services/child.service';
-import { UpdateChildModel } from '@appModule/models/child/update-child.model';
+import {MatSelectModule} from '@angular/material/select';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {AddChildComponent} from '../add-child/add-child.component';
+import {MatTableModule} from '@angular/material/table'
+import {CreateDisasterVictimModel} from '@appModule/models/disaster-victim/create-disaster-victim.model';
+import {UpdateDisasterVictimModel} from '@appModule/models/disaster-victim/update-disaster-victim.model';
+import {CreateChildModel} from '@appModule/models/child/create-child.model';
+import {Genders} from '@appModule/models/shared/genders.enum';
+import {AddressService} from '@appModule/services/address.service';
+import {CountryResultModel} from '@appModule/models/country-result.model';
+import {ChildResultModel} from '@appModule/models/child/child-result.model';
+import {CityResultModel} from '@appModule/models/city-result.model';
+import {ActivatedRoute} from '@angular/router';
+import {Location} from '@angular/common';
+import {ChildService} from '@appModule/services/child.service';
+import {UpdateChildModel} from '@appModule/models/child/update-child.model';
 import {Ng2TelInputModule} from "ng2-tel-input";
+import {SnackbarService} from "@appModule/services/snackbar.service";
 
 @Component({
   selector: 'app-add-disaster-victim',
@@ -68,7 +69,8 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
       Validators.min(9999999999),
       Validators.max(99999999999)
     ]),
-    fullName: this.formBuilder.control(undefined, Validators.required),
+    firstName: this.formBuilder.control(undefined, Validators.required),
+    lastName: this.formBuilder.control(undefined, Validators.required),
     email: this.formBuilder.control(undefined, [
       Validators.required,
       emailValidator
@@ -85,7 +87,13 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     addressValidated: this.formBuilder.control(undefined),
   });
 
-  constructor(private disasterVictimService: DisasterVictimService, private addressService: AddressService, private navigationService: NavigationService, private route: ActivatedRoute, private location: Location, private childService: ChildService) {
+  constructor(private disasterVictimService: DisasterVictimService,
+              private addressService: AddressService,
+              private navigationService: NavigationService,
+              private route: ActivatedRoute,
+              private location: Location,
+              private childService: ChildService,
+              private snackbar: SnackbarService) {
     const id = route.snapshot.paramMap.get('id');
     super(id ? 'Afetzede Güncelle' : 'Afetzede Kayit');
     if (id) {
@@ -99,7 +107,8 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           console.log(result);
           this.cityList$ = cResult.sort((a, b) => a.name.localeCompare(b.name));
           this.form.patchValue(result);
-          this.form.patchValue({ fullName: `${result.firstName} ${result.lastName}` })
+          this.form.patchValue({firstName: `${result.firstName}`})
+          this.form.patchValue({lastName: `${result.lastName}`})
         });
 
       });
@@ -114,8 +123,12 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     return getValidationMessage(this.form.controls.identityNumber);
   }
 
-  public get fullNameValidationMessage(): string {
-    return getValidationMessage(this.form.controls.fullName);
+  public get firstNameValidationMessage(): string {
+    return getValidationMessage(this.form.controls.firstName);
+  }
+
+  public get lastNameValidationMessage(): string {
+    return getValidationMessage(this.form.controls.lastName);
   }
 
   public get emailValidationMessage(): string {
@@ -161,8 +174,8 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     return Object.values(Genders)[gender].toString();
   }
 
-  public showChildDialog(action: string, child:CreateChildModel | UpdateChildModel , index: number) {
-    this.dialog.open(AddChildComponent, { data: { action, child } }).afterClosed().subscribe(result => {
+  public showChildDialog(action: string, child: CreateChildModel | UpdateChildModel, index: number) {
+    this.dialog.open(AddChildComponent, {data: {action, child}}).afterClosed().subscribe(result => {
       if (!result) return;
       if (result.event == 'Add') {
         this.childrens = [...this.childrens, result.data]
@@ -197,11 +210,16 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
     });
     console.log(this.form.valid);
     if (this.form.valid) {
-
       if (!this.disasterVictimId) {
+
+        if (this.childrens.length === 0) {
+          this.snackbar.show('Warning', 'Çocuk/lar eklenmeden kayıt yapamazsınız!');
+          return;
+        }
+
         const model = {
-          firstName: this.form.value.fullName.split(' ')[0],
-          lastName: this.form.value.fullName.split(' ')[1],
+          firstName: this.form.value.firstName,
+          lastName: this.form.value.lastName,
           email: this.form.value.email,
           phone: this.form.value.phone,
           address: this.form.value.address,
@@ -213,13 +231,14 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
           children: this.childrens
         } as CreateDisasterVictimModel;
         this.disasterVictimService.create(model).subscribe(() => {
+          this.snackbar.show('Success', 'Kayit eklendi');
           this.backToList();
         });
       } else {
         const updateModel = {
           id: this.disasterVictimId,
-          firstName: this.form.value.fullName.split(' ')[0],
-          lastName: this.form.value.fullName.split(' ')[1],
+          firstName: this.form.value.firstName,
+          lastName: this.form.value.lastName,
           email: this.form.value.email,
           phone: this.form.value.phone,
           address: this.form.value.address,
@@ -233,7 +252,8 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
         this.disasterVictimService.update(updateModel).subscribe(() => {
           this.childrensToBeDeleted.forEach(element => {
             if ('id' in element)
-              this.childService.delete(element.id).subscribe((res) => { });
+              this.childService.delete(element.id).subscribe((res) => {
+              });
           });
           this.childrens.forEach(element => {
             console.log(element);
@@ -241,12 +261,14 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
               this.addOrUpdateChildren(element);
             }, 300);
           });
-        }).add(()=>{
+        }).add(() => {
+          this.snackbar.show('Success', 'Kayit guncellendi');
           this.backToList();
         });
       }
     }
   }
+
   public addOrUpdateChildren(child: (UpdateChildModel | CreateChildModel)) {
     if ('id' in child) {
       this.childService.update({
@@ -254,16 +276,21 @@ export default class AddDisasterVictimComponent extends AddPageTitle {
         name: child.name,
         birthDate: child.birthDate,
         gender: child.gender
-      }).subscribe((res) => { console.log('yey') });
+      }).subscribe((res) => {
+        console.log('yey')
+      });
     } else {
       this.childService.create({
         userId: this.userId,
         name: child.name,
         birthDate: child.birthDate,
         gender: child.gender
-      }).subscribe((res) => { console.log('yey') });
+      }).subscribe((res) => {
+        console.log('yey')
+      });
     }
   }
+
   public backToList() {
     this.navigationService.navigate('/disaster-victim-list');
   }
