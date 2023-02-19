@@ -8,14 +8,11 @@ import {SnackbarService} from "@appModule/services/snackbar.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {PagedResultModel} from "@appModule/models/shared/paged-result.model";
 import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
-import {MatSortModule, Sort} from "@angular/material/sort";
-import {SortDirection} from "@appModule/models/shared/sort-direction.enum";
-import {SearchSortModel} from "@appModule/models/shared/search-sort.model";
+import {MatSortModule} from "@angular/material/sort";
 import {
   ConfirmationDialogComponent
 } from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
 import {catchError, filter, of, switchMap, tap} from "rxjs";
-import {UserStatuses, UserStatusesLabel} from "@appModule/models/shared/user-statuses.enum";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FlexModule} from "@angular/flex-layout";
@@ -83,42 +80,9 @@ export default class MatchListsComponent extends BaseListComponent
     this.onSearch();
   }
 
-  onSorting($event: Sort) {
-    const sortDirection =
-      $event.direction == 'desc'
-        ? SortDirection.Descending
-        : SortDirection.Ascending;
-    this.searchMatchData.sortModels = [];
-    if ($event.active == 'fullName') {
-      this.searchMatchData.sortModels.push({
-        sortName: 'firstName',
-        sortDirection: sortDirection
-      } as SearchSortModel);
-      this.searchMatchData.sortModels.push({
-        sortName: 'lastName',
-        sortDirection: sortDirection
-      } as SearchSortModel);
-    } else if ($event.active == 'cityCountryName') {
-      this.searchMatchData.sortModels.push({
-        sortName: 'cityName',
-        sortDirection: sortDirection
-      } as SearchSortModel);
-      this.searchMatchData.sortModels.push({
-        sortName: 'countryName',
-        sortDirection: sortDirection
-      } as SearchSortModel);
-    } else {
-      this.searchMatchData.sortModels.push({
-        sortName: $event.active,
-        sortDirection: sortDirection
-      } as SearchSortModel);
-    }
-    this.onSearch();
-  }
-
   override onSearch(keyword?: string) {
-    if (keyword !== undefined) this.searchMatchData.keyword = keyword;
-    this.searchMatchData.includeDeleted = this.isChecked;
+    if (keyword !== undefined) this.searchMatchData.filter = keyword;
+    this.searchMatchData.includePassives = this.isChecked;
 
     this.matchListsService
       .search(this.searchMatchData)
@@ -132,7 +96,8 @@ export default class MatchListsComponent extends BaseListComponent
 
   onEdit(id: string) {
     this.dialog.open(AddNewMatchComponent, {
-      data: { id }});
+      data: {id}
+    });
   }
 
   onDelete(matchId: string) {
@@ -163,8 +128,8 @@ export default class MatchListsComponent extends BaseListComponent
       });
   }
 
-  getMatchStatusLabel(status: UserStatuses) {
-    return UserStatusesLabel.get(status);
+  getMatchStatusLabel(status: boolean) {
+    return status ? 'Aktif' : 'İptal';
   }
 
   override onCheckboxChange(isChecked: boolean) {

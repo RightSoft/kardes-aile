@@ -144,6 +144,8 @@ public class MatchingBusiness : IMatchingBusiness
                     string.IsNullOrEmpty(filter) ||
                     p.Supporter!.User!.FirstName.ToUpper().Contains(filter) ||
                     p.Supporter!.User!.LastName.ToUpper().Contains(filter) ||
+                    p.Victim!.User!.FirstName.ToUpper().Contains(filter) ||
+                    p.Victim!.User!.LastName.ToUpper().Contains(filter) ||
                     p.SupporterChild!.Name.ToUpper().Contains(filter) ||
                     p.VictimChild!.Name.ToUpper().Contains(filter)));
 

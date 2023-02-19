@@ -89,7 +89,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button (click)="onCancel()" mat-button mat-dialog-close class="p-3">İptal</button>
-  <button (click)="onSave()" mat-button class="btn-ascendent p-3" [mat-dialog-close]="true">
+  <button (click)="onSave()" mat-button class="btn-ascendent p-3" [disabled]="!addMatchForm.valid" [mat-dialog-close]="true">
     Kaydet
   </button>
 </mat-dialog-actions>
