@@ -55,8 +55,8 @@ public class AuthenticationBusiness : IAuthenticationBusiness
                     p.Status == UserStatuses.Active &&
                     p.Phone == model.Phone);
         }
-
-        if (user == null) throw Errors.UsernamePasswordDenied;
+        
+        if (user?.Hash == null) throw Errors.UsernamePasswordDenied;
 
         var calculatedHash = KeyDerivation.Pbkdf2(
             model.Password!,
