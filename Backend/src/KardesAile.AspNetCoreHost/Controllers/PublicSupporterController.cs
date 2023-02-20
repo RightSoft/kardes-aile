@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KardesAile.AspNetCoreHost.Controllers;
 
+[ApiController]
+[Route("api/[controller]/[action]")]
+[Produces("application/json")]
 public class PublicSupporterController : ControllerBase
 {
     private readonly ISupporterBusiness _supporterBusiness;
