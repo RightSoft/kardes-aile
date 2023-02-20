@@ -181,12 +181,19 @@ public class DisasterVictimBusiness : IDisasterVictimBusiness
     public async Task<PagedResultModel<DisasterVictimSearchResultModel>> Search(SearchDisasterVictimModel model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
+        var filter = model.Keyword?.ToUpperInvariant();
 
         var query = _unitOfWork.DisasterVictim
             .AsQueryable
             .Where(p => model.IncludeDeleted ||
                         p.User!.Status == UserStatuses.Active ||
-                        p.User.Status == UserStatuses.Suspended);
+                        p.User.Status == UserStatuses.Suspended)
+            .Where(p => string.IsNullOrEmpty(filter) ||
+                        p.User!.FirstName.ToUpper().Contains(filter) ||
+                        p.User!.LastName.ToUpper().Contains(filter) ||
+                        p.City!.Name.ToUpper().Contains(filter) ||
+                        p.Country!.Name.ToUpper().Contains(filter) ||
+                        p.Address!.ToUpper().Contains(filter));
 
         var result = await query
             .Include(p => p.City)
