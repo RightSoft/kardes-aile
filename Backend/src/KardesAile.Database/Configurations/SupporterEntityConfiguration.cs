@@ -9,6 +9,7 @@ public class SupporterEntityConfiguration : ModifiableEntityConfigurationBase<Su
     {
         base.Configure(builder);
         builder.Property(e => e.Address).HasMaxLength(255);
+        builder.Property(e => e.PublicOnboarding).IsRequired();
         builder.HasOne(x => x.User)
             .WithMany(x => x.Supporters)
             .IsRequired()

@@ -36,9 +36,9 @@ public class ChildController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
-    public async Task<IActionResult> Add([FromBody] CreateChildModel model)
+    public async Task<IActionResult> Add([FromBody] CreateChildWithUserIdModel withUserIdModel)
     {
-        await _childBusiness.Add(model);
+        await _childBusiness.Add(withUserIdModel);
         return Ok();
     }
     

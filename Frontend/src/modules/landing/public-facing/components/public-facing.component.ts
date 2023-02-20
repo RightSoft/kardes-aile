@@ -1,48 +1,41 @@
-import {Component, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {VoluntarilyService} from "@voluntarilyListsModule/business/voluntarily.service";
-import AddPageTitle from "@appModule/base-classes/add-page-title.abstract.class";
-import {MatInputModule} from "@angular/material/input";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {BrowserModule} from "@angular/platform-browser";
-import {getValidationMessage} from "@validationModule/get-validation-message";
-import {atLeastOne} from "@validationModule/custom-validator";
-import {emailValidator} from "@validationModule/email-validator";
-import {phoneValidator} from "@validationModule/phone-validator";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {ChildResultModel} from "@appModule/models/child/child-result.model";
-import {MatIconModule} from "@angular/material/icon";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatCardModule} from "@angular/material/card";
-import {MatButtonModule} from "@angular/material/button";
-import {CreateSupporterModel} from "@appModule/models/supporter/create-supporter.model";
-import {NavigationService} from "@appModule/services/navigation.service";
-import {ActivatedRoute} from "@angular/router";
-import {FlexModule} from "@angular/flex-layout";
-import {CacheService} from "@appModule/services/cache.service";
-import {CountryResultModel} from "@appModule/models/country-result.model";
-import {CityResultModel} from "@appModule/models/city-result.model";
-import {catchError, filter, Observable, of, startWith, switchMap, tap} from "rxjs";
-import {map} from "rxjs/operators";
-import {SnackbarService} from "@appModule/services/snackbar.service";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {
-  AddVoluntarilyChildComponent
-} from "@voluntarilyListsModule/components/add-voluntarily-child/add-voluntarily-child.component";
-import {GendersLabel} from "@appModule/models/shared/genders.enum";
-import {ChildService} from "@appModule/services/child.service";
-import {CreateChildModel} from "@appModule/models/child/create-child.model";
-import {UpdateChildModel} from "@appModule/models/child/update-child.model";
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { getValidationMessage } from '@validationModule/get-validation-message';
+import { atLeastOne } from '@validationModule/custom-validator';
+import { emailValidator } from '@validationModule/email-validator';
+import { phoneValidator } from '@validationModule/phone-validator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { CreateSupporterModel } from '@appModule/models/supporter/create-supporter.model';
+import { NavigationService } from '@appModule/services/navigation.service';
+import { ActivatedRoute } from '@angular/router';
+import { FlexModule } from '@angular/flex-layout';
+import { CacheService } from '@appModule/services/cache.service';
+import { CountryResultModel } from '@appModule/models/country-result.model';
+import { CityResultModel } from '@appModule/models/city-result.model';
+import { catchError, filter, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SnackbarService } from '@appModule/services/snackbar.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { GendersLabel } from '@appModule/models/shared/genders.enum';
+import { CreateChildModel } from '@appModule/models/child/create-child.model';
 import {
   ConfirmationDialogComponent
-} from "@sharedComponents/confirmation-dialog/components/confirmation-dialog.component";
-import {AddChildComponent} from '@disasterVictimListsModule/components/add-child/add-child.component';
-import {InputTextComponent} from '@sharedComponents/input/input-text/input-text.component';
-import {InputSelectComponent} from '@sharedComponents/input/input-select/input-select.component';
-import {Ng2TelInputModule} from 'ng2-tel-input';
-import {environment} from "../../../../environments/environment";
-import {NgxCaptchaModule} from "ngx-captcha";
+} from '@sharedComponents/confirmation-dialog/components/confirmation-dialog.component';
+import { AddChildComponent } from '@disasterVictimListsModule/components/add-child/add-child.component';
+import { InputTextComponent } from '@sharedComponents/input/input-text/input-text.component';
+import { InputSelectComponent } from '@sharedComponents/input/input-select/input-select.component';
+import { Ng2TelInputModule } from 'ng2-tel-input';
+import { environment } from '../../../../environments/environment';
+import { NgxCaptchaModule } from 'ngx-captcha';
+import { PublicSupporterService } from '@landingModule/public-facing/services/public-supporter.service';
 
 @Component({
   selector: 'app-public-facing',
@@ -71,8 +64,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   filteredCountryList$: Observable<CountryResultModel[]>;
   cityList: CityResultModel[];
   filteredCityList$: Observable<CityResultModel[]>;
-  children: ChildResultModel[];
-  captchaKey:string=environment.recaptcha.siteKey;
+  children: CreateChildModel[];
+  captchaKey: string = environment.recaptcha.siteKey;
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'actions'];
   private formBuilder = inject(FormBuilder);
   addSupporterForm = this.formBuilder.group({
@@ -82,7 +75,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     lastName: this.formBuilder.control('', Validators.required),
     emailOrPhoneInfo: new FormGroup({
       email: this.formBuilder.control('', emailValidator),
-      phone: this.formBuilder.control('', phoneValidator),
+      phone: this.formBuilder.control('', phoneValidator)
     }, [atLeastOne(Validators.required, ['email', 'phone'])]),
     address: this.formBuilder.control(''),
     countryId: this.formBuilder.control(null),
@@ -90,15 +83,16 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     recaptcha: ['', Validators.required]
   });
 
-  constructor(private voluntarilyService: VoluntarilyService,
-              private navigationService: NavigationService,
-              private route: ActivatedRoute,
-              private cacheService: CacheService,
-              private snackbar: SnackbarService,
-              private dialog: MatDialog,
-              private childService: ChildService) {
+  constructor(
+    private publicSupporterService: PublicSupporterService,
+    private navigationService: NavigationService,
+    private route: ActivatedRoute,
+    private cacheService: CacheService,
+    private snackbar: SnackbarService,
+    private dialog: MatDialog
+  ) {
 
-    super("Gönüllü Kayıt");
+    super('Gönüllü Kayıt');
 
     this.children = [];
     this.cacheService.countries.subscribe(result => {
@@ -112,7 +106,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
         return name ?
           this.countryList?.filter(c => c.name.toUpperCase().startsWith(name.toUpperCase()))
           : this.countryList?.slice();
-      }),
+      })
     );
 
     this.filteredCityList$ = this.addSupporterForm.controls.cityId.valueChanges.pipe(
@@ -122,7 +116,7 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
         return name ?
           this.cityList?.filter(c => c.name.toUpperCase().startsWith(name.toUpperCase()))
           : this.cityList?.slice();
-      }),
+      })
     );
   }
 
@@ -174,10 +168,10 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
           address: this.addSupporterForm.value.address,
           cityId: this.addSupporterForm.value.cityId,
           countryId: this.addSupporterForm.value.countryId,
-          children: this.children.map(child => ({name: child.name, birthDate: child.birthDate, gender: child.gender}))
+          children: this.children
         } as CreateSupporterModel;
 
-        this.voluntarilyService.create(model).subscribe(() => {
+        this.publicSupporterService.create(model).subscribe(() => {
           this.navigateToList();
         }).add(() => this.snackbar.show('Success', 'Yeni kayıt eklendi'));
       }
@@ -192,76 +186,42 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     return this.countryList?.find(c => c.id === id)?.name;
   }
 
-  countryChanged(value: string) {
-
-  }
-
   getCityName(id: string): string {
     return this.cityList?.find(c => c.id === id)?.name;
   }
 
-  addOrEditChild(action: String, child?: ChildResultModel, index?: number) {
+  addOrEditChild(action: string, child?: CreateChildModel, index?: number) {
     const dialogRef = this.dialog.open(AddChildComponent, {
-      data: {action, child}
+      data: { action, child }
     }).afterClosed().subscribe(result => {
       if (!result) return;
+
+      const childResult = { name: result.data.name, birthDate: result.data.birthDate, gender: result.data.gender };
       if (result.event == 'Add') {
-        this.children = [...this.children, result.data]
+        this.children = [...this.children, childResult];
       } else if (result.event == 'Update') {
         console.log(result.data);
-        this.children[index] = result.data;
+        this.children[index] = childResult;
         this.children = [...this.children];
       }
     });
   }
 
-  public showUpdateChild(child: ChildResultModel) {
+  public showUpdateChild(child: CreateChildModel) {
     const index = this.children.findIndex((el) => el === child);
     console.log(index);
     this.addOrEditChild('Update', child, index);
   }
 
-  onDeleteChild(id: string) {
-    if (id) {
-      this.dialog
-        .open(ConfirmationDialogComponent, {
-          width: '300px',
-          data: {
-            title: 'Uyarı',
-            message: 'Çocuğu silmek istediğinize emin misiniz?'
-          }
-        })
-        .afterClosed()
-        .pipe(
-          filter((result) => {
-            return result;
-          }),
-          switchMap(() => this.childService.delete(id)),
-          tap(() => this.snackbar.show('Success', 'Kayit silindi')),
-          tap(() => this.refreshChildren()),
-          catchError((error) => {
-            return of(error);
-          })
-        )
-        .subscribe((data) => {
-          if (data && data.ok === false) {
-            this.snackbar.show('Error', data.message);
-          }
-        });
-    } else {
-      this.children = this.children.filter(child => child.id != id);
+  onDeleteChild(child: CreateChildModel) {
+    const index = this.children.indexOf(child);
+    if (index >= 0) {
+      this.children.splice(index, 1);
     }
   }
 
-
-  refreshChildren() {
-    this.childService.list(this.addSupporterForm.value.userId).subscribe(result => {
-      this.children = result;
-    });
-  }
-
   getChildren() {
-    return new MatTableDataSource<ChildResultModel>(this.children);
+    return new MatTableDataSource<CreateChildModel>(this.children);
   }
 
   getAge(birthDate: Date): string {

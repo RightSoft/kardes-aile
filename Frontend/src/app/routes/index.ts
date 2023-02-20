@@ -3,6 +3,6 @@ import authRoutes from './auth.routes';
 import layoutRoutes from './layout.routes';
 import publicRoutes from './public.routes';
 
-const projectRoutes: Routes = [...authRoutes, ...layoutRoutes, ...publicRoutes];
+const projectRoutes: Routes = [...publicRoutes, ...authRoutes, ...layoutRoutes];
 
 export default projectRoutes;

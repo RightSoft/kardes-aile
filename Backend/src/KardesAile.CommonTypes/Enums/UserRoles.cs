@@ -6,5 +6,6 @@ public enum UserRoles
     Supporter,
     DisasterVictim,
     User, 
-    Moderator
+    Moderator,
+    Anonymous
 }

@@ -23,7 +23,12 @@ public class UserContext : IUserContext
             .Where(x => x.Type == ClaimTypes.Role)
             .Select(c => Enum.Parse<UserRoles>(c.Value, true));
 
-        Username = httpContext.User.Identity?.Name ?? "anonymous";
-        Roles = roles;
+        Username = httpContext.User.Identity.IsAuthenticated ? httpContext.User.Identity?.Name : "anonymous";
+        Roles = httpContext.User.Identity.IsAuthenticated
+            ? roles
+            : new[]
+            {
+                UserRoles.Anonymous
+            };
     }
 }
