@@ -1,49 +1,40 @@
 <app-left-aside-header></app-left-aside-header>
 <div class="px-3">
-  <button
-    [routerLinkActiveOptions]="{
+  <button [routerLinkActiveOptions]="{
       exact: true
     }"
-    mat-stroked-button
-    class="border border-dark w-100 justify-content-start py-3"
-    routerLinkActive="text-bg-dark"
-    routerLink="/"
-  >
+          mat-stroked-button
+          class="border border-dark w-100 justify-content-start py-3"
+          routerLinkActive="text-bg-dark"
+          routerLink="/">
     <span>Eşleşme Listesi</span>
     <mat-icon class="opacity-50">link</mat-icon>
   </button>
-  <button
-    mat-stroked-button
-    class="border border-dark w-100 justify-content-start py-3 mt-3"
-    routerLinkActive="text-bg-dark"
-    routerLink="voluntarily"
-  >
+  <button mat-stroked-button
+          class="border border-dark w-100 justify-content-start py-3 mt-3"
+          routerLinkActive="text-bg-dark"
+          routerLink="voluntarily">
     Gönüllü Listesi
     <mat-icon class="opacity-50">front_hand</mat-icon>
   </button>
-  <button
-    mat-stroked-button
-    class="border border-dark w-100 justify-content-start py-3 mt-3"
-    routerLinkActive="text-bg-dark"
-    routerLink="disaster-victim-list"
-  >
+  <button mat-stroked-button
+          class="border border-dark w-100 justify-content-start py-3 mt-3"
+          routerLinkActive="text-bg-dark"
+          routerLink="disaster-victim-list">
     Afetzede Listesi
     <mat-icon class="opacity-50">home</mat-icon>
   </button>
-  <button
-    mat-stroked-button
-    class="border border-dark w-100 justify-content-start py-3 mt-3"
-    routerLinkActive="text-bg-dark"
-    routerLink="moderator"
-  >
+  <button mat-stroked-button
+          class="border border-dark w-100 justify-content-start py-3 mt-3"
+          routerLinkActive="text-bg-dark"
+          routerLink="moderator">
     Moderatör Listesi
     <mat-icon class="opacity-50">person</mat-icon>
   </button>
-  <button
-    mat-stroked-button
-    class="border border-dark w-100 justify-content-start py-3 mt-3"
-    routerLinkActive="text-bg-dark"
-  >
+  <button mat-stroked-button
+          class="border border-dark w-100 justify-content-start py-3 mt-3"
+          routerLinkActive="text-bg-dark"
+          routerLink="audits">
     Loglar
     <mat-icon class="opacity-50">web_stories</mat-icon>
   </button>
