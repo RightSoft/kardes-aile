@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-import voluntarilyListRoutes from './voluntarily-list.routes';
-import moderatorRoutes from './moderator.routes';
 import { AuthenticationGuard } from '@appModule/guards/authentication.guard/authentication.guard';
-import disasterVictimListRoutes from './disaster-victim-list.routes';
 import matchListRoutes from "@appModule/routes/match-list.routes";
+import auditRoutes from './audits.routes';
+import disasterVictimListRoutes from './disaster-victim-list.routes';
+import moderatorRoutes from './moderator.routes';
+import voluntarilyListRoutes from './voluntarily-list.routes';
 const layoutRoutes: Routes = [
   {
     path: '',
@@ -21,7 +22,8 @@ const layoutRoutes: Routes = [
       ...voluntarilyListRoutes,
       ...matchListRoutes,
       ...moderatorRoutes,
-      ...disasterVictimListRoutes
+      ...disasterVictimListRoutes,
+      ...auditRoutes
     ]
   }
 ];

@@ -1,0 +1,93 @@
+<mat-card>
+  <mat-card-header>
+
+    <form [formGroup]="form"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="12px"
+          (submit)="onSubmit()">
+
+      <mat-form-field>
+        <mat-label>Ara...</mat-label>
+        <input matInput formControlName="filter" type="text" autofocus />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Tip</mat-label>
+        <mat-select formControlName="type">
+          <mat-option></mat-option>
+          <mat-option *ngFor="let key of auditTypes" [value]="key">
+            {{auditTypesEnum[getEnumKeyAsNumber(key)]}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Başlangıç Tarihi</mat-label>
+        <input matInput [matDatepicker]="start" formControlName="start">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+        <mat-datepicker #start></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Bitiş Tarihi</mat-label>
+        <input matInput [matDatepicker]="end" formControlName="end">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+        <mat-datepicker #end></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-button
+              class="btn-ascendent p-3 align-self-baseline ms-auto"
+              type="submit">
+        Filtrele
+      </button>
+
+    </form>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <mat-table [dataSource]="dataSource"
+               matSort
+               matSortActive="createdAt"
+               matSortDirection="desc"
+               matSortDisableClear>
+
+      <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>TİP</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{auditTypesEnum[element.type]}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>İŞLEM</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.action}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>KULLANICI</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.createdBy }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>İŞLEM TARİHİ</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator class="border-top"
+                   aria-label="Select page"
+                   [pageSizeOptions]="pageSizeOptions"
+                   [pageSize]="pageSize"
+                   [length]="length"
+                   [hidePageSize]="true">
+    </mat-paginator>
+
+  </mat-card-content>
+
+</mat-card>
+
