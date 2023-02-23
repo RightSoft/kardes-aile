@@ -20,7 +20,7 @@ public class AddressController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = nameof(UserRoles.User))]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CountryResultModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]
@@ -31,7 +31,7 @@ public class AddressController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = nameof(UserRoles.User))]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CityResultModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorModel))]
     [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorModel))]

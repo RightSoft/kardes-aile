@@ -62,7 +62,7 @@ public class SupporterBusiness : ISupporterBusiness
         return supporter;
     }
 
-    public async Task Create(CreateSupporterModel model)
+    public async Task Create(CreateSupporterModel model, bool publicOnboarding)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
         if (string.IsNullOrEmpty(model.Phone) && string.IsNullOrEmpty(model.Email))
@@ -96,6 +96,7 @@ public class SupporterBusiness : ISupporterBusiness
             Address = model.Address,
             CountryId = model.CountryId,
             CityId = model.CityId,
+            PublicOnboarding = publicOnboarding
         });
 
         _unitOfWork.User.Add(user);

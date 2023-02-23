@@ -35,22 +35,22 @@ public class ChildBusiness : IChildBusiness
         return result;
     }
 
-    public async Task Add(CreateChildModel model)
+    public async Task Add(CreateChildWithUserIdModel withUserIdModel)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        if (model.UserId == null) throw Errors.UserNotFound;
+        if (withUserIdModel == null) throw new ArgumentNullException(nameof(withUserIdModel));
+        if (withUserIdModel.UserId == null) throw Errors.UserNotFound;
         
-        var user = await GetUser(model.UserId!.Value);
+        var user = await GetUser(withUserIdModel.UserId!.Value);
 
         _auditContext.Start(AuditTypes.Child, "Child added");
         _auditContext.AddEffectedUser(user);
 
         _unitOfWork.Child.Add(new Child
         {
-            Name = model.Name!,
-            BirthDate = DateOnly.FromDateTime(model.BirthDate!.Value),
-            Gender = model.Gender!.Value,
-            UserId = model.UserId!.Value,
+            Name = withUserIdModel.Name!,
+            BirthDate = DateOnly.FromDateTime(withUserIdModel.BirthDate!.Value),
+            Gender = withUserIdModel.Gender!.Value,
+            UserId = withUserIdModel.UserId!.Value,
         });
 
         await _unitOfWork.SaveChangesAsync();

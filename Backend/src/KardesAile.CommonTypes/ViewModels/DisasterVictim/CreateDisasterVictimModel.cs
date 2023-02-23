@@ -14,7 +14,7 @@ public class CreateDisasterVictimModel
     public Guid? CityId { get; set; }
     public Guid? TemporaryCityId { get; set; }
     public Guid? CountryId { get; set; }
-    public IEnumerable<CreateChildModel>? Children { get; set; }
+    public IEnumerable<CreateChildWithUserIdModel>? Children { get; set; }
     public string? IdentityNumber { get; set; }
     public bool IdentityNumberValidated { get; set; }
     public bool AddressValidated { get; set; }

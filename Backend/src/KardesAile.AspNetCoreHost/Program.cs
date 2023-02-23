@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using KardesAile.AspNetCoreHost;
+using KardesAile.AspNetCoreHost.Captcha;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog.Events;
 
@@ -42,8 +43,13 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<ICaptchaVerifier, CaptchaVerifier>();
 builder.Services.AddOptions<JwtOptions>()
     .BindConfiguration("Jwt")
+    .ValidateDataAnnotations();
+
+builder.Services.AddOptions<CaptchaOptions>()
+    .BindConfiguration("Captcha")
     .ValidateDataAnnotations();
 
 builder.Services.Configure<TokenValidationParameters>(options =>

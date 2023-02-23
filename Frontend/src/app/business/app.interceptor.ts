@@ -21,14 +21,18 @@ const appInterceptor = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
 
     return next(newRequest).pipe(
       finalize(() => {
-        appService.isLoading$.next(false);
+        setTimeout(() => {
+          appService.isLoading$.next(false);
+        });
       })
     );
   }
 
   return next(request).pipe(
     finalize(() => {
-      appService.isLoading$.next(false);
+      setTimeout(() => {
+        appService.isLoading$.next(false);
+      });
     })
   );
 };

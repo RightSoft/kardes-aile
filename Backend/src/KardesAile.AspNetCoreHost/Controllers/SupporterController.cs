@@ -39,7 +39,7 @@ public class SupporterController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> Create([FromBody] CreateSupporterModel model)
     {
-        await _supporterBusiness.Create(model);
+        await _supporterBusiness.Create(model, false);
         return Ok();
     }
 
