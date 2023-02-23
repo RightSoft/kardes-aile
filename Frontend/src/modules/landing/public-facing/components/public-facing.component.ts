@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import AddPageTitle from '@appModule/base-classes/add-page-title.abstract.class';
 import { MatInputModule } from '@angular/material/input';
@@ -35,7 +35,7 @@ import { InputSelectComponent } from '@sharedComponents/input/input-select/input
 import { Ng2TelInputModule } from 'ng2-tel-input';
 import { environment } from '../../../../environments/environment';
 import { NgxCaptchaModule } from 'ngx-captcha';
-import { PublicSupporterService } from '@landingModule/public-facing/services/public-supporter.service';
+import { PublicSupporterService } from '@appModule/services/public-supporter.service';
 
 @Component({
   selector: 'app-public-facing',
@@ -69,8 +69,6 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   displayedColumns: string[] = ['name', 'birthDate', 'gender', 'actions'];
   private formBuilder = inject(FormBuilder);
   addSupporterForm = this.formBuilder.group({
-    supporterId: this.formBuilder.control(null),
-    userId: this.formBuilder.control(null),
     firstName: this.formBuilder.control('', Validators.required),
     lastName: this.formBuilder.control('', Validators.required),
     emailOrPhoneInfo: new FormGroup({
@@ -82,6 +80,8 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
     cityId: this.formBuilder.control(null),
     recaptcha: ['', Validators.required]
   });
+
+  @ViewChild(NgxCaptchaModule) captchaComponent: NgxCaptchaModule;
 
   constructor(
     private publicSupporterService: PublicSupporterService,
@@ -154,32 +154,35 @@ export default class AddVoluntarilyComponent extends AddPageTitle {
   onSave() {
     console.log(this.addSupporterForm);
     if (this.addSupporterForm.valid) {
-      if (!this.addSupporterForm.value.supporterId) {
-        if (this.children.length === 0) {
-          this.snackbar.show('Warning', 'Çocuk/lar eklenmeden kayıt yapamazsınız!');
-          return;
-        }
-
-        const model = {
-          firstName: this.addSupporterForm.value.firstName.split(' ')[0],
-          lastName: this.addSupporterForm.value.firstName.split(' ')[1],
-          email: this.addSupporterForm.value.emailOrPhoneInfo.email,
-          phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
-          address: this.addSupporterForm.value.address,
-          cityId: this.addSupporterForm.value.cityId,
-          countryId: this.addSupporterForm.value.countryId,
-          children: this.children
-        } as CreateSupporterModel;
-
-        this.publicSupporterService.create(model).subscribe(() => {
-          this.navigateToList();
-        }).add(() => this.snackbar.show('Success', 'Yeni kayıt eklendi'));
+      if (this.children.length === 0) {
+        this.snackbar.show('Warning', 'Ailelerimizle bağ kurmamız için, lütfen en az bir çocuğunuzu kaydedin');
+        return;
       }
+
+      const model = {
+        firstName: this.addSupporterForm.value.firstName,
+        lastName: this.addSupporterForm.value.lastName,
+        email: this.addSupporterForm.value.emailOrPhoneInfo.email,
+        phone: this.addSupporterForm.value.emailOrPhoneInfo.phone,
+        address: this.addSupporterForm.value.address,
+        cityId: this.addSupporterForm.value.cityId,
+        countryId: this.addSupporterForm.value.countryId,
+        children: this.children,
+        recaptchaToken: this.addSupporterForm.value.recaptcha
+      } as CreateSupporterModel;
+
+      this.publicSupporterService.create(model).subscribe(() => {
+          this.snackbar.show('Success', 'Yeni kayıt eklendi');
+          this.navigateToThanks();
+        },
+        err => {
+          this.snackbar.show('Error', err.error);
+        });
     }
   }
 
-  navigateToList() {
-    this.navigationService.navigate('/voluntarily');
+  navigateToThanks() {
+    this.navigationService.navigate('thanks');
   }
 
   getCountryName(id: string): string {

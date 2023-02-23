@@ -29,7 +29,7 @@ public class PublicSupporterController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorModel))]
     public async Task<IActionResult> Create([FromBody] CreateSupporterByCaptchaModel model)
     {
-        if (!await _captchaVerifier.Verify(model.ReCaptchaToken))
+        if (!await _captchaVerifier.Verify(model.RecaptchaToken))
         {
             return BadRequest(new ErrorModel
             {
