@@ -3,6 +3,7 @@ import voluntarilyListRoutes from './voluntarily-list.routes';
 import moderatorRoutes from './moderator.routes';
 import disasterVictimListRoutes from './disaster-victim-list.routes';
 import matchListRoutes from "@appModule/routes/match-list.routes";
+import auditRoutes from '@appModule/routes/audits.routes';
 const layoutRoutes: Routes = [
   {
     path: 'private',
@@ -12,7 +13,8 @@ const layoutRoutes: Routes = [
       ...voluntarilyListRoutes,
       ...matchListRoutes,
       ...moderatorRoutes,
-      ...disasterVictimListRoutes
+      ...disasterVictimListRoutes,
+      ...auditRoutes
     ]
   }
 ];

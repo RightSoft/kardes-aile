@@ -17,8 +17,8 @@
       "@voluntarilyListsModule/*": ["src/modules/voluntarily-lists/*"],
       "@disasterVictimListsModule/*": ["src/modules/disaster-victim-list/*"],
       "@moderatorModule/*": ["src/modules/moderator/*"],
-      "@landingModule/*": ["src/modules/landing/*"]
-
+      "@landingModule/*": [ "src/modules/landing/*" ],
+      "@auditsModule/*": [ "src/modules/audits/*" ]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
